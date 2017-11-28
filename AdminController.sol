@@ -6,10 +6,16 @@ contract AdminController {
     // Emrify shall be admin here
     address public admin;
     
-    struct hostpitalDetail{
-    string name;
-    string state;
-    string pincode;
+    //New Variables from yesterday
+    enum State { Pending, Accepted, Rejected, Terminated } 
+    uint256 totalPendingCount;
+    // Emrify shall add those people who can push claim against the registered Providers, Nobody Else should be able to do it    
+    mapping(address => bool ) public ListOfPeopleWhoCanPushClaim; 
+    
+    
+    struct providerDetail{
+    address providerAddress;
+    State state;
     bool isRegistered;
     string IPFSApprovalDocumentHash;
     string IPFSRemovalDocumentHash;
@@ -39,22 +45,50 @@ contract AdminController {
     
 
     
-    mapping (address => hostpitalDetail) public WhiteListedHospitals;
+    mapping (address => providerDetail) public WhiteListedProviders;
     
-    //this function shall be called by Emrify to add the address of the hospital in the whitelist hospitals
-    function approveHospitalInNetwork(address _hostpitalAddress, string _name, string _state, string _pincode,string _supportingApprovalDocument) onlyAdmin  {
-        WhiteListedHospitals[_hostpitalAddress].name = _name;
-        WhiteListedHospitals[_hostpitalAddress].state = _state;
-        WhiteListedHospitals[_hostpitalAddress].pincode = _pincode; 
-        WhiteListedHospitals[_hostpitalAddress].isRegistered = true;
-        WhiteListedHospitals[_hostpitalAddress].IPFSApprovalDocumentHash = _supportingApprovalDocument;
+    
+    //Step 0 : add the addresses of Govt bodies or those entities who can set claim tomorrow for the providers
+    // & This can also be converted to the request/approve mechanism. even though today we are directly making a request from the Admin controller
+    function whiteListEntityWhoCanPushClaims(address _GovtBodyAddress) onlyAdmin {
+        ListOfPeopleWhoCanPushClaim[_GovtBodyAddress] = true;
     }
     
-    function removeHospitalFromNetwork(address _hostpitalAddress, string _supportingRejectingDocument) onlyAdmin {
-        WhiteListedHospitals[_hostpitalAddress].isRegistered = false;
-        WhiteListedHospitals[_hostpitalAddress].IPFSRemovalDocumentHash = _supportingRejectingDocument;
+    // Step 1:
+    function submitRequestForApproval(string _ProviderDetailsIPFShash){
+        WhiteListedProviders[msg.sender].state = State.Pending;
+        WhiteListedProviders[msg.sender].providerAddress = msg.sender;
+        WhiteListedProviders[msg.sender].IPFSApprovalDocumentHash = _ProviderDetailsIPFShash;
+        totalPendingCount++;
+    }
+    
+    //Step 2-a:
+    //this function shall be called by Emrify to add the address of the hospital in the whitelist hospitals
+    function approveProviderApplication(address _providerAddress) onlyAdmin  {
+        WhiteListedProviders[_providerAddress].state = State.Accepted;
+        WhiteListedProviders[_providerAddress].isRegistered = true;
+        totalPendingCount--;
         
     }
+    
+    
+    //Step 2-b:
+    function rejectProviderApplication(address _providerAddress) onlyAdmin  {
+        WhiteListedProviders[_providerAddress].state = State.Rejected;
+        WhiteListedProviders[_providerAddress].isRegistered = false;
+        totalPendingCount--;
+        
+    } 
+    
+    
+    // This is the case when we want to terminate the relationship from the Network 
+    function terminateProviderFromNetwork(address _providerAddress, string _supportingRejectingDocument) onlyAdmin {
+        WhiteListedProviders[_providerAddress].state = State.Terminated;
+        WhiteListedProviders[_providerAddress].isRegistered = false;
+        WhiteListedProviders[_providerAddress].IPFSRemovalDocumentHash = _supportingRejectingDocument;
+        
+    }
+    
     
     
     

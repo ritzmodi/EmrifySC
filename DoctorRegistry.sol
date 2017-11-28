@@ -1,13 +1,13 @@
 pragma solidity ^0.4.0;
-import "./HospitalRegistry.sol";
+import "./ProviderRegistry.sol";
 
-contract DoctorRegistry is HospitalRegistry{
+contract DoctorRegistry is ProviderRegistry{
     
-    HospitalRegistry hospitalRegistry;
+   ProviderRegistry providerRegistry;
     
-    function DoctorRegistry(address _hospitalRegistry){
-        if (_hospitalRegistry != 0x0) {
-            hospitalRegistry = HospitalRegistry(_hospitalRegistry);
+function DoctorRegistry(address _providerRegistry){
+        if (_providerRegistry != 0x0) {
+            providerRegistry = ProviderRegistry(_providerRegistry);
         }
         else {
             revert(); //the admin controller address is wrong

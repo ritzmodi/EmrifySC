@@ -1,8 +1,8 @@
 pragma solidity ^0.4.0;
 import "./AdminController.sol";
-// import "./DoctorRegistry.sol";
 
-contract HospitalRegistry is AdminController {
+
+contract ProviderRegistry is AdminController {
 
     AdminController adminController ;
     
@@ -18,7 +18,7 @@ contract HospitalRegistry is AdminController {
         
 }*/
 
-function HospitalRegistry(address _adminController){
+function ProviderRegistry(address _adminController){
         if (_adminController != 0x0) {
             adminController = AdminController(_adminController);
         }
@@ -29,10 +29,8 @@ function HospitalRegistry(address _adminController){
     }
     
     struct DoctorDetails{
-        string name;
-        string speciality;
-        string licenseNo;
-        bool isRegistered;
+        address doctorAddress;
+        bool isRegistered ;
         string IPFSDoctorApprovalDocumentHash;
         string IPFSDoctorRemovalDocumentHash; 
     }
@@ -41,11 +39,9 @@ function HospitalRegistry(address _adminController){
     mapping (address => DoctorDetails) public DoctorInformation;
     
     /// this function shall be called by those hospitals which is already registered by the admin in the AdminController contract.
-    function AssociateDoctorUnderMyHospital(string _name, string _speciality, string _licenseNo, string _IPFSDocumentHash)  internal {
-        if(WhiteListedHospitals[msg.sender].isRegistered){
-            DoctorInformation[msg.sender].name = _name;
-            DoctorInformation[msg.sender].speciality = _speciality;
-            DoctorInformation[msg.sender].licenseNo = _licenseNo;
+    function AssociateDoctorUnderMyHospital(address _doctorAddress, string _IPFSDocumentHash)  internal {
+        if(WhiteListedProviders[msg.sender].isRegistered){
+            DoctorInformation[msg.sender].doctorAddress = _doctorAddress;
             DoctorInformation[msg.sender].isRegistered = true;
             DoctorInformation[msg.sender].IPFSDoctorApprovalDocumentHash = _IPFSDocumentHash;
         } else {
@@ -55,7 +51,7 @@ function HospitalRegistry(address _adminController){
     }
     
     function DisassociateDoctorfromTheHospital(){
-        if(WhiteListedHospitals[msg.sender].isRegistered){
+        if(WhiteListedProviders[msg.sender].isRegistered){
             if(DoctorInformation[msg.sender].isRegistered == true){
                 DoctorInformation[msg.sender].isRegistered = false;
             } else {

@@ -2,7 +2,7 @@ pragma solidity ^0.4.0;
 import "./AdminController.sol";
 // import "./DoctorRegistry.sol";
 
-contract HospitalRegistry is AdminController {
+contract ProviderRegistry is AdminController {
 
     AdminController adminController ;
     
@@ -18,7 +18,7 @@ contract HospitalRegistry is AdminController {
         
 }*/
 
-function HospitalRegistry(address _adminController){
+function ProviderRegistry(address _adminController){
         if (_adminController != 0x0) {
             adminController = AdminController(_adminController);
         }

@@ -40,7 +40,7 @@ function ProviderRegistry(address _adminController){
     
     /// this function shall be called by those hospitals which is already registered by the admin in the AdminController contract.
     function AssociateDoctorUnderMyHospital(address _doctorAddress, string _IPFSDocumentHash)  internal {
-        if(WhiteListedProviders[msg.sender].isRegistered){
+        if(WhiteListedProviders[msg.sender].isRegistered && WhiteListedProviders[msg.sender].isOrganization == true){
             DoctorInformation[msg.sender].doctorAddress = _doctorAddress;
             DoctorInformation[msg.sender].isRegistered = true;
             DoctorInformation[msg.sender].IPFSDoctorApprovalDocumentHash = _IPFSDocumentHash;
@@ -51,7 +51,7 @@ function ProviderRegistry(address _adminController){
     }
     
     function DisassociateDoctorfromTheHospital(){
-        if(WhiteListedProviders[msg.sender].isRegistered){
+        if(WhiteListedProviders[msg.sender].isRegistered && WhiteListedProviders[msg.sender].isOrganization){
             if(DoctorInformation[msg.sender].isRegistered == true){
                 DoctorInformation[msg.sender].isRegistered = false;
             } else {

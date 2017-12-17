@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Insurance Interaction</title>
+	<script src="http://rawgit.com/ethereum/web3.js/0.16.0/dist/web3.min.js"></script>
+	<script
+	  src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+	 <script>
+		window.addEventListener('load', function() {
+
+		  // Checking if Web3 has been injected by the browser (Mist/MetaMask)
+		  if (typeof web3 !== 'undefined') {
+		    // Use Mist/MetaMask's provider
+		    web3 = new Web3(web3.currentProvider);
+		  } else {
+		    console.log('No web3? You should consider trying MetaMask!')
+		    // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
+		    web3 = new Web3(new Web3.providers.HttpProvider("https://ropsten.infura.io/jusRhRm9lPsVCXFLnnNk"));
+		  }
+
+
+      var abi =[{"constant":true,"inputs":[{"name":"providerAddress","type":"address"},{"name":"payerAddress","type":"address"}],"name":"isProviderInNetwork","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function","stateMutability":"view"},{"constant":true,"inputs":[{"name":"patientAddress","type":"address"},{"name":"payerAddress","type":"address"}],"name":"isInsured","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function","stateMutability":"view"},{"constant":false,"inputs":[{"name":"patientAddress","type":"address"}],"name":"addPatientToNetwork","outputs":[],"payable":false,"type":"function","stateMutability":"nonpayable"},{"constant":false,"inputs":[{"name":"providerAddress","type":"address"}],"name":"addProviderToNetwork","outputs":[],"payable":false,"type":"function","stateMutability":"nonpayable"}];
+
+      var MyContract = web3.eth.contract(abi);
+      
+      var myContractInstance = MyContract.at('0x0dd3a359e8e70218fac5a129d6ba13bdfbb20127');
+
+
+
+    // Now you can start your app & access web3 freely:
+      startApp(myContractInstance);
+		})
+  </script>
+  </head>
+
+  <body>
+  <h2>Submit Request For Approval: To be called by individual entity or organisation</h2>
+  <div>
+    Is Org : <input id='isOrgBool'>
+</div>
+<div>
+    Provider Details : <input id='providerDetails'>
+</div>
+<button onclick='submitRequestForApproval()'>Submit Provider Request!</button>
+<hr/>
+<p>Events generated for the Submit Request For Approval:
+    <h3 id='callback1'></h3>
+</p>
+<hr/>
+
+<h2>Approve Provider Application : to be called by Emrify ONLY</h2>
+<div>
+  Provider Address : <input id='providerAddressForApproval'>
+</div>
+<button onclick='approveProviderApplication()'>Approve Provider!</button>
+<hr/>
+<p>Events generated for the Appproved provider :
+    <h3 id='callback2'></h3>
+</p>
+<hr/>
+
+<h2> Reject Provider Application: To be called by individual entity or organisation</h2>
+<div>
+    Provider Address : <input id='providerAddressForRejection'>
+</div>
+<button onclick='rejectProviderApplication()'>Reject Provider!</button>
+<hr/>
+<p>Events generated for the rejected provider:
+			<h3 id='callback3'></h3>
+</p>
+
+<hr/>
+
+
+<h2> Terminate Provider Application: To be called by individual entity or organisation</h2>
+<div>
+    Provider Address : <input id='providerAddressForTermination'>
+</div>
+<div>
+    Termination Document : <input id='DocumentForTermination'>
+</div>
+<button onclick='terminateProviderFromNetwork()'>Terminate Provider!</button>
+<hr/>
+<p>Events generated for the Ternimated provider:
+			<h3 id='callback4'></h3>
+</p>
+
+<script type="text/javascript" src='Admin_helper.js'></script>
+</body>
+
+</html>

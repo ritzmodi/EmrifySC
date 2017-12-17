@@ -8,10 +8,17 @@ contract AdminController {
     
     //New Variables from yesterday
     enum State { Pending, Accepted, Rejected, Terminated } 
-    uint256 totalPendingCount;
+    uint256 public totalPendingCount; // to know whats the total no of pending request in the system at any time
     // Emrify shall add those people who can push claim against the registered Providers, Nobody Else should be able to do it    
     mapping(address => bool ) public AdminGroup; 
     
+    // events 
+    event OwnershipTransferred(address indexed newOwner);
+    event NewAdminAdded(address indexed newAdmin);
+    event RequestSubmittedForApproval(address indexed _requsterAdd, bool indexed isOrg, string ProviderDetailsIPFShash);
+    event RequestApproved(address indexed providerAddress);
+    event RequestRejected(address indexed providerAddress);
+    event Terminate(address indexed providerAddress, string IPFSHash);// any document that you have for terminating the relationship with that provider
     
     struct providerDetail{
     address providerAddress;
@@ -39,6 +46,7 @@ contract AdminController {
     function transferOwnership(address _newAdmin) public onlyAdmin {
         if (_newAdmin != address(this)) {
             admin = _newAdmin;
+            OwnershipTransferred(_newAdmin);
         }
     }
     
@@ -54,6 +62,7 @@ contract AdminController {
     // this group tomorrow shall handle the pressure of 
     function addAdminGroup(address _newAdminAddress) onlyAdmin {
         AdminGroup[_newAdminAddress] = true;
+        NewAdminAdded(_newAdminAddress);
     }
     
     // Step 1:
@@ -63,6 +72,7 @@ contract AdminController {
         WhiteListedProviders[msg.sender].providerAddress = msg.sender;
         WhiteListedProviders[msg.sender].IPFSApprovalDocumentHash = _ProviderDetailsIPFShash;
         totalPendingCount++;
+        RequestSubmittedForApproval(msg.sender, _isOrg, _ProviderDetailsIPFShash);
     }
     
     //Step 2-a:
@@ -72,7 +82,7 @@ contract AdminController {
         WhiteListedProviders[_providerAddress].isRegistered = true;
         totalPendingCount--;
         // fire an event with `isORg` variable so that we can identify that he is and org or not
-        
+        RequestApproved(_providerAddress);
         
     }
     
@@ -82,6 +92,7 @@ contract AdminController {
         WhiteListedProviders[_providerAddress].state = State.Rejected;
         WhiteListedProviders[_providerAddress].isRegistered = false;
         totalPendingCount--;
+        RequestRejected(_providerAddress);
         
     } 
     
@@ -91,6 +102,7 @@ contract AdminController {
         WhiteListedProviders[_providerAddress].state = State.Terminated;
         WhiteListedProviders[_providerAddress].isRegistered = false;
         WhiteListedProviders[_providerAddress].IPFSRemovalDocumentHash = _supportingRejectingDocument;
+        Terminate(_providerAddress,_supportingRejectingDocument);
         
     }
     

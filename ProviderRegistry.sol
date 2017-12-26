@@ -25,8 +25,7 @@ contract ProviderRegistry is AdminController {
 function ProviderRegistry(address _adminController){
         if (_adminController != 0x0) {
             adminController = AdminController(_adminController);
-        }
-        else {
+    } else {
             revert(); //the admin controller address is wrong
         }
          
@@ -43,7 +42,7 @@ function ProviderRegistry(address _adminController){
     mapping (address => mapping(address => DoctorDetails )) public DoctorInformation; // this mapping is to keep the relationship between the Organization and their whitelisted doctor
     
     /// this function shall be called by those hospitals which is already registered by the admin in the AdminController contract.
-    function AssociateDoctorUnderMyHospital(address _doctorAddress, string _IPFSDocumentHash)  internal {
+    function AssociateDoctorUnderMyHospital(address _doctorAddress, string _IPFSDocumentHash)   {
         if(WhiteListedProviders[msg.sender].isRegistered && WhiteListedProviders[msg.sender].isOrganization == true){
             DoctorInformation[msg.sender][_doctorAddress].doctorAddress = _doctorAddress;
             DoctorInformation[msg.sender][_doctorAddress].isRegistered = true;

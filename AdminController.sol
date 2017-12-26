@@ -42,19 +42,17 @@ contract AdminController {
         
     }
 
-    // transfer ownership function
+/*    // transfer ownership function
     function transferOwnership(address _newAdmin) public onlyAdmin {
         if (_newAdmin != address(this)) {
             admin = _newAdmin;
             OwnershipTransferred(_newAdmin);
         }
-    }
+    }*/
     
     function AdminController(){
         admin = msg.sender; 
     }
-    
-
     
     mapping (address => providerDetail) public WhiteListedProviders;
     

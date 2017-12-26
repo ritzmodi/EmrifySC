@@ -19,7 +19,284 @@
 		  }
 
 
-      var abi =[{"constant":true,"inputs":[{"name":"providerAddress","type":"address"},{"name":"payerAddress","type":"address"}],"name":"isProviderInNetwork","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function","stateMutability":"view"},{"constant":true,"inputs":[{"name":"patientAddress","type":"address"},{"name":"payerAddress","type":"address"}],"name":"isInsured","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function","stateMutability":"view"},{"constant":false,"inputs":[{"name":"patientAddress","type":"address"}],"name":"addPatientToNetwork","outputs":[],"payable":false,"type":"function","stateMutability":"nonpayable"},{"constant":false,"inputs":[{"name":"providerAddress","type":"address"}],"name":"addProviderToNetwork","outputs":[],"payable":false,"type":"function","stateMutability":"nonpayable"}];
+      var abi =[
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "addr",
+				"type": "address"
+			}
+		],
+		"name": "isAdmin",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "AdminGroup",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_providerAddress",
+				"type": "address"
+			}
+		],
+		"name": "rejectProviderApplication",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "totalPendingCount",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_isOrg",
+				"type": "bool"
+			},
+			{
+				"name": "_ProviderDetailsIPFShash",
+				"type": "string"
+			}
+		],
+		"name": "submitRequestForApproval",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_providerAddress",
+				"type": "address"
+			}
+		],
+		"name": "approveProviderApplication",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_providerAddress",
+				"type": "address"
+			},
+			{
+				"name": "_supportingRejectingDocument",
+				"type": "string"
+			}
+		],
+		"name": "terminateProviderFromNetwork",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_newAdminAddress",
+				"type": "address"
+			}
+		],
+		"name": "addAdminGroup",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "WhiteListedProviders",
+		"outputs": [
+			{
+				"name": "providerAddress",
+				"type": "address"
+			},
+			{
+				"name": "state",
+				"type": "uint8"
+			},
+			{
+				"name": "isRegistered",
+				"type": "bool"
+			},
+			{
+				"name": "isOrganization",
+				"type": "bool"
+			},
+			{
+				"name": "IPFSApprovalDocumentHash",
+				"type": "string"
+			},
+			{
+				"name": "IPFSRemovalDocumentHash",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "admin",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "newOwner",
+				"type": "address"
+			}
+		],
+		"name": "OwnershipTransferred",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "newAdmin",
+				"type": "address"
+			}
+		],
+		"name": "NewAdminAdded",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "_requsterAdd",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"name": "isOrg",
+				"type": "bool"
+			},
+			{
+				"indexed": false,
+				"name": "ProviderDetailsIPFShash",
+				"type": "string"
+			}
+		],
+		"name": "RequestSubmittedForApproval",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "providerAddress",
+				"type": "address"
+			}
+		],
+		"name": "RequestApproved",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "providerAddress",
+				"type": "address"
+			}
+		],
+		"name": "RequestRejected",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "providerAddress",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "IPFSHash",
+				"type": "string"
+			}
+		],
+		"name": "Terminate",
+		"type": "event"
+	}
+];
 
       var MyContract = web3.eth.contract(abi);
       

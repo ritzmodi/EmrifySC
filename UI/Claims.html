@@ -19,7 +19,646 @@
 		  }
 
 
-      var abi =[{"constant":true,"inputs":[{"name":"providerAddress","type":"address"},{"name":"payerAddress","type":"address"}],"name":"isProviderInNetwork","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function","stateMutability":"view"},{"constant":true,"inputs":[{"name":"patientAddress","type":"address"},{"name":"payerAddress","type":"address"}],"name":"isInsured","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function","stateMutability":"view"},{"constant":false,"inputs":[{"name":"patientAddress","type":"address"}],"name":"addPatientToNetwork","outputs":[],"payable":false,"type":"function","stateMutability":"nonpayable"},{"constant":false,"inputs":[{"name":"providerAddress","type":"address"}],"name":"addProviderToNetwork","outputs":[],"payable":false,"type":"function","stateMutability":"nonpayable"}];
+      var abi =[
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "addr",
+				"type": "address"
+			}
+		],
+		"name": "isAdmin",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "AdminGroup",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_providerAddress",
+				"type": "address"
+			}
+		],
+		"name": "rejectProviderApplication",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_claimId",
+				"type": "bytes32"
+			}
+		],
+		"name": "removeClaim",
+		"outputs": [
+			{
+				"name": "success",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_accountType",
+				"type": "uint256"
+			}
+		],
+		"name": "getClaimsIdByType",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bytes32[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "totalPendingCount",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_doctorAddress",
+				"type": "address"
+			},
+			{
+				"name": "_IPFSDocumentHash",
+				"type": "string"
+			}
+		],
+		"name": "AssociateDoctorUnderMyHospital",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_isOrg",
+				"type": "bool"
+			},
+			{
+				"name": "_ProviderDetailsIPFShash",
+				"type": "string"
+			}
+		],
+		"name": "submitRequestForApproval",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_accountType",
+				"type": "uint256"
+			},
+			{
+				"name": "_category",
+				"type": "uint256"
+			},
+			{
+				"name": "_issuer",
+				"type": "address"
+			},
+			{
+				"name": "_signature",
+				"type": "bytes"
+			},
+			{
+				"name": "_data",
+				"type": "bytes"
+			},
+			{
+				"name": "_uri",
+				"type": "string"
+			}
+		],
+		"name": "addClaim",
+		"outputs": [
+			{
+				"name": "claimId",
+				"type": "bytes32"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			},
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "DoctorInformation",
+		"outputs": [
+			{
+				"name": "doctorAddress",
+				"type": "address"
+			},
+			{
+				"name": "isRegistered",
+				"type": "bool"
+			},
+			{
+				"name": "IPFSDoctorApprovalDocumentHash",
+				"type": "string"
+			},
+			{
+				"name": "IPFSDoctorRemovalDocumentHash",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_doctorAddress",
+				"type": "address"
+			},
+			{
+				"name": "_IPFSDocumentHash",
+				"type": "string"
+			}
+		],
+		"name": "DisassociateDoctorfromTheHospital",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_providerAddress",
+				"type": "address"
+			}
+		],
+		"name": "approveProviderApplication",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_providerAddress",
+				"type": "address"
+			},
+			{
+				"name": "_supportingRejectingDocument",
+				"type": "string"
+			}
+		],
+		"name": "terminateProviderFromNetwork",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_newAdminAddress",
+				"type": "address"
+			}
+		],
+		"name": "addAdminGroup",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_claimId",
+				"type": "bytes32"
+			}
+		],
+		"name": "getClaim",
+		"outputs": [
+			{
+				"name": "accountType",
+				"type": "uint256"
+			},
+			{
+				"name": "category",
+				"type": "uint256"
+			},
+			{
+				"name": "issuer",
+				"type": "address"
+			},
+			{
+				"name": "signature",
+				"type": "bytes"
+			},
+			{
+				"name": "data",
+				"type": "bytes"
+			},
+			{
+				"name": "uri",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "WhiteListedProviders",
+		"outputs": [
+			{
+				"name": "providerAddress",
+				"type": "address"
+			},
+			{
+				"name": "state",
+				"type": "uint8"
+			},
+			{
+				"name": "isRegistered",
+				"type": "bool"
+			},
+			{
+				"name": "isOrganization",
+				"type": "bool"
+			},
+			{
+				"name": "IPFSApprovalDocumentHash",
+				"type": "string"
+			},
+			{
+				"name": "IPFSRemovalDocumentHash",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "admin",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"name": "_providerRegistry",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "claimId",
+				"type": "bytes32"
+			},
+			{
+				"indexed": true,
+				"name": "accountType",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"name": "category",
+				"type": "uint256"
+			},
+			{
+				"indexed": true,
+				"name": "issuer",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "signature",
+				"type": "bytes"
+			},
+			{
+				"indexed": false,
+				"name": "data",
+				"type": "bytes"
+			},
+			{
+				"indexed": false,
+				"name": "uri",
+				"type": "string"
+			}
+		],
+		"name": "ClaimAdded",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "claimId",
+				"type": "bytes32"
+			},
+			{
+				"indexed": true,
+				"name": "accountType",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"name": "category",
+				"type": "uint256"
+			},
+			{
+				"indexed": true,
+				"name": "issuer",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "signature",
+				"type": "bytes"
+			},
+			{
+				"indexed": false,
+				"name": "data",
+				"type": "bytes"
+			},
+			{
+				"indexed": false,
+				"name": "uri",
+				"type": "string"
+			}
+		],
+		"name": "ClaimRemoved",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "claimId",
+				"type": "bytes32"
+			},
+			{
+				"indexed": true,
+				"name": "accountType",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"name": "category",
+				"type": "uint256"
+			},
+			{
+				"indexed": true,
+				"name": "issuer",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "signature",
+				"type": "bytes"
+			},
+			{
+				"indexed": false,
+				"name": "data",
+				"type": "bytes"
+			},
+			{
+				"indexed": false,
+				"name": "uri",
+				"type": "string"
+			}
+		],
+		"name": "ClaimChanged",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "_orgAddress",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "doctorAddress",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "IPFSDocumentHash",
+				"type": "string"
+			}
+		],
+		"name": "DoctorAssociated",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "_orgAddress",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "doctorAddress",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "IPFSDocumentHash",
+				"type": "string"
+			}
+		],
+		"name": "DoctorDisassociated",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "newOwner",
+				"type": "address"
+			}
+		],
+		"name": "OwnershipTransferred",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "newAdmin",
+				"type": "address"
+			}
+		],
+		"name": "NewAdminAdded",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "_requsterAdd",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"name": "isOrg",
+				"type": "bool"
+			},
+			{
+				"indexed": false,
+				"name": "ProviderDetailsIPFShash",
+				"type": "string"
+			}
+		],
+		"name": "RequestSubmittedForApproval",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "providerAddress",
+				"type": "address"
+			}
+		],
+		"name": "RequestApproved",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "providerAddress",
+				"type": "address"
+			}
+		],
+		"name": "RequestRejected",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "providerAddress",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "IPFSHash",
+				"type": "string"
+			}
+		],
+		"name": "Terminate",
+		"type": "event"
+	}
+];
 
       var MyContract = web3.eth.contract(abi);
       
@@ -35,51 +674,59 @@
 
   <body>
 
-<h2>Add new Admin to the group: To be called only by the owner of the SC</h2>
+<h2>Get claim</h2>
 <div>
-    Admin Address : <input id="newAdminAdd">
+    Claim ID : <input id="claimID">
 </div>
-<button onclick="addAdminGroup()" > Add this as an Admin!</button>
+<button onclick="getClaim()"> get Claim!</button>
 <hr/>
-<p>Events generated for the adding new Admin:
-        <h3 id='callbackNewAdmin'></h3>
-    </p>
-    <hr/>
 
 
 
-  <h2>Submit Request For Approval: To be called by individual entity or organisation</h2>
+
+  <h2>Fetch the list of the claims by Account type: 0 for Individual, 1 for org</h2>
   <div>
-    Is Org : <input id='isOrgBool'>
+    Account Type : <input id='accType'>
 </div>
-<div>
-    Provider Details : <input id='providerDetails'>
-</div>
-<button onclick='submitRequestForApproval()'>Submit Provider Request!</button>
-<hr/>
-<p>Events generated for the Submit Request For Approval:
-    <h3 id='callback1'></h3>
-</p>
+
+<button onclick='getClaimsIdByType()'>Fetch list!</button>
 <hr/>
 
-<h2>Approve Provider Application : to be called by Emrify ONLY</h2>
+
+<h2>Add/change claim </h2>
 <div>
-  Provider Address : <input id='providerAddressForApproval'>
-</div>
-<button onclick='approveProviderApplication()'>Approve Provider!</button>
+    Account Type[0 for Individual, 1 for org] : <input id='accTypeForAddClaim'>
+  </div>
+  <div>
+    Category : <input id='categoryForAddClaim'>
+  </div>
+  <div>
+    Issuer Address : <input id='issuerAddressForAddClaim'>
+  </div>
+  <div>
+    signature : <input id='signatureForAddClaim'>
+  </div>
+  <div>
+    Data : <input id='dataForAddClaim'>
+  </div>
+  <div>
+    URI : <input id='URIForAddClaim'>
+  </div>
+
+<button onclick='addClaim()'>Add/change claim!</button>
 <hr/>
-<p>Events generated for the Appproved provider :
+<p>Events generated for the Add/change claim :
     <h3 id='callback2'></h3>
 </p>
 <hr/>
 
-<h2> Reject Provider Application: To be called by individual entity or organisation</h2>
+<h2> Remove claim</h2>
 <div>
-    Provider Address : <input id='providerAddressForRejection'>
+    Claim ID : <input id='claimIdForRemoval'>
 </div>
-<button onclick='rejectProviderApplication()'>Reject Provider!</button>
+<button onclick='removeClaim()'>Remove Claim!</button>
 <hr/>
-<p>Events generated for the rejected provider:
+<p>Events generated for the removed claim:
 			<h3 id='callback3'></h3>
 </p>
 

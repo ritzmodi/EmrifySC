@@ -7,79 +7,62 @@ function startApp(_myContractInstance){
     web3 = web2;
 }
 
-function addAdminGroup() {
-var newAdminAdd =  document.getElementById('newAdminAdd').value;
-var addNewAdmin = myContractInstance.addAdminGroup(newAdminAdd,,function(err,result){
+function getClaim() {
+var claimID =  document.getElementById('claimID').value;
+var getClaim = myContractInstance.getClaim(claimID,,function(err,result){
     if(!err){
-        console.log("Admin added successfully")
+        console.log("claim fetched successfully");
+        console.log("These are the details for the :"+claimID+"=> \n accountType=" + result[0]," category="+result[1]," issuer="+result[2]," signature="+result[3]," data="+result[4]," uri="+result[5]);
       }
       else {
           console.err(error);
       }
 });
 
-var event = myContractInstance.NewAdminAdded({},function(error, result) {
-    if (!error) {
-        //address indexed patientAddress, address indexed providerAddress, uint indexed claimID, uint indexed amount, uint indexed visitID
-            var msg = "A new admin have been added with Provider Address :" + result.args.newAdmin ;
-            document.getElementById('callbackNewAdmin').innerHTML = ""+msg;
-            console.log(msg);
-    }
-    else {
-        console.error(error);
-    }
-});
-
 }
 
 
-function submitRequestForApproval(){
-    var isOrgBool = document.getElementById('isOrgBool').value;
-    var providerDetails = document.getElementById('providerDetails').value;
-
-	var addProvider = myContractInstance.submitRequestForApproval(isOrgBool,providerDetails,function(err,result){
+function getClaimsIdByType(){
+    var accType = document.getElementById('accType').value;
+    
+	var fetchList = myContractInstance.getClaimsIdByType(accType,function(err,result){
 		if(!err){
-			console.log("Request submitted successfully")
+			for (var i =0; i< result.length; i++){
+                console.log(result[i]);
+            }
 		  }
 		  else {
 			  console.err(error);
 		  }
     });
-    var event = myContractInstance.RequestSubmittedForApproval({},function(error, result) {
-        if (!error) {
-            //address indexed patientAddress, address indexed providerAddress, uint indexed claimID, uint indexed amount, uint indexed visitID
-                var msg = "A request have been submitted for approval :\n Provider Address :" + result.args._requsterAdd ;
-                if(result.args.isOrg == true){
-                    msg+=" \n as an organization";
-                } else {
-                    msg+=" \n as an individual";
-                }
-                msg+=" \n got these documents " + result.args.ProviderDetailsIPFShash;
-                document.getElementById('callback1').innerHTML = ""+msg;
-                console.log(msg);
-        }
-        else {
-            console.error(error);
-        }
-    });
+    
 }
 
 
-function approveProviderApplication(){
-    var providerAddressForApproval = document.getElementById('providerAddressForApproval').value;
+function addClaim(){
+    var accTypeForAddClaim = document.getElementById('accTypeForAddClaim').value;
+    var categoryForAddClaim = document.getElementById('categoryForAddClaim').value;
+    var issuerAddressForAddClaim = document.getElementById('issuerAddressForAddClaim').value;
+    var signatureForAddClaim = document.getElementById('signatureForAddClaim').value;
+    var dataForAddClaim = document.getElementById('dataForAddClaim').value;
+    var URIForAddClaim = document.getElementById('URIForAddClaim').value;
 
-	var addProvider = myContractInstance.approveProviderApplication(providerAddressForApproval,function(err,result){
+
+	var addProvider = myContractInstance.addClaim(accTypeForAddClaim,categoryForAddClaim,issuerAddressForAddClaim,signatureForAddClaim,dataForAddClaim,URIForAddClaim,function(err,result){
 		if(!err){
-			console.log("Approval request sent successfully")
+			console.log("claim added/changed successfully for claimID="+ (result.value));
 		  }
 		  else {
 			  console.err(error);
 		  }
     });
-    var event = myContractInstance.RequestApproved({},function(error, result) {
+    var event = myContractInstance.ClaimChanged({},function(error, result) {                                                            uint256  , address indexed , bytes , bytes data, string uri
         if (!error) {
             //address indexed patientAddress, address indexed providerAddress, uint indexed claimID, uint indexed amount, uint indexed visitID
-                var msg = "Request of " +result.args.providerAddress+"approved sucessfully.";
+                var msg = "Claim changed successfully with these details. \n Claim ID= " +result.args.claimId+
+                ", Account Type= "+result.args.accountType+ ", Category="+result.args.category +
+                " ,Issuer="+ result.args.issuer+", Signature="+result.args.signature+
+                ", Data="+result.args.data+ ", URI="+result.args.uri;
                 document.getElementById('callback2').innerHTML = ""+msg;
                 console.log(msg);
         }
@@ -87,26 +70,45 @@ function approveProviderApplication(){
             console.error(error);
         }
     });
+
+    var event1 = myContractInstance.ClaimAdded({},function(error, result) {
+        if (!error) {
+            //address indexed patientAddress, address indexed providerAddress, uint indexed claimID, uint indexed amount, uint indexed visitID
+            var msg = "Claim added successfully with these details. \n Claim ID= " +result.args.claimId+
+            ", Account Type= "+result.args.accountType+ ", Category="+result.args.category +
+            " ,Issuer="+ result.args.issuer+", Signature="+result.args.signature+
+            ", Data="+result.args.data+ ", URI="+result.args.uri;
+            document.getElementById('callback2').innerHTML = ""+msg;
+                console.log(msg);
+        }
+        else {
+            console.error(error);
+        }
+    });
+
 }
 
 
 
-function rejectProviderApplication(){
-    var providerAddressForRejection = document.getElementById('providerAddressForRejection').value;
+function removeClaim(){
+    var claimIdForRemoval = document.getElementById('claimIdForRemoval').value;
 
-	var addProvider = myContractInstance.rejectProviderApplication(providerAddressForRejection,function(err,result){
+	var addProvider = myContractInstance.removeClaim(claimIdForRemoval,function(err,result){
 		if(!err){
-			console.log("Rejection request sent successfully")
+			console.log("Claim removed successfully")
 		  }
 		  else {
 			  console.err(error);
 		  }
     });
-    var event = myContractInstance.RequestRejected({},function(error, result) {
+    var event = myContractInstance.ClaimRemoved({},function(error, result) {
         if (!error) {
             //address indexed patientAddress, address indexed providerAddress, uint indexed claimID, uint indexed amount, uint indexed visitID
-                var msg = "Request of " +result.args.providerAddress+"rejected sucessfully.";
-                document.getElementById('callback3').innerHTML = ""+msg;
+            var msg = "Claim removed successfully with these details. \n Claim ID= " +result.args.claimId+
+            ", Account Type= "+result.args.accountType+ ", Category="+result.args.category +
+            " ,Issuer="+ result.args.issuer+", Signature="+result.args.signature+
+            ", Data="+result.args.data+ ", URI="+result.args.uri;
+            document.getElementById('callback2').innerHTML = ""+msg;
                 console.log(msg);
         }
         else {
@@ -118,29 +120,23 @@ function rejectProviderApplication(){
 
 
 
-function terminateProviderFromNetwork(){
-    var providerAddressForTermination = document.getElementById('providerAddressForTermination').value;
-    var DocumentForTermination = document.getElementById('DocumentForTermination').value;
 
-	var addProvider = myContractInstance.terminateProviderFromNetwork(providerAddressForTermination,DocumentForTermination,function(err,result){
-		if(!err){
-			console.log("Terminate request sent successfully")
-		  }
-		  else {
-			  console.err(error);
-		  }
-    });
-    var event = myContractInstance.Terminate({},function(error, result) {
-        if (!error) {
-            //address indexed patientAddress, address indexed providerAddress, uint indexed claimID, uint indexed amount, uint indexed visitID
-                var msg = "" +result.args.providerAddress+"have been terminated from the network."+ result.args.IPFSHash+" is the file for supporting the termination";
-                document.getElementById('callback4').innerHTML = ""+msg;
-                console.log(msg);
-        }
-        else {
-            console.error(error);
-        }
-    });
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

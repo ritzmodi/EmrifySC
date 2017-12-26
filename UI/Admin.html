@@ -34,6 +34,20 @@
   </head>
 
   <body>
+
+<h2>Add new Admin to the group: To be called only by the owner of the SC</h2>
+<div>
+    Admin Address : <input id="newAdminAdd">
+</div>
+<button onclick="addAdminGroup()" > Add this as an Admin!</button>
+<hr/>
+<p>Events generated for the adding new Admin:
+        <h3 id='callbackNewAdmin'></h3>
+    </p>
+    <hr/>
+
+
+
   <h2>Submit Request For Approval: To be called by individual entity or organisation</h2>
   <div>
     Is Org : <input id='isOrgBool'>

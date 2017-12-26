@@ -7,6 +7,32 @@ function startApp(_myContractInstance){
     web3 = web2;
 }
 
+function addAdminGroup() {
+var newAdminAdd =  document.getElementById('newAdminAdd').value;
+var addNewAdmin = myContractInstance.addAdminGroup(newAdminAdd,,function(err,result){
+    if(!err){
+        console.log("Admin added successfully")
+      }
+      else {
+          console.err(error);
+      }
+});
+
+var event = myContractInstance.NewAdminAdded({},function(error, result) {
+    if (!error) {
+        //address indexed patientAddress, address indexed providerAddress, uint indexed claimID, uint indexed amount, uint indexed visitID
+            var msg = "A new admin have been added with Provider Address :" + result.args.newAdmin ;
+            document.getElementById('callbackNewAdmin').innerHTML = ""+msg;
+            console.log(msg);
+    }
+    else {
+        console.error(error);
+    }
+});
+
+}
+
+
 function submitRequestForApproval(){
     var isOrgBool = document.getElementById('isOrgBool').value;
     var providerDetails = document.getElementById('providerDetails').value;

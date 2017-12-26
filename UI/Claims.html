@@ -18,62 +18,88 @@
 		    web3 = new Web3(new Web3.providers.HttpProvider("https://ropsten.infura.io/jusRhRm9lPsVCXFLnnNk"));
 		  }
 
-      //summary contract details
-      var abi1 =[{"constant":true,"inputs":[{"name":"providerAddress","type":"address"},{"name":"payerAddress","type":"address"}],"name":"isProviderInNetwork","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function","stateMutability":"view"},{"constant":true,"inputs":[{"name":"patientAddress","type":"address"},{"name":"payerAddress","type":"address"}],"name":"isInsured","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function","stateMutability":"view"},{"constant":false,"inputs":[{"name":"patientAddress","type":"address"}],"name":"addPatientToNetwork","outputs":[],"payable":false,"type":"function","stateMutability":"nonpayable"},{"constant":false,"inputs":[{"name":"providerAddress","type":"address"}],"name":"addProviderToNetwork","outputs":[],"payable":false,"type":"function","stateMutability":"nonpayable"}];
 
-      var MyContract1 = web3.eth.contract(abi1);
-      //var myContractInstance = MyContract.at('0xb14cfc48fc3dfc352c74a5fc2604c7ae4bd39b34');
-      var myContractInstance1 = MyContract1.at('0x0dd3a359e8e70218fac5a129d6ba13bdfbb20127');
+      var abi =[{"constant":true,"inputs":[{"name":"providerAddress","type":"address"},{"name":"payerAddress","type":"address"}],"name":"isProviderInNetwork","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function","stateMutability":"view"},{"constant":true,"inputs":[{"name":"patientAddress","type":"address"},{"name":"payerAddress","type":"address"}],"name":"isInsured","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function","stateMutability":"view"},{"constant":false,"inputs":[{"name":"patientAddress","type":"address"}],"name":"addPatientToNetwork","outputs":[],"payable":false,"type":"function","stateMutability":"nonpayable"},{"constant":false,"inputs":[{"name":"providerAddress","type":"address"}],"name":"addProviderToNetwork","outputs":[],"payable":false,"type":"function","stateMutability":"nonpayable"}];
 
-      // Claims contract details
-      var abi2 =[{"constant":false,"inputs":[{"name":"patientAddress","type":"address"},{"name":"providerAddress","type":"address"},{"name":"visitID","type":"uint256"},{"name":"claimID","type":"uint256"}],"name":"createClaim","outputs":[],"payable":false,"type":"function","stateMutability":"nonpayable"},{"constant":false,"inputs":[{"name":"summaryContractAddress","type":"address"},{"name":"insuranceContractAddress","type":"address"}],"name":"setAddresses","outputs":[],"payable":false,"type":"function","stateMutability":"nonpayable"},{"constant":true,"inputs":[{"name":"claimID","type":"uint256"}],"name":"getClaimDetails","outputs":[{"name":"","type":"address"},{"name":"","type":"address"},{"name":"","type":"uint256"},{"name":"","type":"uint256"},{"name":"","type":"uint256"},{"name":"","type":"string"}],"payable":false,"type":"function","stateMutability":"view"},{"inputs":[],"payable":false,"type":"constructor","stateMutability":"nonpayable"},{"anonymous":false,"inputs":[{"indexed":true,"name":"patientAddress","type":"address"},{"indexed":true,"name":"providerAddress","type":"address"},{"indexed":true,"name":"claimID","type":"uint256"},{"indexed":false,"name":"amount","type":"uint256"},{"indexed":false,"name":"visitID","type":"uint256"}],"name":"ClaimApproved","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"patientAddress","type":"address"},{"indexed":true,"name":"providerAddress","type":"address"},{"indexed":true,"name":"claimID","type":"uint256"},{"indexed":false,"name":"visitID","type":"uint256"},{"indexed":false,"name":"reason","type":"string"}],"name":"ClaimRejected","type":"event"}];
+      var MyContract = web3.eth.contract(abi);
+      
+      var myContractInstance = MyContract.at('0x0dd3a359e8e70218fac5a129d6ba13bdfbb20127');
 
-
-      var MyContract2 = web3.eth.contract(abi2);
-      //var myContractInstance = MyContract.at('0xb14cfc48fc3dfc352c74a5fc2604c7ae4bd39b34');
-      var myContractInstance2 = MyContract2.at('0x4aa6b492095ce4446e3fd2a0d6fd9d58c44c09d2');
 
 
     // Now you can start your app & access web3 freely:
-      startApp(web3,abi1,MyContract1,myContractInstance1,abi2,MyContract2,myContractInstance2);
+      startApp(myContractInstance);
 		})
   </script>
   </head>
 
   <body>
-  <h2>Add a provider in my network :</h2>
-<div>
-		Provider Address : <input id='providerAdd'>
-</div>
-<button onclick='addProvider()'>Add Provider!</button>
-<hr/>
 
-<h2>Add a patient in my network :</h2>
+<h2>Add new Admin to the group: To be called only by the owner of the SC</h2>
 <div>
-  Patient Address : <input id='patientAdd'>
+    Admin Address : <input id="newAdminAdd">
 </div>
-<button onclick='addPatient()'>Add Patient!</button>
+<button onclick="addAdminGroup()" > Add this as an Admin!</button>
 <hr/>
-<h2> Create Claim</h2>
-<div>
-  Patient Address : <input id='patientAdd'>
+<p>Events generated for the adding new Admin:
+        <h3 id='callbackNewAdmin'></h3>
+    </p>
+    <hr/>
+
+
+
+  <h2>Submit Request For Approval: To be called by individual entity or organisation</h2>
+  <div>
+    Is Org : <input id='isOrgBool'>
 </div>
 <div>
-  Provider Address : <input id='providerAdd'>
+    Provider Details : <input id='providerDetails'>
 </div>
-<div>
-  Visit ID : <input id='visitID'>
-</div>
-<div>
-  Claim ID : <input id='claimID'>
-</div>
-<p>Events generated for the create claim function:
-			<h3 id='callback1'></h3>
+<button onclick='submitRequestForApproval()'>Submit Provider Request!</button>
+<hr/>
+<p>Events generated for the Submit Request For Approval:
+    <h3 id='callback1'></h3>
 </p>
-<button onclick='createClaim()'>Create Claim!</button>
 <hr/>
 
-<script type="text/javascript" src='Insurance_helper.js'></script>
+<h2>Approve Provider Application : to be called by Emrify ONLY</h2>
+<div>
+  Provider Address : <input id='providerAddressForApproval'>
+</div>
+<button onclick='approveProviderApplication()'>Approve Provider!</button>
+<hr/>
+<p>Events generated for the Appproved provider :
+    <h3 id='callback2'></h3>
+</p>
+<hr/>
+
+<h2> Reject Provider Application: To be called by individual entity or organisation</h2>
+<div>
+    Provider Address : <input id='providerAddressForRejection'>
+</div>
+<button onclick='rejectProviderApplication()'>Reject Provider!</button>
+<hr/>
+<p>Events generated for the rejected provider:
+			<h3 id='callback3'></h3>
+</p>
+
+<hr/>
+
+
+<h2> Terminate Provider Application: To be called by individual entity or organisation</h2>
+<div>
+    Provider Address : <input id='providerAddressForTermination'>
+</div>
+<div>
+    Termination Document : <input id='DocumentForTermination'>
+</div>
+<button onclick='terminateProviderFromNetwork()'>Terminate Provider!</button>
+<hr/>
+<p>Events generated for the Ternimated provider:
+			<h3 id='callback4'></h3>
+</p>
+
+<script type="text/javascript" src='Admin_helper.js'></script>
 </body>
 
 </html>

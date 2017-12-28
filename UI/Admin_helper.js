@@ -32,6 +32,20 @@ var event = myContractInstance.NewAdminAdded({},function(error, result) {
 
 }
 
+function listOfAllAdmins(){
+    var allEvents = myContractInstance.NewAdminAdded({},{fromBlock: 0, toBlock: 'latest'},function(error, result) {
+        if (!error) {
+            var msg = "Admin Address : "+(result.args.newAdmin);
+             document.getElementById('callback25').innerHTML += "<hr/>"+msg;
+              console.log(msg);
+        }
+        else {
+            console.error(error);
+        } 
+  });
+  allEvents.stopWatching();
+  
+}
 
 function validateAddress(){
     var validateAddressForOrg = document.getElementById('validateAddressForOrg').value ;
@@ -158,7 +172,19 @@ function rejectProviderApplication(){
 }
  
 
-
+function fetchAllEventsforRejectedRequests(){
+    var allEvents = myContractInstance.RequestRejected({},{fromBlock: 0, toBlock: 'latest'},function(error, result) {
+          if (!error) {
+              var msg = "Request of " +result.args.providerAddress+" was rejected.";
+               document.getElementById('callback24').innerHTML += "<hr/>"+msg;
+                console.log(msg);
+          }
+          else {
+              console.error(error);
+          } 
+    });
+    allEvents.stopWatching();
+    }
 
 function terminateProviderFromNetwork(){
     var providerAddressForTermination = document.getElementById('providerAddressForTermination').value;

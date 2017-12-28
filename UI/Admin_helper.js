@@ -33,10 +33,24 @@ var event = myContractInstance.NewAdminAdded({},function(error, result) {
 }
 
 
+function validateAddress(){
+    var validateAddressForOrg = document.getElementById('validateAddressForOrg').value ;
+    var isOrg = myContractInstance.WhiteListedProviders.call(validateAddressForOrg,function(err,result){
+		if(!err){
+            console.log("isOrg ? =>" + result[3]);
+            document.getElementById('callbackForIsOrg').innerHTML = result[3];
+		  }
+		  else {
+			  console.err(error);
+		  }
+    });
+}
+
+
 function submitRequestForApproval(){
     var isOrgBool = (document.getElementById('isOrgBool').value == 'true');
     var providerDetails = document.getElementById('providerDetails').value;
-console.log("IS ORG=" + isOrgBool);
+    console.log("IS ORG=" + isOrgBool);
 	var addProvider = myContractInstance.submitRequestForApproval(isOrgBool,providerDetails,function(err,result){
 		if(!err){
 			console.log("Request submitted successfully"+ "\n" + result);

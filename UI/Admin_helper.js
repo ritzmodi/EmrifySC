@@ -67,7 +67,7 @@ var storeProviderNotesEvent = myContractInstance.RequestSubmittedForApproval({},
 function fetchAllReqSubmittedEvents(){
 var allEvents = myContractInstance.RequestSubmittedForApproval({},{fromBlock: 0, toBlock: 'latest'},function(error, result) {
 	  if (!error) {
-		  var msg = "IPFS HASH"+(result.args.ProviderDetailsIPFShash);
+		  var msg = "IPFS HASH "+(result.args.ProviderDetailsIPFShash);
            document.getElementById('callback22').innerHTML += "<hr/>"+msg;
 		    console.log(msg);
 	  }
@@ -94,7 +94,7 @@ function approveProviderApplication(){
     var event = myContractInstance.RequestApproved({},function(error, result) {
         if (!error) {
             //address indexed patientAddress, address indexed providerAddress, uint indexed claimID, uint indexed amount, uint indexed visitID
-                var msg = "Request of " +result.args.providerAddress+"approved sucessfully.";
+                var msg = "Request of " +result.args.providerAddress+" approved sucessfully.";
                 document.getElementById('callback2').innerHTML = ""+msg;
                 console.log(msg);
         }

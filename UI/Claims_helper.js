@@ -56,7 +56,7 @@ function addClaim(){
 			  console.err(error);
 		  }
     });
-    var event = myContractInstance.ClaimChanged({},function(error, result) {                                                            uint256  , address indexed , bytes , bytes data, string uri
+    var event = myContractInstance.ClaimChanged({},function(error, result) {
         if (!error) {
             //address indexed patientAddress, address indexed providerAddress, uint indexed claimID, uint indexed amount, uint indexed visitID
                 var msg = "Claim changed successfully with these details. \n Claim ID= " +result.args.claimId+

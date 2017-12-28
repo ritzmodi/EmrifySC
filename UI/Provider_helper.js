@@ -3,8 +3,8 @@ var myContractInstance;
 
 function startApp(_myContractInstance){
     console.error("startup");
-	myContractInstance=_myContractInstance1;
-    web3 = web2;
+	myContractInstance=_myContractInstance;
+    
 }
 
 function AssociateDoctorUnderMyHospital() {

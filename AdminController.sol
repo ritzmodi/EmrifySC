@@ -16,8 +16,8 @@ contract AdminController {
     event OwnershipTransferred(address indexed newOwner);
     event NewAdminAdded(address indexed newAdmin);
     event RequestSubmittedForApproval(address indexed _requsterAdd, bool indexed isOrg, string ProviderDetailsIPFShash);
-    event RequestApproved(address indexed providerAddress);
-    event RequestRejected(address indexed providerAddress);
+    event RequestApproved(address indexed providerAddress, string _IPFSProviderhash);
+    event RequestRejected(address indexed providerAddress, string _IPFSProviderhash);
     event Terminate(address indexed providerAddress, string IPFSHash);// any document that you have for terminating the relationship with that provider
     
     struct providerDetail{
@@ -80,7 +80,7 @@ contract AdminController {
         WhiteListedProviders[_providerAddress].isRegistered = true;
         totalPendingCount--;
         // fire an event with `isORg` variable so that we can identify that he is and org or not
-        RequestApproved(_providerAddress);
+        RequestApproved(_providerAddress, WhiteListedProviders[_providerAddress].IPFSApprovalDocumentHash);
         
     }
     
@@ -90,7 +90,7 @@ contract AdminController {
         WhiteListedProviders[_providerAddress].state = State.Rejected;
         WhiteListedProviders[_providerAddress].isRegistered = false;
         totalPendingCount--;
-        RequestRejected(_providerAddress);
+        RequestRejected(_providerAddress, WhiteListedProviders[_providerAddress].IPFSApprovalDocumentHash);
         
     } 
     

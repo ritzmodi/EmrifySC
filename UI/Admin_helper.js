@@ -96,7 +96,7 @@ var storeProviderNotesEvent = myContractInstance.RequestSubmittedForApproval({},
 function fetchAllReqSubmittedEvents(){
 var allEvents = myContractInstance.RequestSubmittedForApproval({},{fromBlock: 0, toBlock: 'latest'},function(error, result) {
 	  if (!error) {
-		  var msg = "IPFS HASH "+(result.args.ProviderDetailsIPFShash);
+		  var msg = "IPFS HASH "+(result.args.ProviderDetailsIPFShash) + " block no: "+ result.blockNumber;
            document.getElementById('callback22').innerHTML += "<hr/>"+msg;
 		    console.log(msg);
 	  }
@@ -136,7 +136,7 @@ function approveProviderApplication(){
 function fetchAllEventsforRequestAppproved(){
 var allEvents = myContractInstance.RequestApproved({},{fromBlock: 0, toBlock: 'latest'},function(error, result) {
 	  if (!error) {
-		  var msg = "Request of " +result.args.providerAddress+"approved sucessfully.";
+		  var msg = "Request of " +result.args.providerAddress+"approved sucessfully."+ " block no: "+ result.blockNumber;
            document.getElementById('callback23').innerHTML += "<hr/>"+msg;
 		    console.log(msg);
 	  }
@@ -176,7 +176,7 @@ function rejectProviderApplication(){
 function fetchAllEventsforRejectedRequests(){
     var allEvents = myContractInstance.RequestRejected({},{fromBlock: 0, toBlock: 'latest'},function(error, result) {
           if (!error) {
-              var msg = "Request of " +result.args.providerAddress+" was rejected.";
+              var msg = "Request of " +result.args.providerAddress+" was rejected."+ " block no: "+ result.blockNumber;
                document.getElementById('callback24').innerHTML += "<hr/>"+msg;
                 console.log(msg);
           }

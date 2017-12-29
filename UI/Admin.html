@@ -21,22 +21,31 @@
 
       var abi =[
 	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "addr",
-				"type": "address"
-			}
-		],
-		"name": "isAdmin",
+		"constant": true,
+		"inputs": [],
+		"name": "totalPendingCount",
 		"outputs": [
 			{
 				"name": "",
-				"type": "bool"
+				"type": "uint256"
 			}
 		],
 		"payable": false,
-		"stateMutability": "nonpayable",
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "admin",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -56,98 +65,6 @@
 		],
 		"payable": false,
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_providerAddress",
-				"type": "address"
-			}
-		],
-		"name": "rejectProviderApplication",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "totalPendingCount",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_isOrg",
-				"type": "bool"
-			},
-			{
-				"name": "_ProviderDetailsIPFShash",
-				"type": "string"
-			}
-		],
-		"name": "submitRequestForApproval",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_providerAddress",
-				"type": "address"
-			}
-		],
-		"name": "approveProviderApplication",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_providerAddress",
-				"type": "address"
-			},
-			{
-				"name": "_supportingRejectingDocument",
-				"type": "string"
-			}
-		],
-		"name": "terminateProviderFromNetwork",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_newAdminAddress",
-				"type": "address"
-			}
-		],
-		"name": "addAdminGroup",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -190,50 +107,6 @@
 		"type": "function"
 	},
 	{
-		"constant": true,
-		"inputs": [],
-		"name": "admin",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"name": "newOwner",
-				"type": "address"
-			}
-		],
-		"name": "OwnershipTransferred",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"name": "newAdmin",
-				"type": "address"
-			}
-		],
-		"name": "NewAdminAdded",
-		"type": "event"
-	},
-	{
 		"anonymous": false,
 		"inputs": [
 			{
@@ -262,9 +135,72 @@
 				"indexed": true,
 				"name": "providerAddress",
 				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "_IPFSProviderhash",
+				"type": "string"
 			}
 		],
-		"name": "RequestApproved",
+		"name": "RequestRejected",
+		"type": "event"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_providerAddress",
+				"type": "address"
+			}
+		],
+		"name": "rejectProviderApplication",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_providerAddress",
+				"type": "address"
+			}
+		],
+		"name": "approveProviderApplication",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "newAdmin",
+				"type": "address"
+			}
+		],
+		"name": "NewAdminAdded",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "newOwner",
+				"type": "address"
+			}
+		],
+		"name": "OwnershipTransferred",
 		"type": "event"
 	},
 	{
@@ -274,10 +210,52 @@
 				"indexed": true,
 				"name": "providerAddress",
 				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "_IPFSProviderhash",
+				"type": "string"
 			}
 		],
-		"name": "RequestRejected",
+		"name": "RequestApproved",
 		"type": "event"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_isOrg",
+				"type": "bool"
+			},
+			{
+				"name": "_ProviderDetailsIPFShash",
+				"type": "string"
+			}
+		],
+		"name": "submitRequestForApproval",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "addr",
+				"type": "address"
+			}
+		],
+		"name": "isAdmin",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
 	},
 	{
 		"anonymous": false,
@@ -295,12 +273,44 @@
 		],
 		"name": "Terminate",
 		"type": "event"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_providerAddress",
+				"type": "address"
+			},
+			{
+				"name": "_supportingRejectingDocument",
+				"type": "string"
+			}
+		],
+		"name": "terminateProviderFromNetwork",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_newAdminAddress",
+				"type": "address"
+			}
+		],
+		"name": "addAdminGroup",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
 	}
 ];
 
       var MyContract = web3.eth.contract(abi);
       
-      var myContractInstance = MyContract.at('0xfce09869af0eed48a850eb3f3d38f0aab3dd48a7');
+      var myContractInstance = MyContract.at('0x7a2eb3300275b583aa05af7298955cfedba09f3c');
 
 
 

@@ -123,7 +123,7 @@ function approveProviderApplication(){
     var event = myContractInstance.RequestApproved({},function(error, result) {
         if (!error) {
             //address indexed patientAddress, address indexed providerAddress, uint indexed claimID, uint indexed amount, uint indexed visitID
-                var msg = "Request of " +result.args.providerAddress+" approved sucessfully.";
+                var msg = "Request of " +result.args.providerAddress+" approved sucessfully." + "with the HASH: "+ result.args._IPFSProviderhash;
                 document.getElementById('callback2').innerHTML = ""+msg;
                 console.log(msg);
         }
@@ -136,7 +136,7 @@ function approveProviderApplication(){
 function fetchAllEventsforRequestAppproved(){
 var allEvents = myContractInstance.RequestApproved({},{fromBlock: 0, toBlock: 'latest'},function(error, result) {
 	  if (!error) {
-		  var msg = "Request of " +result.args.providerAddress+"approved sucessfully."+ " block no: "+ result.blockNumber;
+		  var msg = "Request of " +result.args.providerAddress+"approved sucessfully."+ " block no: "+ result.blockNumber + "with the HASH: "+ result.args._IPFSProviderhash;
            document.getElementById('callback23').innerHTML += "<hr/>"+msg;
 		    console.log(msg);
 	  }
@@ -162,7 +162,7 @@ function rejectProviderApplication(){
     var event = myContractInstance.RequestRejected({},function(error, result) {
         if (!error) {
             //address indexed patientAddress, address indexed providerAddress, uint indexed claimID, uint indexed amount, uint indexed visitID
-                var msg = "Request of " +result.args.providerAddress+"rejected sucessfully.";
+                var msg = "Request of " +result.args.providerAddress+"rejected sucessfully."+ "with the HASH: "+ result.args._IPFSProviderhash;
                 document.getElementById('callback3').innerHTML = ""+msg;
                 console.log(msg);
         }
@@ -176,7 +176,7 @@ function rejectProviderApplication(){
 function fetchAllEventsforRejectedRequests(){
     var allEvents = myContractInstance.RequestRejected({},{fromBlock: 0, toBlock: 'latest'},function(error, result) {
           if (!error) {
-              var msg = "Request of " +result.args.providerAddress+" was rejected."+ " block no: "+ result.blockNumber;
+              var msg = "Request of " +result.args.providerAddress+" was rejected."+ " block no: "+ result.blockNumber+ "with the HASH: "+ result.args._IPFSProviderhash;
                document.getElementById('callback24').innerHTML += "<hr/>"+msg;
                 console.log(msg);
           }

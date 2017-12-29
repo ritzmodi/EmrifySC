@@ -51,8 +51,9 @@ function validateAddress(){
     var validateAddressForOrg = document.getElementById('validateAddressForOrg').value ;
     var isOrg = myContractInstance.WhiteListedProviders.call(validateAddressForOrg,function(err,result){
 		if(!err){
-            console.log("isOrg ? =>" + result[3]);
-            document.getElementById('callbackForIsOrg').innerHTML = result[3];
+            var msg = "isOrg ? =>" + result[3] + "\n Status[0: Pending, 1: Accepted, 2: Rejected, 3: Terminated] : "+ result[1] + "\n Hash : "+result[4] ;
+            console.log(msg);
+            document.getElementById('callbackForIsOrg').innerHTML = msg;
 		  }
 		  else {
 			  console.err(error);

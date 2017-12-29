@@ -34,7 +34,7 @@ contract AdminController {
         require(isAdmin(msg.sender));
         _;
     }
-
+    
     // this condition makes sure that the operation can be done by any of the designated address
     // they are having Admin previlleges
     function isAdmin(address addr) public returns(bool) { 
@@ -65,16 +65,21 @@ contract AdminController {
     
     // Step 1:
     function submitRequestForApproval(bool _isOrg, string _ProviderDetailsIPFShash){
-        WhiteListedProviders[msg.sender].isOrganization = _isOrg;
-        WhiteListedProviders[msg.sender].state = State.Pending;
-        WhiteListedProviders[msg.sender].providerAddress = msg.sender;
-        WhiteListedProviders[msg.sender].IPFSApprovalDocumentHash = _ProviderDetailsIPFShash;
-        totalPendingCount++;
+        if(WhiteListedProviders[msg.sender].state != State.Accepted ){
+            WhiteListedProviders[msg.sender].isOrganization = _isOrg;
+            WhiteListedProviders[msg.sender].state = State.Pending;
+            WhiteListedProviders[msg.sender].providerAddress = msg.sender;
+            WhiteListedProviders[msg.sender].IPFSApprovalDocumentHash = _ProviderDetailsIPFShash;
+            totalPendingCount++;
+        } else {
+            WhiteListedProviders[msg.sender].IPFSApprovalDocumentHash = _ProviderDetailsIPFShash; 
+        }
+        
         RequestSubmittedForApproval(msg.sender, _isOrg, _ProviderDetailsIPFShash);
     }
     
     //Step 2-a:
-    //this function shall be called by Emrify to add the address of the hospital in the whitelist hospitals
+    //this function shall be called by Emrify or the provider himself to add the address of the hospital in the whitelist hospitals
     function approveProviderApplication(address _providerAddress) onlyAdmin  {
         WhiteListedProviders[_providerAddress].state = State.Accepted;
         WhiteListedProviders[_providerAddress].isRegistered = true;

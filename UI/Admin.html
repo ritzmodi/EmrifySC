@@ -111,6 +111,23 @@
 		"inputs": [
 			{
 				"indexed": true,
+				"name": "providerAddress",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "IPFSHash",
+				"type": "string"
+			}
+		],
+		"name": "Terminate",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
 				"name": "_requsterAdd",
 				"type": "address"
 			},
@@ -123,26 +140,14 @@
 				"indexed": false,
 				"name": "ProviderDetailsIPFShash",
 				"type": "string"
-			}
-		],
-		"name": "RequestSubmittedForApproval",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"name": "providerAddress",
-				"type": "address"
 			},
 			{
 				"indexed": false,
-				"name": "_IPFSProviderhash",
-				"type": "string"
+				"name": "state",
+				"type": "uint8"
 			}
 		],
-		"name": "RequestRejected",
+		"name": "RequestSubmittedForApproval",
 		"type": "event"
 	},
 	{
@@ -196,11 +201,16 @@
 		"inputs": [
 			{
 				"indexed": true,
-				"name": "newOwner",
+				"name": "providerAddress",
 				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "_IPFSProviderhash",
+				"type": "string"
 			}
 		],
-		"name": "OwnershipTransferred",
+		"name": "RequestApproved",
 		"type": "event"
 	},
 	{
@@ -217,7 +227,7 @@
 				"type": "string"
 			}
 		],
-		"name": "RequestApproved",
+		"name": "RequestRejected",
 		"type": "event"
 	},
 	{
@@ -258,23 +268,6 @@
 		"type": "function"
 	},
 	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"name": "providerAddress",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"name": "IPFSHash",
-				"type": "string"
-			}
-		],
-		"name": "Terminate",
-		"type": "event"
-	},
-	{
 		"constant": false,
 		"inputs": [
 			{
@@ -310,7 +303,7 @@
 
       var MyContract = web3.eth.contract(abi);
       
-      var myContractInstance = MyContract.at('0x7a2eb3300275b583aa05af7298955cfedba09f3c');
+      var myContractInstance = MyContract.at('0x4a5145031ccedaa699b983a9ea7236bee1f292e1');
 
 
 
@@ -368,13 +361,20 @@
 <hr/>
 
 
-<button onclick="fetchAllReqSubmittedEvents()" > Fetch all req submitted events!</button>
+<button onclick="fetchAllPendingReqests()" > Fetch all pending requests !</button>
 <hr/>
-<p>all the Events generated for the Submit Request For Approval:
+<p>all the Events generated for the pending Request For Approval:
         <h3 id='callback22'></h3>
     </p>
 	<hr/>
 	
+
+<button onclick="fetchAllAcceptedReqests()" > Fetch all Accepted requests !</button>
+<hr/>
+<p>all the Events generated for the modification of the profile in already Accepted Request :
+	<h3 id='acceptedReqCallback'></h3>
+</p>
+<hr/>
 	
 
 <h2>Approve Provider Application : to be called by Emrify ONLY</h2>
@@ -409,7 +409,7 @@
 
 
 
-<button onclick="fetchAllEventsforRequestAppproved()" > Fetch all rejected requestd lists!</button>
+<button onclick="fetchAllEventsforRejectedRequests()" > Fetch all rejected requestd lists!</button>
 <hr/>
 <p>all the Requests which got rejected :
         <h3 id='callback24'></h3>

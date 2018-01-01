@@ -93,20 +93,64 @@ var storeProviderNotesEvent = myContractInstance.RequestSubmittedForApproval({},
     
 }
 
-function fetchAllReqSubmittedEvents(){
+var PendingListMap = new Object();
+function fetchAllPendingReqests(){
 var allEvents = myContractInstance.RequestSubmittedForApproval({},{fromBlock: 0, toBlock: 'latest'},function(error, result) {
 	  if (!error) {
+          if(result.args.state == 0) { // this IF condition shall filter the PENDING requests
 		  var msg = "IPFS HASH "+(result.args.ProviderDetailsIPFShash) + " block no: "+ result.blockNumber;
            document.getElementById('callback22').innerHTML += "<hr/>"+msg;
-		    console.log(msg);
+            console.log(msg);
+            PendingListMap[result.args._requsterAdd] = result.args.ProviderDetailsIPFShash ;
+        }
 	  }
 	  else {
 		  console.error(error);
 	  } 
 });
 allEvents.stopWatching();
-
+console.log ("these are the entry for pending list");
+for(var key in PendingListMap) {
+    var value = PendingListMap[key];
+    console.log("key:=" + key + ", value:="+value);
+   
+  }
 }
+
+var AcceptedListMap = new Object();
+
+function fetchAllAcceptedReqests(){
+var allEvents = myContractInstance.RequestSubmittedForApproval({},{fromBlock: 0, toBlock: 'latest'},function(error, result) {
+    if (!error) {
+        if(result.args.state == 1) { // this IF condition shall filter the Accepted requests
+        var msg = "IPFS HASH "+(result.args.ProviderDetailsIPFShash) + " block no: "+ result.blockNumber;
+        document.getElementById('acceptedReqCallback').innerHTML += "<hr/>"+msg;
+        console.log(msg);
+        AcceptedListMap[result.args._requsterAdd] = result.args.ProviderDetailsIPFShash ;
+    }
+    }
+    else {
+        console.error(error);
+    } 
+});
+
+allEvents.stopWatching();
+console.log ("these are the entry for Already accepted list which got modified");
+for(var key in AcceptedListMap) {
+    var value = AcceptedListMap[key];
+    console.log("key:=" + key + ", value:="+value)
+   }
+}
+
+function printAcceptedList(){
+console.log ("these are the entry for Already accepted list which got modified");
+for(var key in AcceptedListMap) {
+    var value = AcceptedListMap[key];
+    console.log("key:=" + key + ", value:="+value)
+   }
+}
+
+
 
 function approveProviderApplication(){
     var providerAddressForApproval = document.getElementById('providerAddressForApproval').value;

@@ -93,64 +93,137 @@ var storeProviderNotesEvent = myContractInstance.RequestSubmittedForApproval({},
     
 }
 
-var PendingListMap = new Object();
-function fetchAllPendingReqests(){
-var allEvents = myContractInstance.RequestSubmittedForApproval({},{fromBlock: 0, toBlock: 'latest'},function(error, result) {
-	  if (!error) {
-          if(result.args.state == 0) { // this IF condition shall filter the PENDING requests
-		  var msg = "IPFS HASH "+(result.args.ProviderDetailsIPFShash) + " block no: "+ result.blockNumber;
-           document.getElementById('callback22').innerHTML += "<hr/>"+msg;
+// var PendingListMap = new Object();
+function fetchAllPendingAddresses(){
+    var isOrg = myContractInstance.returnPendingArray(function(err,result){
+		if(!err){
+            var msg ="";
+            for (var i = 0; i< result.length; i++){
+                msg += result[i]+", ";
+            }
+
+            document.getElementById('callback22').innerHTML = msg;
             console.log(msg);
-            PendingListMap[result.args._requsterAdd] = result.args.ProviderDetailsIPFShash ;
-        }
-	  }
-	  else {
-		  console.error(error);
-	  } 
-});
-allEvents.stopWatching();
-console.log ("these are the entry for pending list");
-for(var key in PendingListMap) {
-    var value = PendingListMap[key];
-    console.log("key:=" + key + ", value:="+value);
+
+		  }
+		  else {
+			  console.err(error);
+		  }
+    });
+
+
+// var allEvents = myContractInstance.RequestSubmittedForApproval({},{fromBlock: 0, toBlock: 'latest'},function(error, result) {
+// 	  if (!error) {
+//           if(result.args.state == 0) { // this IF condition shall filter the PENDING requests
+// 		  var msg = "IPFS HASH "+(result.args.ProviderDetailsIPFShash) + " block no: "+ result.blockNumber;
+//            document.getElementById('callback22').innerHTML += "<hr/>"+msg;
+//             console.log(msg);
+//             PendingListMap[result.args._requsterAdd] = result.args.ProviderDetailsIPFShash ;
+//         }
+// 	  }
+// 	  else {
+// 		  console.error(error);
+// 	  } 
+// });
+// allEvents.stopWatching();
+// console.log ("these are the entry for pending list");
+// for(var key in PendingListMap) {
+//     var value = PendingListMap[key];
+//     console.log("key:=" + key + ", value:="+value);
    
-  }
+//   }
 }
 
-var AcceptedListMap = new Object();
+// var AcceptedListMap = new Object();
 
-function fetchAllAcceptedReqests(){
-var allEvents = myContractInstance.RequestSubmittedForApproval({},{fromBlock: 0, toBlock: 'latest'},function(error, result) {
-    if (!error) {
-        if(result.args.state == 1) { // this IF condition shall filter the Accepted requests
-        var msg = "IPFS HASH "+(result.args.ProviderDetailsIPFShash) + " block no: "+ result.blockNumber;
-        document.getElementById('acceptedReqCallback').innerHTML += "<hr/>"+msg;
-        console.log(msg);
-        AcceptedListMap[result.args._requsterAdd] = result.args.ProviderDetailsIPFShash ;
-    }
-    }
-    else {
-        console.error(error);
-    } 
-});
+function fetchAllAcceptedAddresses(){
 
-allEvents.stopWatching();
-console.log ("these are the entry for Already accepted list which got modified");
-for(var key in AcceptedListMap) {
-    var value = AcceptedListMap[key];
-    console.log("key:=" + key + ", value:="+value)
-   }
+    var isOrg = myContractInstance.returnAcceptedArray(function(err,result){
+		if(!err){
+            var msg ="";
+            for (var i = 0; i< result.length; i++){
+                msg += result[i]+", ";
+            }
+
+            document.getElementById('acceptedCallback').innerHTML = msg;
+            console.log(msg);
+
+		  }
+		  else {
+			  console.err(error);
+		  }
+    });
+
+// var allEvents = myContractInstance.RequestSubmittedForApproval({},{fromBlock: 0, toBlock: 'latest'},function(error, result) {
+//     if (!error) {
+//         if(result.args.state == 1) { // this IF condition shall filter the Accepted requests
+//         var msg = "IPFS HASH "+(result.args.ProviderDetailsIPFShash) + " block no: "+ result.blockNumber;
+//         document.getElementById('acceptedReqCallback').innerHTML += "<hr/>"+msg;
+//         console.log(msg);
+//         AcceptedListMap[result.args._requsterAdd] = result.args.ProviderDetailsIPFShash ;
+//     }
+//     }
+//     else {
+//         console.error(error);
+//     } 
+// });
+
+// allEvents.stopWatching();
+// console.log ("these are the entry for Already accepted list which got modified");
+// for(var key in AcceptedListMap) {
+//     var value = AcceptedListMap[key];
+//     console.log("key:=" + key + ", value:="+value)
+//    }
+// }
+
+// function printAcceptedList(){
+// console.log ("these are the entry for Already accepted list which got modified");
+// for(var key in AcceptedListMap) {
+//     var value = AcceptedListMap[key];
+//     console.log("key:=" + key + ", value:="+value)
+//    }
 }
 
-function printAcceptedList(){
-console.log ("these are the entry for Already accepted list which got modified");
-for(var key in AcceptedListMap) {
-    var value = AcceptedListMap[key];
-    console.log("key:=" + key + ", value:="+value)
-   }
+
+function fetchAllRejectedAddresses(){
+
+    var isOrg = myContractInstance.returnRejectedArray(function(err,result){
+		if(!err){
+            var msg ="";
+            for (var i = 0; i< result.length; i++){
+                msg += result[i]+", ";
+            }
+
+            document.getElementById('rejectedCallback').innerHTML = msg;
+            console.log(msg);
+
+		  }
+		  else {
+			  console.err(error);
+		  }
+    });
 }
 
 
+
+function fetchAllRevokedAddresses(){
+
+    var isOrg = myContractInstance.returnRevokedArray(function(err,result){
+		if(!err){
+            var msg ="";
+            for (var i = 0; i< result.length; i++){
+                msg += result[i]+", ";
+            }
+
+            document.getElementById('revokedCallback').innerHTML = msg;
+            console.log(msg);
+
+		  }
+		  else {
+			  console.err(error);
+		  }
+    });
+}
 
 function approveProviderApplication(){
     var providerAddressForApproval = document.getElementById('providerAddressForApproval').value;
@@ -230,6 +303,51 @@ function fetchAllEventsforRejectedRequests(){
     });
     allEvents.stopWatching();
     }
+
+
+
+function revokeProviderApplication(){
+    var providerAddressForRevoking = document.getElementById('providerAddressForRevoking').value;
+
+	var addProvider = myContractInstance.revokeProviderApplication(providerAddressForRevoking,function(err,result){
+		if(!err){
+			console.log("Revoke request sent successfully"+ "\n" + result);
+		  }
+		  else {
+			  console.err(error);
+		  }
+    });
+    var event = myContractInstance.RequestRevoked({},function(error, result) {
+        if (!error) {
+            //address indexed patientAddress, address indexed providerAddress, uint indexed claimID, uint indexed amount, uint indexed visitID
+                var msg = "Request of " +result.args.providerAddress+"revoked sucessfully."+ "with the HASH: "+ result.args._IPFSProviderhash;
+                document.getElementById('callbackRevoke3').innerHTML = ""+msg;
+                console.log(msg);
+        }
+        else {
+            console.error(error);
+        }
+    });
+}
+ 
+
+function fetchAllEventsforRevokedRequests(){
+    var allEvents = myContractInstance.RequestRevoked({},{fromBlock: 0, toBlock: 'latest'},function(error, result) {
+          if (!error) {
+              var msg = "Request of " +result.args.providerAddress+" was revoked."+ " block no: "+ result.blockNumber+ "with the HASH: "+ result.args._IPFSProviderhash;
+               document.getElementById('callbackrevoke24').innerHTML += "<hr/>"+msg;
+                console.log(msg);
+          }
+          else {
+              console.error(error);
+          } 
+    });
+    allEvents.stopWatching();
+    }
+
+
+
+
 
 function terminateProviderFromNetwork(){
     var providerAddressForTermination = document.getElementById('providerAddressForTermination').value;

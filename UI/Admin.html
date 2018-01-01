@@ -23,7 +23,7 @@
 	{
 		"constant": true,
 		"inputs": [],
-		"name": "totalPendingCount",
+		"name": "totalRevokeCount",
 		"outputs": [
 			{
 				"name": "",
@@ -37,11 +37,185 @@
 	{
 		"constant": true,
 		"inputs": [],
-		"name": "admin",
+		"name": "returnRejectedArray",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "returnPendingArray",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "returnApplicationRevoke",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "returnApplicationRejected",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "returnRevokedArray",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "returnApplicationAccepted",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "returnAcceptedArray",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "RejectedList",
 		"outputs": [
 			{
 				"name": "",
 				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "RevokeList",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "individualRevokeCount",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "PendingList",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "totalRejectedCount",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
 			}
 		],
 		"payable": false,
@@ -61,6 +235,77 @@
 			{
 				"name": "",
 				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "individualPendingCount",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "AcceptedList",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "individualAcceptedCount",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "totalAcceptedCount",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
 			}
 		],
 		"payable": false,
@@ -107,94 +352,65 @@
 		"type": "function"
 	},
 	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"name": "providerAddress",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"name": "IPFSHash",
-				"type": "string"
-			}
-		],
-		"name": "Terminate",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"name": "_requsterAdd",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"name": "isOrg",
-				"type": "bool"
-			},
-			{
-				"indexed": false,
-				"name": "ProviderDetailsIPFShash",
-				"type": "string"
-			},
-			{
-				"indexed": false,
-				"name": "state",
-				"type": "uint8"
-			}
-		],
-		"name": "RequestSubmittedForApproval",
-		"type": "event"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_providerAddress",
-				"type": "address"
-			}
-		],
-		"name": "rejectProviderApplication",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_providerAddress",
-				"type": "address"
-			}
-		],
-		"name": "approveProviderApplication",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
+		"constant": true,
 		"inputs": [],
+		"name": "totalPendingCount",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
 		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "constructor"
+		"stateMutability": "view",
+		"type": "function"
 	},
 	{
-		"anonymous": false,
-		"inputs": [
+		"constant": true,
+		"inputs": [],
+		"name": "admin",
+		"outputs": [
 			{
-				"indexed": true,
-				"name": "newAdmin",
+				"name": "",
 				"type": "address"
 			}
 		],
-		"name": "NewAdminAdded",
-		"type": "event"
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "returnApplicationPending",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "individualRejectiedCount",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
 	},
 	{
 		"anonymous": false,
@@ -214,6 +430,40 @@
 		"type": "event"
 	},
 	{
+		"inputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_providerAddress",
+				"type": "address"
+			}
+		],
+		"name": "rejectProviderApplication",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_newAdminAddress",
+				"type": "address"
+			}
+		],
+		"name": "addAdminGroup",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"anonymous": false,
 		"inputs": [
 			{
@@ -223,12 +473,30 @@
 			},
 			{
 				"indexed": false,
-				"name": "_IPFSProviderhash",
+				"name": "IPFSHash",
 				"type": "string"
 			}
 		],
-		"name": "RequestRejected",
+		"name": "Terminate",
 		"type": "event"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_providerAddress",
+				"type": "address"
+			},
+			{
+				"name": "_supportingRejectingDocument",
+				"type": "string"
+			}
+		],
+		"name": "terminateProviderFromNetwork",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
 	},
 	{
 		"constant": false,
@@ -243,6 +511,32 @@
 			}
 		],
 		"name": "submitRequestForApproval",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "newAdmin",
+				"type": "address"
+			}
+		],
+		"name": "NewAdminAdded",
+		"type": "event"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_providerAddress",
+				"type": "address"
+			}
+		],
+		"name": "revokeProviderApplication",
 		"outputs": [],
 		"payable": false,
 		"stateMutability": "nonpayable",
@@ -273,37 +567,80 @@
 			{
 				"name": "_providerAddress",
 				"type": "address"
-			},
-			{
-				"name": "_supportingRejectingDocument",
-				"type": "string"
 			}
 		],
-		"name": "terminateProviderFromNetwork",
+		"name": "approveProviderApplication",
 		"outputs": [],
 		"payable": false,
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
-		"constant": false,
+		"anonymous": false,
 		"inputs": [
 			{
-				"name": "_newAdminAddress",
+				"indexed": true,
+				"name": "providerAddress",
 				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "_IPFSProviderhash",
+				"type": "string"
 			}
 		],
-		"name": "addAdminGroup",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
+		"name": "RequestRejected",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "providerAddress",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "_IPFSProviderhash",
+				"type": "string"
+			}
+		],
+		"name": "RequestRevoked",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "_requsterAdd",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"name": "isOrg",
+				"type": "bool"
+			},
+			{
+				"indexed": false,
+				"name": "ProviderDetailsIPFShash",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"name": "state",
+				"type": "uint8"
+			}
+		],
+		"name": "RequestSubmittedForApproval",
+		"type": "event"
 	}
 ];
 
       var MyContract = web3.eth.contract(abi);
       
-      var myContractInstance = MyContract.at('0x4a5145031ccedaa699b983a9ea7236bee1f292e1');
+      var myContractInstance = MyContract.at('0x56fb7db72a7d37f03b085b6ea56f5712d47ab016');
 
 
 
@@ -361,7 +698,7 @@
 <hr/>
 
 
-<button onclick="fetchAllPendingReqests()" > Fetch all pending requests !</button>
+<button onclick="fetchAllPendingAddresses()" > Fetch all pending addresses !</button>
 <hr/>
 <p>all the Events generated for the pending Request For Approval:
         <h3 id='callback22'></h3>
@@ -369,13 +706,28 @@
 	<hr/>
 	
 
-<button onclick="fetchAllAcceptedReqests()" > Fetch all Accepted requests !</button>
+<button onclick="fetchAllAcceptedAddresses()" > Fetch all Accepted addresses !</button>
 <hr/>
 <p>all the Events generated for the modification of the profile in already Accepted Request :
-	<h3 id='acceptedReqCallback'></h3>
+	<h3 id='acceptedCallback'></h3>
 </p>
 <hr/>
 	
+<button onclick="fetchAllRejectedAddresses()" > Fetch all Accepted addresses !</button>
+<hr/>
+<p>all the Events generated for the modification of the profile in already Accepted Request :
+	<h3 id='rejectedCallback'></h3>
+</p>
+<hr/>
+
+<button onclick="fetchAllRevokedAddresses()" > Fetch all Accepted addresses !</button>
+<hr/>
+<p>all the Events generated for the modification of the profile in already Accepted Request :
+	<h3 id='revokedCallback'></h3>
+</p>
+<hr/>
+
+
 
 <h2>Approve Provider Application : to be called by Emrify ONLY</h2>
 <div>
@@ -417,7 +769,27 @@
 	<hr/>
 
 
+<h2> Revoke Provider Application: To be called by individual entity or organisation</h2>
+<div>
+	Provider Address : <input id='providerAddressForRevoking'>
+</div>
+<button onclick='revokeProviderApplication()'>Revoke Provider!</button>
+<hr/>
+<p>Events generated for the Revoke provider:
+			<h3 id='callbackRevoke3'></h3>
+</p>
 
+<hr/>
+
+
+
+<button onclick="fetchAllEventsforRevokedRequests()" > Fetch all revoked requestd lists!</button>
+<hr/>
+<p>all the Requests which got rejected :
+		<h3 id='callbackrevoke24'></h3>
+	</p>
+	<hr/>
+	
 
 <h2> Terminate Provider Application: To be called by individual entity or organisation</h2>
 <div>

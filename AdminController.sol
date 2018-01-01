@@ -125,10 +125,10 @@ contract AdminController {
     {
         //delete PendingList[individualPendingCount[_providerAddress]] ;
         if(WhiteListedProviders[_providerAddress].state == State.Pending){ 
-            PendingList= remove(PendingList, individualPendingCount[_providerAddress]);
+            PendingList= remove(PendingList, findIndexOfAddress(PendingList, _providerAddress));
             //delete individualPendingCount[_providerAddress];
         } else {
-            RevokeList= remove(RevokeList, individualRevokeCount[_providerAddress]);
+            RevokeList= remove(RevokeList, findIndexOfAddress(RevokeList, _providerAddress));
             //delete  individualRevokeCount[_providerAddress];
         }
         
@@ -152,7 +152,7 @@ contract AdminController {
         WhiteListedProviders[_providerAddress].isRegistered = false;
         
         //delete PendingList[individualPendingCount[_providerAddress]] ;
-        PendingList= remove(PendingList, individualPendingCount[_providerAddress]);
+        PendingList= remove(PendingList, findIndexOfAddress(PendingList, _providerAddress));
         //delete individualPendingCount[_providerAddress];
         RejectedList.push(_providerAddress); 
         totalRejectedCount++  ;
@@ -172,7 +172,7 @@ contract AdminController {
         WhiteListedProviders[_providerAddress].isRegistered = false;
         
         //delete AcceptedList[individualAcceptedCount[_providerAddress]] ;
-        AcceptedList= remove(AcceptedList, individualAcceptedCount[_providerAddress]);
+        AcceptedList= remove(AcceptedList, findIndexOfAddress(AcceptedList, _providerAddress));
         //delete individualAcceptedCount[_providerAddress];
         RevokeList.push(_providerAddress); 
         totalRevokeCount++ ;
@@ -205,6 +205,15 @@ contract AdminController {
         }
         delete array;
         return arrayNew;
+    }
+    
+    function findIndexOfAddress(address[] array, address findIndexOfThisAddress) internal  returns (uint256) {
+        for (uint i = 0; i<array.length; i++){
+            if( array[i] == findIndexOfThisAddress){
+                return i;
+            }
+        }
+        
     }
     
     function returnPendingArray() constant returns (address[]){

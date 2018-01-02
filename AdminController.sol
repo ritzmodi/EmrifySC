@@ -6,8 +6,8 @@ contract AdminController {
     // Emrify shall be admin here
     address public admin;
     
-    //New Variables from yesterday
-    enum State { Pending, Accepted, Rejected, Revoke, Terminated } 
+    //New Variables to keep track of the application level of the address in the system
+    enum State { NotApplied, Pending, Accepted, Rejected, Revoke, Terminated } 
     
     
     // these are application wide numbers: In total how many of each requests got through this SC
@@ -78,7 +78,6 @@ contract AdminController {
     // they are having Admin previlleges
     function isAdmin(address addr) public returns(bool) { 
         return addr == admin ||  AdminGroup[addr] == true ; 
-        
     }
 
     function AdminController(){
@@ -86,7 +85,6 @@ contract AdminController {
     }
     
     mapping (address => providerDetail) public WhiteListedProviders;
-    
     
     // this group tomorrow shall handle the pressure of 
     function addAdminGroup(address _newAdminAddress) onlyAdmin {
@@ -96,20 +94,22 @@ contract AdminController {
     
     // Step 1:
     function submitRequestForApproval(bool _isOrg, string _ProviderDetailsIPFShash){
-        if(WhiteListedProviders[msg.sender].state != State.Accepted ){
+        if( WhiteListedProviders[msg.sender].state != State.Accepted && WhiteListedProviders[msg.sender].state != State.Pending ){
             WhiteListedProviders[msg.sender].isOrganization = _isOrg;
             WhiteListedProviders[msg.sender].state = State.Pending;
             WhiteListedProviders[msg.sender].providerAddress = msg.sender;
             WhiteListedProviders[msg.sender].IPFSApprovalDocumentHash = _ProviderDetailsIPFShash;
             
+            // if(findIndexOfThisAddress(PendingList, msg.sender) == PendingList.length){
             PendingList.push(msg.sender);
             totalPendingCount++;
             individualPendingCount[msg.sender]=PendingList.length-1;
-            
-            
             RequestSubmittedForApproval(msg.sender, _isOrg, _ProviderDetailsIPFShash, WhiteListedProviders[msg.sender].state);
+            // }
+            
 
         } else {
+            WhiteListedProviders[msg.sender].isOrganization = _isOrg;
             WhiteListedProviders[msg.sender].IPFSApprovalDocumentHash = _ProviderDetailsIPFShash;
             
         }
@@ -210,8 +210,13 @@ contract AdminController {
     function findIndexOfAddress(address[] array, address findIndexOfThisAddress) internal  returns (uint256) {
         for (uint i = 0; i<array.length; i++){
             if( array[i] == findIndexOfThisAddress){
-                return i;
+                break;
             }
+        }
+        if(i>=0 && i<array.length){
+            return i;
+        } else {
+            return array.length;
         }
         
     }

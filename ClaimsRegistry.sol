@@ -1,10 +1,11 @@
 pragma solidity ^0.4.0;
-import "./ProviderRegistry.sol";
+import "./AdminController.sol";
 
-contract ClaimsRegistry is AdminController{
+contract ClaimsRegistry {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
     
     AdminController adminController ;
    
+  
     struct Claim {
         // uint256 accountType; // can be either individual or organzation
         uint256 claimType; // this shall be one of the many from : doctor, nurse, receptionist etc 
@@ -29,13 +30,18 @@ contract ClaimsRegistry is AdminController{
         _;
     }
     
-    mapping(address => bytes32[]) public individualPendingClaims; // my total pending claims
+    modifier notYourself (address _issuer){
+        require(msg.sender != _issuer);
+        _;
+    }
     
-    mapping(address => bytes32[]) public individualApprovedClaims; // my approved claims
+    mapping(address => bytes32) public individualPendingClaims; // my total pending claims
     
-    mapping(address => bytes32[]) public PendingClaimsForEachIssuers; // pending claims at individual issuers
+    mapping(address => bytes32) public individualApprovedClaims; // my approved claims
     
-    mapping(address => bytes32[]) public ApprovedClaimsForEachIssuers; // claims  which are approved  by Issuers
+    mapping(address => bytes32[]) PendingClaimsForEachIssuers; // pending claims at individual issuers
+    
+    mapping(address => bytes32[])  ApprovedClaimsbyEachIssuers; // claims  which are approved  by Issuers
     
     mapping (bytes32 => Claim) public claims;
     
@@ -60,42 +66,26 @@ contract ClaimsRegistry is AdminController{
     event ClaimChangedByClaimee(bytes32 indexed claimId, address indexed claimee ,  uint256 _claimType, address indexed issuer, bytes signature, bytes data, string uri);
     
     
-/*    function getSpecificClaimDetails(bytes32 _claimId)public constant returns (uint256 accountType, uint256 category, address issuer,address claimee, bytes signature, bytes data, string uri, bool isApproved){
-            Claim memory _claim = claims[_claimId];
-            return (_claim.accountType, _claim.category, _claim.issuer, _claim.claimee, _claim.signature, _claim.data, _claim.uri, _claim.isApproved);
-        }*/
 
-    function getAllApprovedClaimIdsForThisAddress (address _claimee) returns (bytes32[] ){
-        return individualApprovedClaims[_claimee];
-    }
-
-    function getAllPendingClaimIdsForThisAddress (address _claimee) returns (bytes32[] ){
-        return individualPendingClaims[_claimee];
+    
+    
+    function getAllApprovedClaimIdsForThisIssuer (address _issuer) constant returns (bytes32[] ){
+        return ApprovedClaimsbyEachIssuers[_issuer];
     }
     
-    function getAllApprovedClaimIdsForThisIssuer (address _issuer) returns (bytes32[] ){
-        return ApprovedClaimsForEachIssuers[_issuer];
-    }
-    
-    function getAllPendingClaimIdsForThisIssuer (address _issuer) returns (bytes32[] ){
+    function getAllPendingClaimIdsForThisIssuer (address _issuer) constant returns (bytes32[] ){
         return PendingClaimsForEachIssuers[_issuer];
     }
-/*    function getClaimsIdByType(uint256 _accountType, uint256 _category) public constant returns(bytes32[]) {
-        return claimsByType[keccak256(_accountType, _category)];
-    }*/
 
     // it shall add or change the claim directly. no need to check anything. it will be called by the ISSUER
-    function addClaim(uint256 _claimType, address _issuer, bytes _signature, bytes _data, string _uri ) returns (bytes32 claimId, bool isNewClaimAdded) {
+    function addClaim(uint256 _claimType, address _issuer, bytes _signature, bytes _data, string _uri ) 
+    notYourself(_issuer) 
+    returns (bytes32 claimId, bool isNewClaimAdded) {
             claimId = keccak256(_claimType, msg.sender, _issuer); // three params: as a single claim can be uniquely identified by them
-            uint256 index = findClaimIndex(individualApprovedClaims[msg.sender], claimId);
-            
-            if(index < individualApprovedClaims[msg.sender].length ){ // already existes condition
-                return (claimId, false) ;
+            //uint256 index = findClaimIndex(individualApprovedClaims[msg.sender], claimId);
+            if(individualApprovedClaims[msg.sender] == claimId || individualPendingClaims[msg.sender] == claimId){
+                return (claimId, false);
             }
-            
-            index = findClaimIndex(individualPendingClaims[msg.sender], claimId); // claim doesn't exit in both pending and approved claim array
-
-            if(index == individualPendingClaims[msg.sender].length){
 
              claims[claimId] = Claim(
                  {
@@ -111,21 +101,18 @@ contract ClaimsRegistry is AdminController{
                  }
              );
     
-                individualPendingClaims[msg.sender].push(claimId); // add to the list of the claimee
+                individualPendingClaims[msg.sender]= claimId; // add to the list of the claimee
                 PendingClaimsForEachIssuers[_issuer].push(claimId); // add to the list of the issuer
                 ClaimAdded(claimId, msg.sender, _claimType, _issuer, _signature, _data, _uri);
                 
                 return (claimId, true);    
-            }
-            else {
-                return (claimId, false);
-            }
-        }
+    }
 
     // shall be called by the ISSUER only
-    function ApproveClaimByIssuer( bytes32 _claimId ) 
-    onlyIssuer( msg.sender, _claimId)
-    returns (bool isClaimApproved){
+    function ApproveClaim( bytes32 _claimId )  
+    onlyIssuer( msg.sender, _claimId) 
+    returns (bool isClaimApproved)
+    {
         Claim memory _claim = claims[_claimId];
         uint256 index = findClaimIndex(PendingClaimsForEachIssuers[msg.sender], _claimId);
         if(index < PendingClaimsForEachIssuers[msg.sender].length){
@@ -142,10 +129,12 @@ contract ClaimsRegistry is AdminController{
                      isApproved: true                 
                  }
              );
-            ApprovedClaimsForEachIssuers[msg.sender].push(_claimId);
+            ApprovedClaimsbyEachIssuers[msg.sender].push(_claimId);
+            individualApprovedClaims[_claim.claimee]=_claimId;
+
             PendingClaimsForEachIssuers[msg.sender] = remove (PendingClaimsForEachIssuers[msg.sender], findClaimIndex(PendingClaimsForEachIssuers[msg.sender], _claimId));
-            individualApprovedClaims[_claim.claimee].push(_claimId);
-            
+            //individualPendingClaims[_claim.claimee] = remove (individualPendingClaims[_claim.claimee], findClaimIndex(individualPendingClaims[_claim.claimee], _claimId));
+            delete individualPendingClaims[_claim.claimee];
             ClaimApprovedByIssuer(_claimId, msg.sender, _claim.claimType, _claim.issuer, _claim.signature, _claim.data, _claim.uri);
             return true;
         } else {
@@ -155,14 +144,17 @@ contract ClaimsRegistry is AdminController{
     
     
     // submit a fresh request for a new claim overwriting the previous one
-    /// untile this gets accepted, the old one shall be active
-    function changeClaimByClaimee(uint256 _claimType, address _issuer, bytes _signature, bytes _data, string _uri, bytes32 _claimId ) 
+    // untile this gets accepted, the old one shall be active
+    // This is redundant function, no need of this. because change claim is a separate fresh request for addClaim with updated params
+/*    function changeClaimByClaimee(uint256 _claimType, address _issuer, bytes _signature, bytes _data, string _uri, bytes32 _claimId ) 
     onlyClaimee( msg.sender, _claimId)
     returns (bool){
         bytes32 claimId = keccak256(_claimType, msg.sender, _issuer);
         Claim memory _claim = claims[_claimId];
-        uint256 index = findClaimIndex(PendingClaimsForEachIssuers[msg.sender], _claimId);
-        if(index != PendingClaimsForEachIssuers[msg.sender].length){
+
+        if(individualApprovedClaims[msg.sender] == claimId || individualPendingClaims[msg.sender] == claimId){
+                return false;
+        }
         claims[_claimId] = Claim(
                  {
                     //  accountType: _claim.accountType,
@@ -177,44 +169,54 @@ contract ClaimsRegistry is AdminController{
                  }
              );
         
-        individualPendingClaims[msg.sender].push(claimId); // add to the list of the claimee
+        individualPendingClaims[msg.sender]=claimId; // add to the list of the claimee
         PendingClaimsForEachIssuers[_issuer].push(claimId); // add to the list of the issuer    
         ClaimChangedByClaimee(_claimId, msg.sender, _claim.claimType, _claim.issuer, _claim.signature, _claim.data, _claim.uri);
-        }
         
-    }
+        
+    }*/
     
     // shall be called by ISSUER to remove the claim
     function removeClaimByIssuer(bytes32 _claimId) 
     onlyIssuer( msg.sender, _claimId)
     returns (bool success) {
             Claim memory c = claims[_claimId];
-            require(WhiteListedProviders[msg.sender].state == State.Accepted && WhiteListedProviders[msg.sender].isOrganization == true) ;
-             ClaimRemovedByIssuer(_claimId, c.claimee, c.claimType, c.issuer, c.signature, c.data, c.uri);
+            
+            if(c.isApproved == true){ // must be already approved
+            require( adminController.isOrgAndState(msg.sender)) ;
+            ClaimRemovedByIssuer(_claimId, c.claimee, c.claimType, c.issuer, c.signature, c.data, c.uri);
             // delete from three places: 1: issuer's approved list, 2: individual approved list, 3: from app wide claims  
-            ApprovedClaimsForEachIssuers[msg.sender] = remove (ApprovedClaimsForEachIssuers[msg.sender], findClaimIndex(ApprovedClaimsForEachIssuers[msg.sender], _claimId));
-            individualApprovedClaims[msg.sender] = remove (individualApprovedClaims[msg.sender], findClaimIndex(individualApprovedClaims[msg.sender], _claimId));
+            ApprovedClaimsbyEachIssuers[msg.sender] = remove (ApprovedClaimsbyEachIssuers[msg.sender], findClaimIndex(ApprovedClaimsbyEachIssuers[msg.sender], _claimId));
+            delete individualApprovedClaims[msg.sender];
             delete claims[_claimId];
             
             return true;
         }
-        
+        else {
+            return false;       
+        }
+    }        
     
     
-    // shall be called by ISSUER to remove the claim
+    // shall be called by individual entity
     function removeSelfClaim(bytes32 _claimId) 
     onlyClaimee( msg.sender, _claimId)
     returns (bool success) {
             Claim memory c = claims[_claimId];
-            require(WhiteListedProviders[msg.sender].state == State.Accepted ) ;
+             if(c.isApproved == true){ // must be already approved
              ClaimRemovedByClaimee(_claimId, c.claimee, c.claimType, c.issuer, c.signature, c.data, c.uri);
             // delete from three places: 1: issuer's approved list, 2: individual approved list, 3: from app wide claims  
-            PendingClaimsForEachIssuers[msg.sender] = remove (PendingClaimsForEachIssuers[msg.sender], findClaimIndex(PendingClaimsForEachIssuers[msg.sender], _claimId));
-            individualApprovedClaims[msg.sender] = remove (individualApprovedClaims[msg.sender], findClaimIndex(individualApprovedClaims[msg.sender], _claimId));
+            ApprovedClaimsbyEachIssuers[c.issuer] = remove (ApprovedClaimsbyEachIssuers[c.issuer], findClaimIndex(ApprovedClaimsbyEachIssuers[c.issuer], _claimId));
+            delete individualApprovedClaims[msg.sender];
             delete claims[_claimId];
             
             return true;
         }
+        else {
+            return false;       
+        }
+                 
+    }
         
     
         
@@ -244,7 +246,6 @@ contract ClaimsRegistry is AdminController{
         } else {
             return _claimIds.length;
         }
-        
-        
     }
+    
 }

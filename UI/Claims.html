@@ -20,642 +20,443 @@
 
 
       var abi =[
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_anyAddress",
-				"type": "address"
-			}
-		],
-		"name": "isOrgAndState",
-		"outputs": [
-			{
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "addr",
-				"type": "address"
-			}
-		],
-		"name": "isAdmin",
-		"outputs": [
-			{
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"name": "AdminGroup",
-		"outputs": [
-			{
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "returnApplicationRevoke",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_providerAddress",
-				"type": "address"
-			}
-		],
-		"name": "rejectProviderApplication",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "AcceptedList",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "PendingList",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "totalAcceptedCount",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"name": "individualPendingCount",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "totalRevokeCount",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "returnApplicationAccepted",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "returnRejectedArray",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address[]"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "returnApplicationPending",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"name": "individualRevokeCount",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "returnApplicationRejected",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "totalPendingCount",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"name": "individualAcceptedCount",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_isOrg",
-				"type": "bool"
-			},
-			{
-				"name": "_ProviderDetailsIPFShash",
-				"type": "string"
-			}
-		],
-		"name": "submitRequestForApproval",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_providerAddress",
-				"type": "address"
-			}
-		],
-		"name": "revokeProviderApplication",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_providerAddress",
-				"type": "address"
-			}
-		],
-		"name": "approveProviderApplication",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_providerAddress",
-				"type": "address"
-			},
-			{
-				"name": "_supportingRejectingDocument",
-				"type": "string"
-			}
-		],
-		"name": "terminateProviderFromNetwork",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_newAdminAddress",
-				"type": "address"
-			}
-		],
-		"name": "addAdminGroup",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "totalRejectedCount",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "returnRevokedArray",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address[]"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "returnAcceptedArray",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address[]"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"name": "individualRejectiedCount",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"name": "WhiteListedProviders",
-		"outputs": [
-			{
-				"name": "providerAddress",
-				"type": "address"
-			},
-			{
-				"name": "state",
-				"type": "uint8"
-			},
-			{
-				"name": "isRegistered",
-				"type": "bool"
-			},
-			{
-				"name": "isOrganization",
-				"type": "bool"
-			},
-			{
-				"name": "IPFSApprovalDocumentHash",
-				"type": "string"
-			},
-			{
-				"name": "IPFSRemovalDocumentHash",
-				"type": "string"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "returnPendingArray",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address[]"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "RevokeList",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "admin",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "RejectedList",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"name": "newAdmin",
-				"type": "address"
-			}
-		],
-		"name": "NewAdminAdded",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"name": "_requsterAdd",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"name": "isOrg",
-				"type": "bool"
-			},
-			{
-				"indexed": false,
-				"name": "ProviderDetailsIPFShash",
-				"type": "string"
-			},
-			{
-				"indexed": false,
-				"name": "state",
-				"type": "uint8"
-			}
-		],
-		"name": "RequestSubmittedForApproval",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"name": "providerAddress",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"name": "_IPFSProviderhash",
-				"type": "string"
-			}
-		],
-		"name": "RequestApproved",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"name": "providerAddress",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"name": "_IPFSProviderhash",
-				"type": "string"
-			}
-		],
-		"name": "RequestRejected",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"name": "providerAddress",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"name": "_IPFSProviderhash",
-				"type": "string"
-			}
-		],
-		"name": "RequestRevoked",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"name": "providerAddress",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"name": "IPFSHash",
-				"type": "string"
-			}
-		],
-		"name": "Terminate",
-		"type": "event"
-	}
-];
+	  {
+		  "constant": true,
+		  "inputs": [
+			  {
+				  "name": "",
+				  "type": "address"
+			  }
+		  ],
+		  "name": "individualPendingClaims",
+		  "outputs": [
+			  {
+				  "name": "",
+				  "type": "bytes32"
+			  }
+		  ],
+		  "payable": false,
+		  "stateMutability": "view",
+		  "type": "function"
+	  },
+	  {
+		  "constant": true,
+		  "inputs": [
+			  {
+				  "name": "",
+				  "type": "address"
+			  }
+		  ],
+		  "name": "individualApprovedClaims",
+		  "outputs": [
+			  {
+				  "name": "",
+				  "type": "bytes32"
+			  }
+		  ],
+		  "payable": false,
+		  "stateMutability": "view",
+		  "type": "function"
+	  },
+	  {
+		  "constant": true,
+		  "inputs": [
+			  {
+				  "name": "_issuer",
+				  "type": "address"
+			  }
+		  ],
+		  "name": "getAllPendingClaimIdsForThisIssuer",
+		  "outputs": [
+			  {
+				  "name": "",
+				  "type": "bytes32[]"
+			  }
+		  ],
+		  "payable": false,
+		  "stateMutability": "view",
+		  "type": "function"
+	  },
+	  {
+		  "constant": true,
+		  "inputs": [
+			  {
+				  "name": "_issuer",
+				  "type": "address"
+			  }
+		  ],
+		  "name": "getAllApprovedClaimIdsForThisIssuer",
+		  "outputs": [
+			  {
+				  "name": "",
+				  "type": "bytes32[]"
+			  }
+		  ],
+		  "payable": false,
+		  "stateMutability": "view",
+		  "type": "function"
+	  },
+	  {
+		  "constant": true,
+		  "inputs": [
+			  {
+				  "name": "",
+				  "type": "bytes32"
+			  }
+		  ],
+		  "name": "claims",
+		  "outputs": [
+			  {
+				  "name": "claimType",
+				  "type": "uint256"
+			  },
+			  {
+				  "name": "issuer",
+				  "type": "address"
+			  },
+			  {
+				  "name": "claimee",
+				  "type": "address"
+			  },
+			  {
+				  "name": "signature",
+				  "type": "bytes"
+			  },
+			  {
+				  "name": "data",
+				  "type": "bytes"
+			  },
+			  {
+				  "name": "uri",
+				  "type": "string"
+			  },
+			  {
+				  "name": "isApproved",
+				  "type": "bool"
+			  }
+		  ],
+		  "payable": false,
+		  "stateMutability": "view",
+		  "type": "function"
+	  },
+	  {
+		  "constant": false,
+		  "inputs": [
+			  {
+				  "name": "_claimType",
+				  "type": "uint256"
+			  },
+			  {
+				  "name": "_issuer",
+				  "type": "address"
+			  },
+			  {
+				  "name": "_signature",
+				  "type": "bytes"
+			  },
+			  {
+				  "name": "_data",
+				  "type": "bytes"
+			  },
+			  {
+				  "name": "_uri",
+				  "type": "string"
+			  }
+		  ],
+		  "name": "addClaim",
+		  "outputs": [
+			  {
+				  "name": "claimId",
+				  "type": "bytes32"
+			  },
+			  {
+				  "name": "isNewClaimAdded",
+				  "type": "bool"
+			  }
+		  ],
+		  "payable": false,
+		  "stateMutability": "nonpayable",
+		  "type": "function"
+	  },
+	  {
+		  "constant": false,
+		  "inputs": [
+			  {
+				  "name": "_claimId",
+				  "type": "bytes32"
+			  }
+		  ],
+		  "name": "ApproveClaim",
+		  "outputs": [
+			  {
+				  "name": "isClaimApproved",
+				  "type": "bool"
+			  }
+		  ],
+		  "payable": false,
+		  "stateMutability": "nonpayable",
+		  "type": "function"
+	  },
+	  {
+		  "constant": false,
+		  "inputs": [
+			  {
+				  "name": "_claimId",
+				  "type": "bytes32"
+			  }
+		  ],
+		  "name": "removeSelfClaim",
+		  "outputs": [
+			  {
+				  "name": "success",
+				  "type": "bool"
+			  }
+		  ],
+		  "payable": false,
+		  "stateMutability": "nonpayable",
+		  "type": "function"
+	  },
+	  {
+		  "inputs": [
+			  {
+				  "name": "_adminController",
+				  "type": "address"
+			  }
+		  ],
+		  "payable": false,
+		  "stateMutability": "nonpayable",
+		  "type": "constructor"
+	  },
+	  {
+		  "anonymous": false,
+		  "inputs": [
+			  {
+				  "indexed": true,
+				  "name": "claimId",
+				  "type": "bytes32"
+			  },
+			  {
+				  "indexed": true,
+				  "name": "claimee",
+				  "type": "address"
+			  },
+			  {
+				  "indexed": false,
+				  "name": "_claimType",
+				  "type": "uint256"
+			  },
+			  {
+				  "indexed": true,
+				  "name": "issuer",
+				  "type": "address"
+			  },
+			  {
+				  "indexed": false,
+				  "name": "signature",
+				  "type": "bytes"
+			  },
+			  {
+				  "indexed": false,
+				  "name": "data",
+				  "type": "bytes"
+			  },
+			  {
+				  "indexed": false,
+				  "name": "uri",
+				  "type": "string"
+			  }
+		  ],
+		  "name": "ClaimAdded",
+		  "type": "event"
+	  },
+	  {
+		  "anonymous": false,
+		  "inputs": [
+			  {
+				  "indexed": true,
+				  "name": "claimId",
+				  "type": "bytes32"
+			  },
+			  {
+				  "indexed": true,
+				  "name": "claimee",
+				  "type": "address"
+			  },
+			  {
+				  "indexed": false,
+				  "name": "_claimType",
+				  "type": "uint256"
+			  },
+			  {
+				  "indexed": true,
+				  "name": "issuer",
+				  "type": "address"
+			  },
+			  {
+				  "indexed": false,
+				  "name": "signature",
+				  "type": "bytes"
+			  },
+			  {
+				  "indexed": false,
+				  "name": "data",
+				  "type": "bytes"
+			  },
+			  {
+				  "indexed": false,
+				  "name": "uri",
+				  "type": "string"
+			  }
+		  ],
+		  "name": "ClaimApprovedByIssuer",
+		  "type": "event"
+	  },
+	  {
+		  "anonymous": false,
+		  "inputs": [
+			  {
+				  "indexed": true,
+				  "name": "claimId",
+				  "type": "bytes32"
+			  },
+			  {
+				  "indexed": true,
+				  "name": "claimee",
+				  "type": "address"
+			  },
+			  {
+				  "indexed": false,
+				  "name": "_claimType",
+				  "type": "uint256"
+			  },
+			  {
+				  "indexed": true,
+				  "name": "issuer",
+				  "type": "address"
+			  },
+			  {
+				  "indexed": false,
+				  "name": "signature",
+				  "type": "bytes"
+			  },
+			  {
+				  "indexed": false,
+				  "name": "data",
+				  "type": "bytes"
+			  },
+			  {
+				  "indexed": false,
+				  "name": "uri",
+				  "type": "string"
+			  }
+		  ],
+		  "name": "ClaimChangedByClaimee",
+		  "type": "event"
+	  },
+	  {
+		  "anonymous": false,
+		  "inputs": [
+			  {
+				  "indexed": true,
+				  "name": "claimId",
+				  "type": "bytes32"
+			  },
+			  {
+				  "indexed": true,
+				  "name": "claimee",
+				  "type": "address"
+			  },
+			  {
+				  "indexed": false,
+				  "name": "_claimType",
+				  "type": "uint256"
+			  },
+			  {
+				  "indexed": true,
+				  "name": "issuer",
+				  "type": "address"
+			  },
+			  {
+				  "indexed": false,
+				  "name": "signature",
+				  "type": "bytes"
+			  },
+			  {
+				  "indexed": false,
+				  "name": "data",
+				  "type": "bytes"
+			  },
+			  {
+				  "indexed": false,
+				  "name": "uri",
+				  "type": "string"
+			  }
+		  ],
+		  "name": "ClaimRemovedByClaimee",
+		  "type": "event"
+	  },
+	  {
+		  "anonymous": false,
+		  "inputs": [
+			  {
+				  "indexed": true,
+				  "name": "claimId",
+				  "type": "bytes32"
+			  },
+			  {
+				  "indexed": true,
+				  "name": "claimee",
+				  "type": "address"
+			  },
+			  {
+				  "indexed": false,
+				  "name": "_claimType",
+				  "type": "uint256"
+			  },
+			  {
+				  "indexed": true,
+				  "name": "issuer",
+				  "type": "address"
+			  },
+			  {
+				  "indexed": false,
+				  "name": "signature",
+				  "type": "bytes"
+			  },
+			  {
+				  "indexed": false,
+				  "name": "data",
+				  "type": "bytes"
+			  },
+			  {
+				  "indexed": false,
+				  "name": "uri",
+				  "type": "string"
+			  }
+		  ],
+		  "name": "ClaimRemovedByIssuer",
+		  "type": "event"
+	  },
+	  {
+		  "constant": false,
+		  "inputs": [
+			  {
+				  "name": "_claimId",
+				  "type": "bytes32"
+			  }
+		  ],
+		  "name": "removeClaimByIssuer",
+		  "outputs": [
+			  {
+				  "name": "success",
+				  "type": "bool"
+			  }
+		  ],
+		  "payable": false,
+		  "stateMutability": "nonpayable",
+		  "type": "function"
+	  }
+  ];
 
       var MyContract = web3.eth.contract(abi);
       

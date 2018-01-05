@@ -21,41 +21,75 @@
 
       var abi =[
 	{
-		"constant": true,
-		"inputs": [],
-		"name": "totalRevokeCount",
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_anyAddress",
+				"type": "address"
+			}
+		],
+		"name": "isOrgAndState",
 		"outputs": [
 			{
 				"name": "",
-				"type": "uint256"
+				"type": "bool"
 			}
 		],
 		"payable": false,
-		"stateMutability": "view",
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_anyAddress",
+				"type": "address"
+			}
+		],
+		"name": "isOrg",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "addr",
+				"type": "address"
+			}
+		],
+		"name": "isAdmin",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
 		"constant": true,
-		"inputs": [],
-		"name": "returnRejectedArray",
-		"outputs": [
+		"inputs": [
 			{
 				"name": "",
-				"type": "address[]"
+				"type": "address"
 			}
 		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "returnPendingArray",
+		"name": "AdminGroup",
 		"outputs": [
 			{
 				"name": "",
-				"type": "address[]"
+				"type": "bool"
 			}
 		],
 		"payable": false,
@@ -77,59 +111,17 @@
 		"type": "function"
 	},
 	{
-		"constant": true,
-		"inputs": [],
-		"name": "returnApplicationRejected",
-		"outputs": [
+		"constant": false,
+		"inputs": [
 			{
-				"name": "",
-				"type": "uint256"
+				"name": "_providerAddress",
+				"type": "address"
 			}
 		],
+		"name": "rejectProviderApplication",
+		"outputs": [],
 		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "returnRevokedArray",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address[]"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "returnApplicationAccepted",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "returnAcceptedArray",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address[]"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -140,49 +132,11 @@
 				"type": "uint256"
 			}
 		],
-		"name": "RejectedList",
+		"name": "AcceptedList",
 		"outputs": [
 			{
 				"name": "",
 				"type": "address"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "RevokeList",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"name": "individualRevokeCount",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
 			}
 		],
 		"payable": false,
@@ -211,30 +165,11 @@
 	{
 		"constant": true,
 		"inputs": [],
-		"name": "totalRejectedCount",
+		"name": "totalAcceptedCount",
 		"outputs": [
 			{
 				"name": "",
 				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"name": "AdminGroup",
-		"outputs": [
-			{
-				"name": "",
-				"type": "bool"
 			}
 		],
 		"payable": false,
@@ -262,17 +197,120 @@
 	},
 	{
 		"constant": true,
-		"inputs": [
+		"inputs": [],
+		"name": "totalRevokeCount",
+		"outputs": [
 			{
 				"name": "",
 				"type": "uint256"
 			}
 		],
-		"name": "AcceptedList",
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "returnApplicationAccepted",
 		"outputs": [
 			{
 				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "returnRejectedArray",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_anyAddress",
 				"type": "address"
+			}
+		],
+		"name": "isState",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "returnApplicationPending",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "individualRevokeCount",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "returnApplicationRejected",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "totalPendingCount",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
 			}
 		],
 		"payable": false,
@@ -299,9 +337,134 @@
 		"type": "function"
 	},
 	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_isOrg",
+				"type": "bool"
+			},
+			{
+				"name": "_ProviderDetailsIPFShash",
+				"type": "string"
+			}
+		],
+		"name": "submitRequestForApproval",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_providerAddress",
+				"type": "address"
+			}
+		],
+		"name": "revokeProviderApplication",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_providerAddress",
+				"type": "address"
+			}
+		],
+		"name": "approveProviderApplication",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_providerAddress",
+				"type": "address"
+			},
+			{
+				"name": "_supportingRejectingDocument",
+				"type": "string"
+			}
+		],
+		"name": "terminateProviderFromNetwork",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_newAdminAddress",
+				"type": "address"
+			}
+		],
+		"name": "addAdminGroup",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"constant": true,
 		"inputs": [],
-		"name": "totalAcceptedCount",
+		"name": "totalRejectedCount",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "returnRevokedArray",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "returnAcceptedArray",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "individualRejectiedCount",
 		"outputs": [
 			{
 				"name": "",
@@ -354,11 +517,30 @@
 	{
 		"constant": true,
 		"inputs": [],
-		"name": "totalPendingCount",
+		"name": "returnPendingArray",
 		"outputs": [
 			{
 				"name": "",
+				"type": "address[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
 				"type": "uint256"
+			}
+		],
+		"name": "RevokeList",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
 			}
 		],
 		"payable": false,
@@ -381,12 +563,17 @@
 	},
 	{
 		"constant": true,
-		"inputs": [],
-		"name": "returnApplicationPending",
-		"outputs": [
+		"inputs": [
 			{
 				"name": "",
 				"type": "uint256"
+			}
+		],
+		"name": "RejectedList",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
 			}
 		],
 		"payable": false,
@@ -394,23 +581,49 @@
 		"type": "function"
 	},
 	{
-		"constant": true,
+		"inputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
 		"inputs": [
 			{
-				"name": "",
+				"indexed": true,
+				"name": "newAdmin",
 				"type": "address"
 			}
 		],
-		"name": "individualRejectiedCount",
-		"outputs": [
+		"name": "NewAdminAdded",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
 			{
-				"name": "",
-				"type": "uint256"
+				"indexed": true,
+				"name": "_requsterAdd",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"name": "isOrg",
+				"type": "bool"
+			},
+			{
+				"indexed": false,
+				"name": "ProviderDetailsIPFShash",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"name": "state",
+				"type": "uint8"
 			}
 		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
+		"name": "RequestSubmittedForApproval",
+		"type": "event"
 	},
 	{
 		"anonymous": false,
@@ -428,152 +641,6 @@
 		],
 		"name": "RequestApproved",
 		"type": "event"
-	},
-	{
-		"inputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_providerAddress",
-				"type": "address"
-			}
-		],
-		"name": "rejectProviderApplication",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_newAdminAddress",
-				"type": "address"
-			}
-		],
-		"name": "addAdminGroup",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"name": "providerAddress",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"name": "IPFSHash",
-				"type": "string"
-			}
-		],
-		"name": "Terminate",
-		"type": "event"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_providerAddress",
-				"type": "address"
-			},
-			{
-				"name": "_supportingRejectingDocument",
-				"type": "string"
-			}
-		],
-		"name": "terminateProviderFromNetwork",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_isOrg",
-				"type": "bool"
-			},
-			{
-				"name": "_ProviderDetailsIPFShash",
-				"type": "string"
-			}
-		],
-		"name": "submitRequestForApproval",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"name": "newAdmin",
-				"type": "address"
-			}
-		],
-		"name": "NewAdminAdded",
-		"type": "event"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_providerAddress",
-				"type": "address"
-			}
-		],
-		"name": "revokeProviderApplication",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "addr",
-				"type": "address"
-			}
-		],
-		"name": "isAdmin",
-		"outputs": [
-			{
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_providerAddress",
-				"type": "address"
-			}
-		],
-		"name": "approveProviderApplication",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
 	},
 	{
 		"anonymous": false,
@@ -614,33 +681,23 @@
 		"inputs": [
 			{
 				"indexed": true,
-				"name": "_requsterAdd",
+				"name": "providerAddress",
 				"type": "address"
 			},
 			{
-				"indexed": true,
-				"name": "isOrg",
-				"type": "bool"
-			},
-			{
 				"indexed": false,
-				"name": "ProviderDetailsIPFShash",
+				"name": "IPFSHash",
 				"type": "string"
-			},
-			{
-				"indexed": false,
-				"name": "state",
-				"type": "uint8"
 			}
 		],
-		"name": "RequestSubmittedForApproval",
+		"name": "Terminate",
 		"type": "event"
 	}
 ];
 
       var MyContract = web3.eth.contract(abi);
       
-      var myContractInstance = MyContract.at('0x0f21036c87d597ee10c360762ff2909080d7f919');
+      var myContractInstance = MyContract.at('0x5be928b032f559ff1937f9efbd96a8fa471925b2');
 
 
 

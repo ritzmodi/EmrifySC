@@ -20,447 +20,405 @@
 
 
       var abi =[
-	  {
-		  "constant": true,
-		  "inputs": [
-			  {
-				  "name": "",
-				  "type": "address"
-			  }
-		  ],
-		  "name": "individualPendingClaims",
-		  "outputs": [
-			  {
-				  "name": "",
-				  "type": "bytes32"
-			  }
-		  ],
-		  "payable": false,
-		  "stateMutability": "view",
-		  "type": "function"
-	  },
-	  {
-		  "constant": true,
-		  "inputs": [
-			  {
-				  "name": "",
-				  "type": "address"
-			  }
-		  ],
-		  "name": "individualApprovedClaims",
-		  "outputs": [
-			  {
-				  "name": "",
-				  "type": "bytes32"
-			  }
-		  ],
-		  "payable": false,
-		  "stateMutability": "view",
-		  "type": "function"
-	  },
-	  {
-		  "constant": true,
-		  "inputs": [
-			  {
-				  "name": "_issuer",
-				  "type": "address"
-			  }
-		  ],
-		  "name": "getAllPendingClaimIdsForThisIssuer",
-		  "outputs": [
-			  {
-				  "name": "",
-				  "type": "bytes32[]"
-			  }
-		  ],
-		  "payable": false,
-		  "stateMutability": "view",
-		  "type": "function"
-	  },
-	  {
-		  "constant": true,
-		  "inputs": [
-			  {
-				  "name": "_issuer",
-				  "type": "address"
-			  }
-		  ],
-		  "name": "getAllApprovedClaimIdsForThisIssuer",
-		  "outputs": [
-			  {
-				  "name": "",
-				  "type": "bytes32[]"
-			  }
-		  ],
-		  "payable": false,
-		  "stateMutability": "view",
-		  "type": "function"
-	  },
-	  {
-		  "constant": true,
-		  "inputs": [
-			  {
-				  "name": "",
-				  "type": "bytes32"
-			  }
-		  ],
-		  "name": "claims",
-		  "outputs": [
-			  {
-				  "name": "claimType",
-				  "type": "uint256"
-			  },
-			  {
-				  "name": "issuer",
-				  "type": "address"
-			  },
-			  {
-				  "name": "claimee",
-				  "type": "address"
-			  },
-			  {
-				  "name": "signature",
-				  "type": "bytes"
-			  },
-			  {
-				  "name": "data",
-				  "type": "bytes"
-			  },
-			  {
-				  "name": "uri",
-				  "type": "string"
-			  },
-			  {
-				  "name": "isApproved",
-				  "type": "bool"
-			  }
-		  ],
-		  "payable": false,
-		  "stateMutability": "view",
-		  "type": "function"
-	  },
-	  {
-		  "constant": false,
-		  "inputs": [
-			  {
-				  "name": "_claimType",
-				  "type": "uint256"
-			  },
-			  {
-				  "name": "_issuer",
-				  "type": "address"
-			  },
-			  {
-				  "name": "_signature",
-				  "type": "bytes"
-			  },
-			  {
-				  "name": "_data",
-				  "type": "bytes"
-			  },
-			  {
-				  "name": "_uri",
-				  "type": "string"
-			  }
-		  ],
-		  "name": "addClaim",
-		  "outputs": [
-			  {
-				  "name": "claimId",
-				  "type": "bytes32"
-			  },
-			  {
-				  "name": "isNewClaimAdded",
-				  "type": "bool"
-			  }
-		  ],
-		  "payable": false,
-		  "stateMutability": "nonpayable",
-		  "type": "function"
-	  },
-	  {
-		  "constant": false,
-		  "inputs": [
-			  {
-				  "name": "_claimId",
-				  "type": "bytes32"
-			  }
-		  ],
-		  "name": "ApproveClaim",
-		  "outputs": [
-			  {
-				  "name": "isClaimApproved",
-				  "type": "bool"
-			  }
-		  ],
-		  "payable": false,
-		  "stateMutability": "nonpayable",
-		  "type": "function"
-	  },
-	  {
-		  "constant": false,
-		  "inputs": [
-			  {
-				  "name": "_claimId",
-				  "type": "bytes32"
-			  }
-		  ],
-		  "name": "removeSelfClaim",
-		  "outputs": [
-			  {
-				  "name": "success",
-				  "type": "bool"
-			  }
-		  ],
-		  "payable": false,
-		  "stateMutability": "nonpayable",
-		  "type": "function"
-	  },
-	  {
-		  "inputs": [
-			  {
-				  "name": "_adminController",
-				  "type": "address"
-			  }
-		  ],
-		  "payable": false,
-		  "stateMutability": "nonpayable",
-		  "type": "constructor"
-	  },
-	  {
-		  "anonymous": false,
-		  "inputs": [
-			  {
-				  "indexed": true,
-				  "name": "claimId",
-				  "type": "bytes32"
-			  },
-			  {
-				  "indexed": true,
-				  "name": "claimee",
-				  "type": "address"
-			  },
-			  {
-				  "indexed": false,
-				  "name": "_claimType",
-				  "type": "uint256"
-			  },
-			  {
-				  "indexed": true,
-				  "name": "issuer",
-				  "type": "address"
-			  },
-			  {
-				  "indexed": false,
-				  "name": "signature",
-				  "type": "bytes"
-			  },
-			  {
-				  "indexed": false,
-				  "name": "data",
-				  "type": "bytes"
-			  },
-			  {
-				  "indexed": false,
-				  "name": "uri",
-				  "type": "string"
-			  }
-		  ],
-		  "name": "ClaimAdded",
-		  "type": "event"
-	  },
-	  {
-		  "anonymous": false,
-		  "inputs": [
-			  {
-				  "indexed": true,
-				  "name": "claimId",
-				  "type": "bytes32"
-			  },
-			  {
-				  "indexed": true,
-				  "name": "claimee",
-				  "type": "address"
-			  },
-			  {
-				  "indexed": false,
-				  "name": "_claimType",
-				  "type": "uint256"
-			  },
-			  {
-				  "indexed": true,
-				  "name": "issuer",
-				  "type": "address"
-			  },
-			  {
-				  "indexed": false,
-				  "name": "signature",
-				  "type": "bytes"
-			  },
-			  {
-				  "indexed": false,
-				  "name": "data",
-				  "type": "bytes"
-			  },
-			  {
-				  "indexed": false,
-				  "name": "uri",
-				  "type": "string"
-			  }
-		  ],
-		  "name": "ClaimApprovedByIssuer",
-		  "type": "event"
-	  },
-	  {
-		  "anonymous": false,
-		  "inputs": [
-			  {
-				  "indexed": true,
-				  "name": "claimId",
-				  "type": "bytes32"
-			  },
-			  {
-				  "indexed": true,
-				  "name": "claimee",
-				  "type": "address"
-			  },
-			  {
-				  "indexed": false,
-				  "name": "_claimType",
-				  "type": "uint256"
-			  },
-			  {
-				  "indexed": true,
-				  "name": "issuer",
-				  "type": "address"
-			  },
-			  {
-				  "indexed": false,
-				  "name": "signature",
-				  "type": "bytes"
-			  },
-			  {
-				  "indexed": false,
-				  "name": "data",
-				  "type": "bytes"
-			  },
-			  {
-				  "indexed": false,
-				  "name": "uri",
-				  "type": "string"
-			  }
-		  ],
-		  "name": "ClaimChangedByClaimee",
-		  "type": "event"
-	  },
-	  {
-		  "anonymous": false,
-		  "inputs": [
-			  {
-				  "indexed": true,
-				  "name": "claimId",
-				  "type": "bytes32"
-			  },
-			  {
-				  "indexed": true,
-				  "name": "claimee",
-				  "type": "address"
-			  },
-			  {
-				  "indexed": false,
-				  "name": "_claimType",
-				  "type": "uint256"
-			  },
-			  {
-				  "indexed": true,
-				  "name": "issuer",
-				  "type": "address"
-			  },
-			  {
-				  "indexed": false,
-				  "name": "signature",
-				  "type": "bytes"
-			  },
-			  {
-				  "indexed": false,
-				  "name": "data",
-				  "type": "bytes"
-			  },
-			  {
-				  "indexed": false,
-				  "name": "uri",
-				  "type": "string"
-			  }
-		  ],
-		  "name": "ClaimRemovedByClaimee",
-		  "type": "event"
-	  },
-	  {
-		  "anonymous": false,
-		  "inputs": [
-			  {
-				  "indexed": true,
-				  "name": "claimId",
-				  "type": "bytes32"
-			  },
-			  {
-				  "indexed": true,
-				  "name": "claimee",
-				  "type": "address"
-			  },
-			  {
-				  "indexed": false,
-				  "name": "_claimType",
-				  "type": "uint256"
-			  },
-			  {
-				  "indexed": true,
-				  "name": "issuer",
-				  "type": "address"
-			  },
-			  {
-				  "indexed": false,
-				  "name": "signature",
-				  "type": "bytes"
-			  },
-			  {
-				  "indexed": false,
-				  "name": "data",
-				  "type": "bytes"
-			  },
-			  {
-				  "indexed": false,
-				  "name": "uri",
-				  "type": "string"
-			  }
-		  ],
-		  "name": "ClaimRemovedByIssuer",
-		  "type": "event"
-	  },
-	  {
-		  "constant": false,
-		  "inputs": [
-			  {
-				  "name": "_claimId",
-				  "type": "bytes32"
-			  }
-		  ],
-		  "name": "removeClaimByIssuer",
-		  "outputs": [
-			  {
-				  "name": "success",
-				  "type": "bool"
-			  }
-		  ],
-		  "payable": false,
-		  "stateMutability": "nonpayable",
-		  "type": "function"
-	  }
-  ];
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_claimType",
+				"type": "uint256"
+			},
+			{
+				"name": "_issuer",
+				"type": "address"
+			},
+			{
+				"name": "_signature",
+				"type": "bytes"
+			},
+			{
+				"name": "_data",
+				"type": "bytes"
+			},
+			{
+				"name": "_uri",
+				"type": "string"
+			}
+		],
+		"name": "addClaim",
+		"outputs": [
+			{
+				"name": "claimId",
+				"type": "bytes32"
+			},
+			{
+				"name": "isNewClaimAdded",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "individualPendingClaims",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bytes32"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_claimId",
+				"type": "bytes32"
+			}
+		],
+		"name": "removeSelfClaim",
+		"outputs": [
+			{
+				"name": "success",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_issuer",
+				"type": "address"
+			}
+		],
+		"name": "getAllPendingClaimIdsForThisIssuer",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bytes32[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_claimId",
+				"type": "bytes32"
+			}
+		],
+		"name": "ApproveClaim",
+		"outputs": [
+			{
+				"name": "isClaimApproved",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "individualApprovedClaims",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bytes32"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_claimId",
+				"type": "bytes32"
+			}
+		],
+		"name": "removeClaimByIssuer",
+		"outputs": [
+			{
+				"name": "success",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_issuer",
+				"type": "address"
+			}
+		],
+		"name": "getAllApprovedClaimIdsForThisIssuer",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bytes32[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "bytes32"
+			}
+		],
+		"name": "claims",
+		"outputs": [
+			{
+				"name": "claimType",
+				"type": "uint256"
+			},
+			{
+				"name": "issuer",
+				"type": "address"
+			},
+			{
+				"name": "claimee",
+				"type": "address"
+			},
+			{
+				"name": "signature",
+				"type": "bytes"
+			},
+			{
+				"name": "data",
+				"type": "bytes"
+			},
+			{
+				"name": "uri",
+				"type": "string"
+			},
+			{
+				"name": "isApproved",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"name": "_adminController",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "claimId",
+				"type": "bytes32"
+			},
+			{
+				"indexed": true,
+				"name": "claimee",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "_claimType",
+				"type": "uint256"
+			},
+			{
+				"indexed": true,
+				"name": "issuer",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "signature",
+				"type": "bytes"
+			},
+			{
+				"indexed": false,
+				"name": "data",
+				"type": "bytes"
+			},
+			{
+				"indexed": false,
+				"name": "uri",
+				"type": "string"
+			}
+		],
+		"name": "ClaimAdded",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "claimId",
+				"type": "bytes32"
+			},
+			{
+				"indexed": true,
+				"name": "claimee",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "_claimType",
+				"type": "uint256"
+			},
+			{
+				"indexed": true,
+				"name": "issuer",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "signature",
+				"type": "bytes"
+			},
+			{
+				"indexed": false,
+				"name": "data",
+				"type": "bytes"
+			},
+			{
+				"indexed": false,
+				"name": "uri",
+				"type": "string"
+			}
+		],
+		"name": "ClaimRemovedByIssuer",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "claimId",
+				"type": "bytes32"
+			},
+			{
+				"indexed": true,
+				"name": "claimee",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "_claimType",
+				"type": "uint256"
+			},
+			{
+				"indexed": true,
+				"name": "issuer",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "signature",
+				"type": "bytes"
+			},
+			{
+				"indexed": false,
+				"name": "data",
+				"type": "bytes"
+			},
+			{
+				"indexed": false,
+				"name": "uri",
+				"type": "string"
+			}
+		],
+		"name": "ClaimRemovedByClaimee",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "claimId",
+				"type": "bytes32"
+			},
+			{
+				"indexed": true,
+				"name": "claimee",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "_claimType",
+				"type": "uint256"
+			},
+			{
+				"indexed": true,
+				"name": "issuer",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "signature",
+				"type": "bytes"
+			},
+			{
+				"indexed": false,
+				"name": "data",
+				"type": "bytes"
+			},
+			{
+				"indexed": false,
+				"name": "uri",
+				"type": "string"
+			}
+		],
+		"name": "ClaimApprovedByIssuer",
+		"type": "event"
+	}
+];
 
       var MyContract = web3.eth.contract(abi);
       
-      var myContractInstance = MyContract.at('0xd30b2a3dfe377fb1d40d38759376600753860087');
+      var myContractInstance = MyContract.at('0x1ee86b0ce69c669783864dcff85d4f4f576b7790');
 
 
 

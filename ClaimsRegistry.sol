@@ -36,6 +36,10 @@ contract ClaimsRegistry {
         _;
     }
     
+    modifier isRequesterApproved(address _requester){
+        require(adminController.isState(_requester));
+        _;
+    }
     mapping(address => bytes32) public individualPendingClaims; // my total pending claims
     
     mapping(address => bytes32) public individualApprovedClaims; // my approved claims
@@ -81,6 +85,7 @@ contract ClaimsRegistry {
     // it shall add or change the claim directly. no need to check anything. it will be called by the ISSUER
     function addClaim(uint256 _claimType, address _issuer, bytes _signature, bytes _data, string _uri ) 
     notYourself(_issuer) 
+    isRequesterApproved(msg.sender)
     returns (bytes32 claimId, bool isNewClaimAdded) {
             claimId = keccak256(_claimType, msg.sender, _issuer); // three params: as a single claim can be uniquely identified by them
             //uint256 index = findClaimIndex(individualApprovedClaims[msg.sender], claimId);
@@ -114,6 +119,7 @@ contract ClaimsRegistry {
     onlyIssuer( msg.sender, _claimId) 
     returns (bool isClaimApproved)
     {
+        require( adminController.isOrgAndState(msg.sender)) ;
         Claim memory _claim = claims[_claimId];
         uint256 index = findClaimIndex(PendingClaimsForEachIssuers[msg.sender], _claimId);
         if(index < PendingClaimsForEachIssuers[msg.sender].length){
@@ -200,7 +206,8 @@ contract ClaimsRegistry {
     
     
     // shall be called by individual entity
-    function removeSelfClaim(bytes32 _claimId) 
+    function removeSelfClaim(bytes32 _claimId)
+    isRequesterApproved(msg.sender)
     onlyClaimee( msg.sender, _claimId)
     returns (bool success) {
             Claim memory c = claims[_claimId];

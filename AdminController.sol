@@ -250,5 +250,16 @@ contract AdminController {
         return RevokeList.length;
     }
     
+    function isOrgAndState(address _anyAddress) returns (bool){
+        return (WhiteListedProviders[_anyAddress].isOrganization == true &&  WhiteListedProviders[_anyAddress].state == State.Accepted ? true : false );
+    }
+    
+    function isState(address _anyAddress) returns (bool){
+    return (WhiteListedProviders[_anyAddress].state == State.Accepted ? true : false );
+    }
+    
+    function isOrg(address _anyAddress) returns (bool){
+        return (WhiteListedProviders[_anyAddress].isOrganization == true ? true : false );
+    }
     
 }

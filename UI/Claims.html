@@ -522,7 +522,7 @@
   <h3 id='removeSelfClaimEvent'></h3>
 
 <hr/>
-RemoveClaimByIssuer
+
 
 
 <h2>Remove claim By Issuer: Will be called only by Issuer of the claim</h2>
@@ -567,7 +567,7 @@ RemoveClaimByIssuer
 <button onclick="fetchPendingClaimForIssuer()"> Fetch all pending Claim of this Issuer !</button>
 
 <h2> Pending Claim Id: </h2>
-  <h3 id='pendingClaimId'></h3>
+  <h3 id='pendingClaimIdForIssuer'></h3>
 <hr/>
 
 
@@ -580,6 +580,20 @@ RemoveClaimByIssuer
   <h3 id='ApprovedClaimIdByIssuer'></h3>
 
 <hr/>
+
+
+
+<h2>Fetch details of this claim Id</h2>
+<div>
+    Claim Id : <input id="claim">
+</div>
+<button onclick="fetchDetail()"> Fetch all Details !</button>
+<h2> Details of the claim </h2>
+  <h3 id='FetchDetail'></h3>
+
+<hr/>
+
+
 
 <script type="text/javascript" src='Claims_helper.js'></script>
 </body>

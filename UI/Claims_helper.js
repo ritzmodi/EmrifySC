@@ -170,7 +170,7 @@ function fetchPendingClaimForIssuer(){
             }
             var msg = "Pending Claim Ids are =>" + msg;
             console.log(msg);
-            document.getElementById('pendingClaimId').innerHTML = msg;
+            document.getElementById('pendingClaimIdForIssuer').innerHTML = msg;
 		  }
 		  else {
 			  console.err(error);
@@ -189,6 +189,23 @@ function fetchApprovedClaimsByIssuer(){
             var msg = "Approved Claim Ids are =>" + msg;
             console.log(msg);
             document.getElementById('ApprovedClaimIdByIssuer').innerHTML = msg;
+		  }
+		  else {
+			  console.err(error);
+		  }
+    });
+}
+
+
+function fetchDetail(){
+    var claim = document.getElementById('claim').value ;
+    var isOrg = myContractInstance.claims.call(claim,function(err,result){
+		if(!err){
+            var msg ="ClaimType="+result[0] +
+            " ,Issuer="+ result[1]+", Requester="+result[2]+", Signature="+result[3]+
+            ", Data="+result[4]+ ", URI="+result[5] + ", isApproved="+result[6];
+            
+            document.getElementById('FetchDetail').innerHTML = msg;
 		  }
 		  else {
 			  console.err(error);

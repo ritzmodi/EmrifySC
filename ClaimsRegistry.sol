@@ -5,7 +5,8 @@ contract ClaimsRegistry {
     
     AdminController adminController ;
    
-  
+ 
+   
     struct Claim {
         // uint256 accountType; // can be either individual or organzation
         uint256 claimType; // this shall be one of the many from : doctor, nurse, receptionist etc 
@@ -63,7 +64,7 @@ contract ClaimsRegistry {
     event ClaimRemovedByIssuer(bytes32 indexed claimId, address indexed claimee, uint256 _claimType, address indexed issuer, bytes signature, bytes data, string uri);
     event ClaimRemovedByClaimee(bytes32 indexed claimId, address indexed claimee, uint256 _claimType, address indexed issuer, bytes signature, bytes data, string uri);
     event ClaimApprovedByIssuer(bytes32 indexed claimId, address indexed claimee ,  uint256 _claimType, address indexed issuer, bytes signature, bytes data, string uri);
-    event ClaimChangedByClaimee(bytes32 indexed claimId, address indexed claimee ,  uint256 _claimType, address indexed issuer, bytes signature, bytes data, string uri);
+    // event ClaimChangedByClaimee(bytes32 indexed claimId, address indexed claimee ,  uint256 _claimType, address indexed issuer, bytes signature, bytes data, string uri);
     
     
 

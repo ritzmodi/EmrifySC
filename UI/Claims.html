@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Insurance Interaction</title>
+    <title>Claims Registry</title>
 	<script src="http://rawgit.com/ethereum/web3.js/0.16.0/dist/web3.min.js"></script>
 	<script
 	  src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
@@ -20,6 +20,25 @@
 
 
       var abi =[
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_anyAddress",
+				"type": "address"
+			}
+		],
+		"name": "isOrgAndState",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
 	{
 		"constant": false,
 		"inputs": [
@@ -59,6 +78,20 @@
 		"type": "function"
 	},
 	{
+		"constant": true,
+		"inputs": [],
+		"name": "returnApplicationRevoke",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"constant": false,
 		"inputs": [
 			{
@@ -73,37 +106,159 @@
 		"type": "function"
 	},
 	{
-		"constant": false,
+		"constant": true,
 		"inputs": [
 			{
-				"name": "_claimId",
-				"type": "bytes32"
+				"name": "",
+				"type": "uint256"
 			}
 		],
-		"name": "removeClaim",
+		"name": "AcceptedList",
 		"outputs": [
 			{
-				"name": "success",
-				"type": "bool"
+				"name": "",
+				"type": "address"
 			}
 		],
 		"payable": false,
-		"stateMutability": "nonpayable",
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
 		"constant": true,
 		"inputs": [
 			{
-				"name": "_accountType",
+				"name": "",
 				"type": "uint256"
 			}
 		],
-		"name": "getClaimsIdByType",
+		"name": "PendingList",
 		"outputs": [
 			{
 				"name": "",
-				"type": "bytes32[]"
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "totalAcceptedCount",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "individualPendingCount",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "totalRevokeCount",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "returnApplicationAccepted",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "returnRejectedArray",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "returnApplicationPending",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "individualRevokeCount",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "returnApplicationRejected",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
 			}
 		],
 		"payable": false,
@@ -125,21 +280,22 @@
 		"type": "function"
 	},
 	{
-		"constant": false,
+		"constant": true,
 		"inputs": [
 			{
-				"name": "_doctorAddress",
+				"name": "",
 				"type": "address"
-			},
-			{
-				"name": "_IPFSDocumentHash",
-				"type": "string"
 			}
 		],
-		"name": "AssociateDoctorUnderMyHospital",
-		"outputs": [],
+		"name": "individualAcceptedCount",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
 		"payable": false,
-		"stateMutability": "nonpayable",
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -164,89 +320,11 @@
 		"constant": false,
 		"inputs": [
 			{
-				"name": "_accountType",
-				"type": "uint256"
-			},
-			{
-				"name": "_category",
-				"type": "uint256"
-			},
-			{
-				"name": "_issuer",
-				"type": "address"
-			},
-			{
-				"name": "_signature",
-				"type": "bytes"
-			},
-			{
-				"name": "_data",
-				"type": "bytes"
-			},
-			{
-				"name": "_uri",
-				"type": "string"
-			}
-		],
-		"name": "addClaim",
-		"outputs": [
-			{
-				"name": "claimId",
-				"type": "bytes32"
-			}
-		],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "",
-				"type": "address"
-			},
-			{
-				"name": "",
+				"name": "_providerAddress",
 				"type": "address"
 			}
 		],
-		"name": "DoctorInformation",
-		"outputs": [
-			{
-				"name": "doctorAddress",
-				"type": "address"
-			},
-			{
-				"name": "isRegistered",
-				"type": "bool"
-			},
-			{
-				"name": "IPFSDoctorApprovalDocumentHash",
-				"type": "string"
-			},
-			{
-				"name": "IPFSDoctorRemovalDocumentHash",
-				"type": "string"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_doctorAddress",
-				"type": "address"
-			},
-			{
-				"name": "_IPFSDocumentHash",
-				"type": "string"
-			}
-		],
-		"name": "DisassociateDoctorfromTheHospital",
+		"name": "revokeProviderApplication",
 		"outputs": [],
 		"payable": false,
 		"stateMutability": "nonpayable",
@@ -300,37 +378,59 @@
 	},
 	{
 		"constant": true,
-		"inputs": [
-			{
-				"name": "_claimId",
-				"type": "bytes32"
-			}
-		],
-		"name": "getClaim",
+		"inputs": [],
+		"name": "totalRejectedCount",
 		"outputs": [
 			{
-				"name": "accountType",
+				"name": "",
 				"type": "uint256"
-			},
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "returnRevokedArray",
+		"outputs": [
 			{
-				"name": "category",
-				"type": "uint256"
-			},
+				"name": "",
+				"type": "address[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "returnAcceptedArray",
+		"outputs": [
 			{
-				"name": "issuer",
+				"name": "",
+				"type": "address[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
 				"type": "address"
-			},
+			}
+		],
+		"name": "individualRejectiedCount",
+		"outputs": [
 			{
-				"name": "signature",
-				"type": "bytes"
-			},
-			{
-				"name": "data",
-				"type": "bytes"
-			},
-			{
-				"name": "uri",
-				"type": "string"
+				"name": "",
+				"type": "uint256"
 			}
 		],
 		"payable": false,
@@ -379,6 +479,39 @@
 	{
 		"constant": true,
 		"inputs": [],
+		"name": "returnPendingArray",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "RevokeList",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
 		"name": "admin",
 		"outputs": [
 			{
@@ -391,197 +524,29 @@
 		"type": "function"
 	},
 	{
+		"constant": true,
 		"inputs": [
 			{
-				"name": "_providerRegistry",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "RejectedList",
+		"outputs": [
+			{
+				"name": "",
 				"type": "address"
 			}
 		],
 		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"payable": false,
 		"stateMutability": "nonpayable",
 		"type": "constructor"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"name": "claimId",
-				"type": "bytes32"
-			},
-			{
-				"indexed": true,
-				"name": "accountType",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"name": "category",
-				"type": "uint256"
-			},
-			{
-				"indexed": true,
-				"name": "issuer",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"name": "signature",
-				"type": "bytes"
-			},
-			{
-				"indexed": false,
-				"name": "data",
-				"type": "bytes"
-			},
-			{
-				"indexed": false,
-				"name": "uri",
-				"type": "string"
-			}
-		],
-		"name": "ClaimAdded",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"name": "claimId",
-				"type": "bytes32"
-			},
-			{
-				"indexed": true,
-				"name": "accountType",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"name": "category",
-				"type": "uint256"
-			},
-			{
-				"indexed": true,
-				"name": "issuer",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"name": "signature",
-				"type": "bytes"
-			},
-			{
-				"indexed": false,
-				"name": "data",
-				"type": "bytes"
-			},
-			{
-				"indexed": false,
-				"name": "uri",
-				"type": "string"
-			}
-		],
-		"name": "ClaimRemoved",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"name": "claimId",
-				"type": "bytes32"
-			},
-			{
-				"indexed": true,
-				"name": "accountType",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"name": "category",
-				"type": "uint256"
-			},
-			{
-				"indexed": true,
-				"name": "issuer",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"name": "signature",
-				"type": "bytes"
-			},
-			{
-				"indexed": false,
-				"name": "data",
-				"type": "bytes"
-			},
-			{
-				"indexed": false,
-				"name": "uri",
-				"type": "string"
-			}
-		],
-		"name": "ClaimChanged",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"name": "_orgAddress",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"name": "doctorAddress",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"name": "IPFSDocumentHash",
-				"type": "string"
-			}
-		],
-		"name": "DoctorAssociated",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"name": "_orgAddress",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"name": "doctorAddress",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"name": "IPFSDocumentHash",
-				"type": "string"
-			}
-		],
-		"name": "DoctorDisassociated",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"name": "newOwner",
-				"type": "address"
-			}
-		],
-		"name": "OwnershipTransferred",
-		"type": "event"
 	},
 	{
 		"anonymous": false,
@@ -612,6 +577,11 @@
 				"indexed": false,
 				"name": "ProviderDetailsIPFShash",
 				"type": "string"
+			},
+			{
+				"indexed": false,
+				"name": "state",
+				"type": "uint8"
 			}
 		],
 		"name": "RequestSubmittedForApproval",
@@ -624,6 +594,11 @@
 				"indexed": true,
 				"name": "providerAddress",
 				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "_IPFSProviderhash",
+				"type": "string"
 			}
 		],
 		"name": "RequestApproved",
@@ -636,9 +611,31 @@
 				"indexed": true,
 				"name": "providerAddress",
 				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "_IPFSProviderhash",
+				"type": "string"
 			}
 		],
 		"name": "RequestRejected",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "providerAddress",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "_IPFSProviderhash",
+				"type": "string"
+			}
+		],
+		"name": "RequestRevoked",
 		"type": "event"
 	},
 	{
@@ -662,7 +659,7 @@
 
       var MyContract = web3.eth.contract(abi);
       
-      var myContractInstance = MyContract.at('0x0dd3a359e8e70218fac5a129d6ba13bdfbb20127');
+      var myContractInstance = MyContract.at('0xd30b2a3dfe377fb1d40d38759376600753860087');
 
 
 
@@ -674,77 +671,114 @@
 
   <body>
 
-<h2>Get claim</h2>
+<h2>Add claim : Can be called by any entity</h2>
 <div>
-    Claim ID : <input id="claimID">
-</div>
-<button onclick="getClaim()"> get Claim!</button>
-<hr/>
-
-
-
-
-  <h2>Fetch the list of the claims by Account type: 0 for Individual, 1 for org</h2>
-  <div>
-    Account Type : <input id='accType'>
-</div>
-
-<button onclick='getClaimsIdByType()'>Fetch list!</button>
-<hr/>
-
-
-<h2>Add/change claim </h2>
-<div>
-    Account Type[0 for Individual, 1 for org] : <input id='accTypeForAddClaim'>
-  </div>
-  <div>
-    Category : <input id='categoryForAddClaim'>
-  </div>
-  <div>
-    Issuer Address : <input id='issuerAddressForAddClaim'>
-  </div>
-  <div>
-    signature : <input id='signatureForAddClaim'>
-  </div>
-  <div>
-    Data : <input id='dataForAddClaim'>
-  </div>
-  <div>
-    URI : <input id='URIForAddClaim'>
-  </div>
-
-<button onclick='addClaim()'>Add/change claim!</button>
-<hr/>
-<p>Events generated for the Add/change claim :
-    <h3 id='callback2'></h3>
-</p>
-<hr/>
-
-<h2> Remove claim</h2>
-<div>
-    Claim ID : <input id='claimIdForRemoval'>
-</div>
-<button onclick='removeClaim()'>Remove Claim!</button>
-<hr/>
-<p>Events generated for the removed claim:
-			<h3 id='callback3'></h3>
-</p>
-
-<hr/>
-
-
-<h2> Terminate Provider Application: To be called by individual entity or organisation</h2>
-<div>
-    Provider Address : <input id='providerAddressForTermination'>
+    Claim Type : <input id="claimType">
 </div>
 <div>
-    Termination Document : <input id='DocumentForTermination'>
+    Claim Issuer : <input id="claimIssuer">
 </div>
-<button onclick='terminateProviderFromNetwork()'>Terminate Provider!</button>
+<div>
+    Signature : <input id="signature">
+</div>
+<div>
+    Data : <input id="data">
+</div>
+<div>
+    URI: <input id="uri">
+</div>
+
+<button onclick="AddClaim()"> Add Claim!</button>
 <hr/>
-<p>Events generated for the Ternimated provider:
-			<h3 id='callback4'></h3>
-</p>
+
+  <h2> Event of the Add claims: </h2>
+  <h3 id='addClaimEvent'></h3>
+
+<hr/>
+
+
+<h2>Appprove claim : Will be called only by Issuer</h2>
+<div>
+    Claim ID : <input id="claimIdForApproval">
+</div>
+<button onclick="ApproveClaim()"> Approve Claim!</button>
+<hr/>
+
+  <h2> Event of the Aproved claims: </h2>
+  <h3 id='approveClaimEvent'></h3>
+
+<hr/>
+
+
+<h2>Remove Self claim : Will be called only by requester of the claim</h2>
+<div>
+    Claim ID : <input id="claimIdForSelfRemoval">
+</div>
+<button onclick="RemoveSelfClaim()"> Remove Own Claim!</button>
+<hr/>
+
+  <h2> Event of the Self Removed claims: </h2>
+  <h3 id='removeSelfClaimEvent'></h3>
+
+<hr/>
+RemoveClaimByIssuer
+
+
+<h2>Remove claim By Issuer: Will be called only by Issuer of the claim</h2>
+<div>
+    Claim ID : <input id="claimIdForRemovalByIssuer">
+</div>
+<button onclick="RemoveClaimByIssuer()"> Issuer is removing this Claim!</button>
+<hr/>
+
+  <h2> Event of the claim removed by Issuer: </h2>
+  <h3 id='removeClaimByIssuer'></h3>
+
+<hr/>
+
+
+<h2>Get Pending claim Id for this Entity</h2>
+<div>
+    Entity Address : <input id="fetchPendingClaimAdd">
+</div>
+<button onclick="fetchPendingClaim()"> Get Pending Claim!</button>
+
+<h2> Pending Claim Id: </h2>
+  <h3 id='pendingClaimId'></h3>
+<hr/>
+
+<h2>Get Approved claim Id for this Entity</h2>
+<div>
+    Entity Address : <input id="fetchApprovedClaimAdd">
+</div>
+<button onclick="fetchApprovedClaim()"> Fetch Approved Claim!</button>
+<h2> Appproved Claim Id: </h2>
+  <h3 id='ApprovedClaimId'></h3>
+
+<hr/>
+
+
+
+<h2>Fetch All Pending claim Ids for this Issuer</h2>
+<div>
+    Issuer Address : <input id="fetchPendingClaimsForThisIssuer">
+</div>
+<button onclick="fetchPendingClaimForIssuer()"> Fetch all pending Claim of this Issuer !</button>
+
+<h2> Pending Claim Id: </h2>
+  <h3 id='pendingClaimId'></h3>
+<hr/>
+
+
+<h2>Fetch All approved claim Ids by this Issuer</h2>
+<div>
+    Issuer Address : <input id="fetchApprovedClaimIdsByIssuer">
+</div>
+<button onclick="fetchApprovedClaimsByIssuer()"> Fetch all approved Claim by this Issuer !</button>
+<h2> Appproved Claim Id: </h2>
+  <h3 id='ApprovedClaimIdByIssuer'></h3>
+
+<hr/>
 
 <script type="text/javascript" src='Claim_helper.js'></script>
 </body>

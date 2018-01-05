@@ -7,108 +7,91 @@ function startApp(_myContractInstance){
     
 }
 
-function getClaim() {
-var claimID =  document.getElementById('claimID').value;
-var getClaim = myContractInstance.getClaim(claimID,,function(err,result){
+function AddClaim() {
+    var claimType =  document.getElementById('claimType').value;
+    var claimIssuer =  document.getElementById('claimIssuer').value;
+    var signature =  document.getElementById('signature').value;
+    var data =  document.getElementById('data').value;
+    var uri =  document.getElementById('uri').value;
+var addClaim = myContractInstance.addClaim(claimType,claimIssuer,signature,data,uri,function(err,result){
     if(!err){
-        console.log("claim fetched successfully");
-        console.log("These are the details for the :"+claimID+"=> \n accountType=" + result[0]," category="+result[1]," issuer="+result[2]," signature="+result[3]," data="+result[4]," uri="+result[5]);
+        console.log("Add claim request submitted successfully");
+        // console.log("These are the details for the :"+claimID+"=> \n accountType=" + result[0]," category="+result[1]," issuer="+result[2]," signature="+result[3]," data="+result[4]," uri="+result[5]);
       }
       else {
           console.err(error);
       }
 });
 
+var event = myContractInstance.ClaimAdded({},function(error, result) {
+    if (!error) {
+        //address indexed patientAddress, address indexed providerAddress, uint indexed claimID, uint indexed amount, uint indexed visitID
+            var msg = "Claim added successfully with these details. \n Claim ID= " +result.args.claimId+
+            ", Requester= "+result.args.claimee+ ", ClaimType="+result.args._claimType +
+            " ,Issuer="+ result.args.issuer+", Signature="+result.args.signature+
+            ", Data="+result.args.data+ ", URI="+result.args.uri;
+            document.getElementById('addClaimEvent').innerHTML = ""+msg;
+            console.log(msg);
+    }
+    else {
+        console.error(error);
+    }
+});
+
+
 }
 
 
-function getClaimsIdByType(){
-    var accType = document.getElementById('accType').value;
+function ApproveClaim(){
+    var claimIdForApproval = document.getElementById('claimIdForApproval').value;
     
-	var fetchList = myContractInstance.getClaimsIdByType(accType,function(err,result){
+	var fetchList = myContractInstance.ApproveClaim(claimIdForApproval,function(err,result){
 		if(!err){
-			for (var i =0; i< result.length; i++){
-                console.log(result[i]);
-            }
+			console.log("Approve claim request submitted successfully" + result);
 		  }
 		  else {
 			  console.err(error);
 		  }
     });
     
-}
-
-
-function addClaim(){
-    var accTypeForAddClaim = document.getElementById('accTypeForAddClaim').value;
-    var categoryForAddClaim = document.getElementById('categoryForAddClaim').value;
-    var issuerAddressForAddClaim = document.getElementById('issuerAddressForAddClaim').value;
-    var signatureForAddClaim = document.getElementById('signatureForAddClaim').value;
-    var dataForAddClaim = document.getElementById('dataForAddClaim').value;
-    var URIForAddClaim = document.getElementById('URIForAddClaim').value;
-
-
-	var addProvider = myContractInstance.addClaim(accTypeForAddClaim,categoryForAddClaim,issuerAddressForAddClaim,signatureForAddClaim,dataForAddClaim,URIForAddClaim,function(err,result){
-		if(!err){
-			console.log("claim added/changed successfully for claimID="+ (result.value));
-		  }
-		  else {
-			  console.err(error);
-		  }
-    });
-    var event = myContractInstance.ClaimChanged({},function(error, result) {
+    var event = myContractInstance.ClaimApprovedByIssuer({},function(error, result) {
         if (!error) {
             //address indexed patientAddress, address indexed providerAddress, uint indexed claimID, uint indexed amount, uint indexed visitID
-                var msg = "Claim changed successfully with these details. \n Claim ID= " +result.args.claimId+
-                ", Account Type= "+result.args.accountType+ ", Category="+result.args.category +
+                var msg = "Claim approved successfully with these details. \n Claim ID= " +result.args.claimId+
+                ", Requester= "+result.args.claimee+ ", ClaimType="+result.args._claimType +
                 " ,Issuer="+ result.args.issuer+", Signature="+result.args.signature+
                 ", Data="+result.args.data+ ", URI="+result.args.uri;
-                document.getElementById('callback2').innerHTML = ""+msg;
+                document.getElementById('approveClaimEvent').innerHTML = ""+msg;
                 console.log(msg);
         }
         else {
             console.error(error);
         }
     });
-
-    var event1 = myContractInstance.ClaimAdded({},function(error, result) {
-        if (!error) {
-            //address indexed patientAddress, address indexed providerAddress, uint indexed claimID, uint indexed amount, uint indexed visitID
-            var msg = "Claim added successfully with these details. \n Claim ID= " +result.args.claimId+
-            ", Account Type= "+result.args.accountType+ ", Category="+result.args.category +
-            " ,Issuer="+ result.args.issuer+", Signature="+result.args.signature+
-            ", Data="+result.args.data+ ", URI="+result.args.uri;
-            document.getElementById('callback2').innerHTML = ""+msg;
-                console.log(msg);
-        }
-        else {
-            console.error(error);
-        }
-    });
-
 }
 
 
 
-function removeClaim(){
-    var claimIdForRemoval = document.getElementById('claimIdForRemoval').value;
-
-	var addProvider = myContractInstance.removeClaim(claimIdForRemoval,function(err,result){
+function RemoveSelfClaim(){
+    var claimIdForSelfRemoval = document.getElementById('claimIdForSelfRemoval').value;
+    
+	var claimIdForRemoval = myContractInstance.removeSelfClaim(claimIdForSelfRemoval,function(err,result){
 		if(!err){
-			console.log("Claim removed successfully")
+			console.log("Self Remove claim request submitted successfully" + result);
 		  }
 		  else {
 			  console.err(error);
 		  }
     });
-    var event = myContractInstance.ClaimRemoved({},function(error, result) {
+    
+    var event = myContractInstance.ClaimRemovedByClaimee({},function(error, result) {
         if (!error) {
             //address indexed patientAddress, address indexed providerAddress, uint indexed claimID, uint indexed amount, uint indexed visitID
-            var msg = "Claim removed successfully with these details. \n Claim ID= " +result.args.claimId+
-            ", Account Type= "+result.args.accountType+ ", Category="+result.args.category +
-            " ,Issuer="+ result.args.issuer+", Signature="+result.args.signature+
-            ", Data="+result.args.data+ ", URI="+result.args.uri;
-            document.getElementById('callback2').innerHTML = ""+msg;
+                var msg = "You removed your own claim successfully. These were the details for the removed claim. \n Claim ID= " +result.args.claimId+
+                ", Requester= "+result.args.claimee+ ", ClaimType="+result.args._claimType +
+                " ,Issuer="+ result.args.issuer+", Signature="+result.args.signature+
+                ", Data="+result.args.data+ ", URI="+result.args.uri;
+                document.getElementById('removeSelfClaimEvent').innerHTML = ""+msg;
                 console.log(msg);
         }
         else {
@@ -116,27 +99,99 @@ function removeClaim(){
         }
     });
 }
- 
 
 
 
 
+function RemoveClaimByIssuer(){
+    var claimIdForRemovalByIssuer = document.getElementById('claimIdForRemovalByIssuer').value;
+    
+	var claimIdForRemovalByIssuer = myContractInstance.removeClaimByIssuer(claimIdForRemovalByIssuer,function(err,result){
+		if(!err){
+			console.log("Issuer have successfully submitted the remove claim request" + result);
+		  }
+		  else {
+			  console.err(error);
+		  }
+    });
+    
+    var event = myContractInstance.ClaimRemovedByIssuer({},function(error, result) {
+        if (!error) {
+            //address indexed patientAddress, address indexed providerAddress, uint indexed claimID, uint indexed amount, uint indexed visitID
+                var msg = "Issuer have removed the claim successfully. These were the details for the removed claim. \n Claim ID= " +result.args.claimId+
+                ", Requester= "+result.args.claimee+ ", ClaimType="+result.args._claimType +
+                " ,Issuer="+ result.args.issuer+", Signature="+result.args.signature+
+                ", Data="+result.args.data+ ", URI="+result.args.uri;
+                document.getElementById('removeClaimByIssuer').innerHTML = ""+msg;
+                console.log(msg);
+        }
+        else {
+            console.error(error);
+        }
+    });
+}
+
+function fetchPendingClaim(){
+    var fetchPendingClaimAdd = document.getElementById('fetchPendingClaimAdd').value ;
+    var isOrg = myContractInstance.individualPendingClaims.call(fetchPendingClaimAdd,function(err,result){
+		if(!err){
+            var msg = "Pending Claim Id =>" + result;
+            console.log(msg);
+            document.getElementById('pendingClaimId').innerHTML = result;
+		  }
+		  else {
+			  console.err(error);
+		  }
+    });
+}
+
+function fetchApprovedClaim(){
+    var fetchApprovedClaimAdd = document.getElementById('fetchApprovedClaimAdd').value ;
+    var isOrg = myContractInstance.individualApprovedClaims.call(fetchApprovedClaimAdd,function(err,result){
+		if(!err){
+            var msg = "Approved Claim Id =>" + result;
+            console.log(msg);
+            document.getElementById('ApprovedClaimId').innerHTML = result;
+		  }
+		  else {
+			  console.err(error);
+		  }
+    });
+}
 
 
+function fetchPendingClaimForIssuer(){
+    var fetchPendingClaimsForThisIssuer = document.getElementById('fetchPendingClaimsForThisIssuer').value ;
+    var isOrg = myContractInstance.getAllPendingClaimIdsForThisIssuer.call(fetchPendingClaimsForThisIssuer,function(err,result){
+		if(!err){
+            var msg ="";
+            for (var i = 0; i< result.length; i++){
+                msg += result[i]+", ";
+            }
+            var msg = "Pending Claim Ids are =>" + msg;
+            console.log(msg);
+            document.getElementById('pendingClaimId').innerHTML = msg;
+		  }
+		  else {
+			  console.err(error);
+		  }
+    });
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+function fetchApprovedClaimsByIssuer(){
+    var fetchApprovedClaimIdsByIssuer = document.getElementById('fetchApprovedClaimIdsByIssuer').value ;
+    var isOrg = myContractInstance.getAllApprovedClaimIdsForThisIssuer.call(fetchApprovedClaimIdsByIssuer,function(err,result){
+		if(!err){
+            var msg ="";
+            for (var i = 0; i< result.length; i++){
+                msg += result[i]+", ";
+            }
+            var msg = "Approved Claim Ids are =>" + msg;
+            console.log(msg);
+            document.getElementById('ApprovedClaimIdByIssuer').innerHTML = msg;
+		  }
+		  else {
+			  console.err(error);
+		  }
+    });
+}

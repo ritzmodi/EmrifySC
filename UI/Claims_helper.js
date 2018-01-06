@@ -166,7 +166,7 @@ function fetchPendingClaimsBetweenPair(){
 
 function fetchPendingClaim(){
     var fetchPendingClaimAdd = document.getElementById('fetchPendingClaimAdd').value ;
-    var isOrg = myContractInstance.individualPendingClaims.call(fetchPendingClaimAdd,function(err,result){
+    var isOrg = myContractInstance.getAllPendingClaimIdsForIndividual.call(fetchPendingClaimAdd,function(err,result){
 		if(!err){
             var msg ="";
             for (var i = 0; i< result.length; i++){
@@ -184,7 +184,7 @@ function fetchPendingClaim(){
 
 function fetchApprovedClaim(){
     var fetchApprovedClaimAdd = document.getElementById('fetchApprovedClaimAdd').value ;
-    var isOrg = myContractInstance.individualApprovedClaims.call(fetchApprovedClaimAdd,function(err,result){
+    var isOrg = myContractInstance.getAllApprovedClaimIdsforIndividual.call(fetchApprovedClaimAdd,function(err,result){
 		if(!err){
             var msg ="";
             for (var i = 0; i< result.length; i++){

@@ -109,10 +109,10 @@ contract ClaimsRegistry {
         
             claimId = keccak256(_claimType, msg.sender, _issuer); // three params: as a single claim can be uniquely identified by them
             //uint256 index = findClaimIndex(individualApprovedClaims[msg.sender], claimId);
-            if(pairApprovedClaimPerType[msg.sender][_issuer][_claimType] == claimId || pairPendingClaimPerType[msg.sender][_issuer][_claimType] == claimId){
+            if(pairApprovedClaimPerType[msg.sender][_issuer][_claimType] == claimId){
                 return (claimId, false);
             }
-
+            delete claims[claimId];
              claims[claimId] = Claim(
                  {
                     //  accountType: _accountType,
@@ -126,12 +126,13 @@ contract ClaimsRegistry {
                      isApproved: false
                  }
              );
-    
+            
+            if( pairPendingClaimPerType[msg.sender][_issuer][_claimType] != claimId){
                 pairPendingClaimPerType[msg.sender][_issuer][_claimType]= claimId; // add to the list of the claimee
                 PendingClaimsForEachIssuers[_issuer].push(claimId); // add to the list of the issuer
                 individualPendingClaims[msg.sender].push(claimId);
                 ClaimAdded(claimId, msg.sender, _claimType, _issuer, _signature, _data, _uri);
-                
+            }
                 return (claimId, true);    
     }
 

@@ -164,6 +164,42 @@ function fetchPendingClaimsBetweenPair(){
 }
 
 
+function fetchPendingClaim(){
+    var fetchPendingClaimAdd = document.getElementById('fetchPendingClaimAdd').value ;
+    var isOrg = myContractInstance.individualPendingClaims.call(fetchPendingClaimAdd,function(err,result){
+		if(!err){
+            var msg ="";
+            for (var i = 0; i< result.length; i++){
+                msg += result[i]+", ";
+            }
+            var msg = "Pending Claim Ids for this individual are =>" + msg;
+            console.log(msg);
+            document.getElementById('pendingClaimIdList').innerHTML = result;
+		  }
+		  else {
+			  console.err(error);
+		  }
+    });
+}
+
+function fetchApprovedClaim(){
+    var fetchApprovedClaimAdd = document.getElementById('fetchApprovedClaimAdd').value ;
+    var isOrg = myContractInstance.individualApprovedClaims.call(fetchApprovedClaimAdd,function(err,result){
+		if(!err){
+            var msg ="";
+            for (var i = 0; i< result.length; i++){
+                msg += result[i]+", ";
+            }
+            var msg = "Approved Claim Ids for this individual are =>" + msg;
+            console.log(msg);
+            document.getElementById('ApprovedClaimIdList').innerHTML = result;
+		  }
+		  else {
+			  console.err(error);
+		  }
+    });
+}
+
 function fetchPendingClaimForIssuer(){
     var fetchPendingClaimsForThisIssuer = document.getElementById('fetchPendingClaimsForThisIssuer').value ;
     var isOrg = myContractInstance.getAllPendingClaimIdsForThisIssuer.call(fetchPendingClaimsForThisIssuer,function(err,result){

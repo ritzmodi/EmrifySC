@@ -55,6 +55,10 @@ contract ClaimsRegistry {
     
     mapping(address => bytes32[])  ApprovedClaimsbyEachIssuers; // claims  which are approved  by Issuers
     
+    mapping(address => bytes32[]) individualPendingClaims; // pending claims for individual 
+    
+    mapping(address => bytes32[])  individualApprovedClaims; // approved  claims for individual 
+    
     mapping (bytes32 => Claim) public claims;
     
     // mapping (bytes32 => bytes32[]) claimsByType; // either organization or individual
@@ -88,7 +92,14 @@ contract ClaimsRegistry {
     function getAllPendingClaimIdsForThisIssuer (address _issuer) constant returns (bytes32[] ){
         return PendingClaimsForEachIssuers[_issuer];
     }
-
+    
+    function getAllApprovedClaimIdsforIndividual (address _requester) constant returns (bytes32[] ){
+        return individualApprovedClaims[_requester];
+    }
+    
+    function getAllPendingClaimIdsForIndividual (address _requester) constant returns (bytes32[] ){
+        return individualPendingClaims[_requester];
+    }
     // it shall add or change the claim directly. no need to check anything. it will be called by the ISSUER
     function addClaim(uint256 _claimType, address _issuer, bytes _signature, bytes _data, string _uri ) 
     notYourself(_issuer) 
@@ -118,6 +129,7 @@ contract ClaimsRegistry {
     
                 pairPendingClaimPerType[msg.sender][_issuer][_claimType]= claimId; // add to the list of the claimee
                 PendingClaimsForEachIssuers[_issuer].push(claimId); // add to the list of the issuer
+                individualPendingClaims[msg.sender].push(claimId);
                 ClaimAdded(claimId, msg.sender, _claimType, _issuer, _signature, _data, _uri);
                 
                 return (claimId, true);    
@@ -150,7 +162,7 @@ contract ClaimsRegistry {
             pairApprovedClaimPerType[_claim.claimee][msg.sender][_claim.claimType]=_claimId;
 
             PendingClaimsForEachIssuers[msg.sender] = remove (PendingClaimsForEachIssuers[msg.sender], findClaimIndex(PendingClaimsForEachIssuers[msg.sender], _claimId));
-            //individualPendingClaims[_claim.claimee] = remove (individualPendingClaims[_claim.claimee], findClaimIndex(individualPendingClaims[_claim.claimee], _claimId));
+            individualPendingClaims[_claim.claimee] = remove(individualPendingClaims[_claim.claimee], findClaimIndex(individualPendingClaims[_claim.claimee], _claimId));
             delete pairPendingClaimPerType[_claim.claimee][msg.sender][_claim.claimType];
             ClaimApprovedByIssuer(_claimId, msg.sender, _claim.claimType, _claim.issuer, _claim.signature, _claim.data, _claim.uri);
             return true;
@@ -204,6 +216,7 @@ contract ClaimsRegistry {
             ClaimRemovedByIssuer(_claimId, c.claimee, c.claimType, c.issuer, c.signature, c.data, c.uri);
             // delete from three places: 1: issuer's approved list, 2: individual approved list, 3: from app wide claims  
             ApprovedClaimsbyEachIssuers[msg.sender] = remove (ApprovedClaimsbyEachIssuers[msg.sender], findClaimIndex(ApprovedClaimsbyEachIssuers[msg.sender], _claimId));
+            individualApprovedClaims[c.claimee] = remove(individualApprovedClaims[c.claimee], findClaimIndex(individualApprovedClaims[c.claimee], _claimId));
             delete pairApprovedClaimPerType[c.claimee][msg.sender][c.claimType];
             delete claims[_claimId];
             
@@ -225,6 +238,7 @@ contract ClaimsRegistry {
              ClaimRemovedByClaimee(_claimId, c.claimee, c.claimType, c.issuer, c.signature, c.data, c.uri);
             // delete from three places: 1: issuer's approved list, 2: individual approved list, 3: from app wide claims  
             ApprovedClaimsbyEachIssuers[c.issuer] = remove (ApprovedClaimsbyEachIssuers[c.issuer], findClaimIndex(ApprovedClaimsbyEachIssuers[c.issuer], _claimId));
+            individualApprovedClaims[c.claimee] = remove(individualApprovedClaims[c.claimee], findClaimIndex(individualApprovedClaims[c.claimee], _claimId));
             delete pairApprovedClaimPerType[msg.sender][c.issuer][c.claimType];
             delete claims[_claimId];
             

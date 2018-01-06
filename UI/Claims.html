@@ -25,6 +25,49 @@
 		"inputs": [
 			{
 				"name": "",
+				"type": "bytes32"
+			}
+		],
+		"name": "claims",
+		"outputs": [
+			{
+				"name": "claimType",
+				"type": "uint256"
+			},
+			{
+				"name": "issuer",
+				"type": "address"
+			},
+			{
+				"name": "claimee",
+				"type": "address"
+			},
+			{
+				"name": "signature",
+				"type": "bytes"
+			},
+			{
+				"name": "data",
+				"type": "bytes"
+			},
+			{
+				"name": "uri",
+				"type": "string"
+			},
+			{
+				"name": "isApproved",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
 				"type": "address"
 			},
 			{
@@ -97,11 +140,11 @@
 		"constant": true,
 		"inputs": [
 			{
-				"name": "_issuer",
+				"name": "_requester",
 				"type": "address"
 			}
 		],
-		"name": "getAllApprovedClaimIdsForThisIssuer",
+		"name": "getAllPendingClaimIdsForIndividual",
 		"outputs": [
 			{
 				"name": "",
@@ -116,39 +159,15 @@
 		"constant": true,
 		"inputs": [
 			{
-				"name": "",
-				"type": "bytes32"
+				"name": "_requester",
+				"type": "address"
 			}
 		],
-		"name": "claims",
+		"name": "getAllApprovedClaimIdsforIndividual",
 		"outputs": [
 			{
-				"name": "claimType",
-				"type": "uint256"
-			},
-			{
-				"name": "issuer",
-				"type": "address"
-			},
-			{
-				"name": "claimee",
-				"type": "address"
-			},
-			{
-				"name": "signature",
-				"type": "bytes"
-			},
-			{
-				"name": "data",
-				"type": "bytes"
-			},
-			{
-				"name": "uri",
-				"type": "string"
-			},
-			{
-				"name": "isApproved",
-				"type": "bool"
+				"name": "",
+				"type": "bytes32[]"
 			}
 		],
 		"payable": false,
@@ -156,42 +175,22 @@
 		"type": "function"
 	},
 	{
-		"constant": false,
+		"constant": true,
 		"inputs": [
-			{
-				"name": "_claimType",
-				"type": "uint256"
-			},
 			{
 				"name": "_issuer",
 				"type": "address"
-			},
-			{
-				"name": "_signature",
-				"type": "bytes"
-			},
-			{
-				"name": "_data",
-				"type": "bytes"
-			},
-			{
-				"name": "_uri",
-				"type": "string"
 			}
 		],
-		"name": "addClaim",
+		"name": "getAllApprovedClaimIdsForThisIssuer",
 		"outputs": [
 			{
-				"name": "claimId",
-				"type": "bytes32"
-			},
-			{
-				"name": "isNewClaimAdded",
-				"type": "bool"
+				"name": "",
+				"type": "bytes32[]"
 			}
 		],
 		"payable": false,
-		"stateMutability": "nonpayable",
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -415,6 +414,45 @@
 		"constant": false,
 		"inputs": [
 			{
+				"name": "_claimType",
+				"type": "uint256"
+			},
+			{
+				"name": "_issuer",
+				"type": "address"
+			},
+			{
+				"name": "_signature",
+				"type": "bytes"
+			},
+			{
+				"name": "_data",
+				"type": "bytes"
+			},
+			{
+				"name": "_uri",
+				"type": "string"
+			}
+		],
+		"name": "addClaim",
+		"outputs": [
+			{
+				"name": "claimId",
+				"type": "bytes32"
+			},
+			{
+				"name": "isNewClaimAdded",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
 				"name": "_claimId",
 				"type": "bytes32"
 			}
@@ -434,7 +472,7 @@
 
       var MyContract = web3.eth.contract(abi);
       
-      var myContractInstance = MyContract.at('0x6a90837da86693d65f42a87ae5e4e594052aa795');
+      var myContractInstance = MyContract.at('0xcfa2ca6312da9b12ede47022a38d9f6c50619042');
 
 
 
@@ -544,6 +582,24 @@
 
 <hr/>
 
+<h2>Get Pending claim Id for this Entity</h2>	
+<div>
+  Entity Address : <input id="fetchPendingClaimAdd">
+  </div>
+  <button onclick="fetchPendingClaim()"> Get Pending Claim!</button>
+  h2> Pending Claim Id List: </h2>
+  <h3 id='pendingClaimIdList'></h3>
+<hr/>
+
+<h2>Get Approved claim Id for this Entity</h2>
+<div>
+	Entity Address : <input id="fetchApprovedClaimAdd">
+</div>
+<button onclick="fetchApprovedClaim()"> Fetch Approved Claim!</button>
+<h2> Appproved Claim Id List: </h2>
+  <h3 id='ApprovedClaimIdList'></h3>
+
+<hr/>
 
 
 <h2>Fetch All Pending claim Ids for this Issuer</h2>

@@ -21,53 +21,22 @@
 
       var abi =[
 	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_claimType",
-				"type": "uint256"
-			},
-			{
-				"name": "_issuer",
-				"type": "address"
-			},
-			{
-				"name": "_signature",
-				"type": "bytes"
-			},
-			{
-				"name": "_data",
-				"type": "bytes"
-			},
-			{
-				"name": "_uri",
-				"type": "string"
-			}
-		],
-		"name": "addClaim",
-		"outputs": [
-			{
-				"name": "claimId",
-				"type": "bytes32"
-			},
-			{
-				"name": "isNewClaimAdded",
-				"type": "bool"
-			}
-		],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
 		"constant": true,
 		"inputs": [
 			{
 				"name": "",
 				"type": "address"
+			},
+			{
+				"name": "",
+				"type": "address"
+			},
+			{
+				"name": "",
+				"type": "uint256"
 			}
 		],
-		"name": "individualPendingClaims",
+		"name": "pairPendingClaimPerType",
 		"outputs": [
 			{
 				"name": "",
@@ -79,22 +48,30 @@
 		"type": "function"
 	},
 	{
-		"constant": false,
+		"constant": true,
 		"inputs": [
 			{
-				"name": "_claimId",
+				"name": "",
+				"type": "address"
+			},
+			{
+				"name": "",
+				"type": "address"
+			},
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "pairApprovedClaimPerType",
+		"outputs": [
+			{
+				"name": "",
 				"type": "bytes32"
 			}
 		],
-		"name": "removeSelfClaim",
-		"outputs": [
-			{
-				"name": "success",
-				"type": "bool"
-			}
-		],
 		"payable": false,
-		"stateMutability": "nonpayable",
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -114,63 +91,6 @@
 		],
 		"payable": false,
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_claimId",
-				"type": "bytes32"
-			}
-		],
-		"name": "ApproveClaim",
-		"outputs": [
-			{
-				"name": "isClaimApproved",
-				"type": "bool"
-			}
-		],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"name": "individualApprovedClaims",
-		"outputs": [
-			{
-				"name": "",
-				"type": "bytes32"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_claimId",
-				"type": "bytes32"
-			}
-		],
-		"name": "removeClaimByIssuer",
-		"outputs": [
-			{
-				"name": "success",
-				"type": "bool"
-			}
-		],
-		"payable": false,
-		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -233,6 +153,83 @@
 		],
 		"payable": false,
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_claimType",
+				"type": "uint256"
+			},
+			{
+				"name": "_issuer",
+				"type": "address"
+			},
+			{
+				"name": "_signature",
+				"type": "bytes"
+			},
+			{
+				"name": "_data",
+				"type": "bytes"
+			},
+			{
+				"name": "_uri",
+				"type": "string"
+			}
+		],
+		"name": "addClaim",
+		"outputs": [
+			{
+				"name": "claimId",
+				"type": "bytes32"
+			},
+			{
+				"name": "isNewClaimAdded",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_claimId",
+				"type": "bytes32"
+			}
+		],
+		"name": "ApproveClaim",
+		"outputs": [
+			{
+				"name": "isClaimApproved",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_claimId",
+				"type": "bytes32"
+			}
+		],
+		"name": "removeSelfClaim",
+		"outputs": [
+			{
+				"name": "success",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -327,7 +324,7 @@
 				"type": "string"
 			}
 		],
-		"name": "ClaimRemovedByIssuer",
+		"name": "ClaimApprovedByIssuer",
 		"type": "event"
 	},
 	{
@@ -411,14 +408,33 @@
 				"type": "string"
 			}
 		],
-		"name": "ClaimApprovedByIssuer",
+		"name": "ClaimRemovedByIssuer",
 		"type": "event"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_claimId",
+				"type": "bytes32"
+			}
+		],
+		"name": "removeClaimByIssuer",
+		"outputs": [
+			{
+				"name": "success",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
 	}
 ];
 
       var MyContract = web3.eth.contract(abi);
       
-      var myContractInstance = MyContract.at('0x1ee86b0ce69c669783864dcff85d4f4f576b7790');
+      var myContractInstance = MyContract.at('0x6a90837da86693d65f42a87ae5e4e594052aa795');
 
 
 
@@ -496,21 +512,33 @@
 <hr/>
 
 
-<h2>Get Pending claim Id for this Entity</h2>
+<h2>Get Pending claim Id between pair and for specific claimType</h2>
 <div>
-    Entity Address : <input id="fetchPendingClaimAdd">
+    Requester Address : <input id="requesterAdd">
 </div>
-<button onclick="fetchPendingClaim()"> Get Pending Claim!</button>
+<div>
+    Issuer Address : <input id="issuerAddress">
+</div>
+<div>
+    Claim Type: it can be 1,2,3 etc : <input id="claimTypeForPendingClaimsBetweenPair">
+</div>
+<button onclick="fetchPendingClaimsBetweenPair()"> Get Pending Claim!</button>
 
 <h2> Pending Claim Id: </h2>
   <h3 id='pendingClaimId'></h3>
 <hr/>
 
-<h2>Get Approved claim Id for this Entity</h2>
+<h2>Get Approved claim Id between pair and for specific claimType</h2>
 <div>
-    Entity Address : <input id="fetchApprovedClaimAdd">
+    Requester Address : <input id="requesterAddForApprovedClaim">
 </div>
-<button onclick="fetchApprovedClaim()"> Fetch Approved Claim!</button>
+<div>
+    Issuer Address : <input id="issuerAddressForApprovedClaim">
+</div>
+<div>
+    Claim Type: it can be 1,2,3 etc : <input id="claimTypeForApprovedClaimsBetweenPair">
+</div>
+<button onclick="fetchPendingClaimsBetweenPair()"> Fetch Approved Claim!</button>
 <h2> Appproved Claim Id: </h2>
   <h3 id='ApprovedClaimId'></h3>
 

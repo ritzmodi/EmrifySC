@@ -40,9 +40,16 @@ contract ClaimsRegistry {
         require(adminController.isState(_requester));
         _;
     }
-    mapping(address => bytes32) public individualPendingClaims; // my total pending claims
     
-    mapping(address => bytes32) public individualApprovedClaims; // my approved claims
+    modifier onlyApprovedOrg(address _issuerAddress){
+        require( adminController.isOrgAndState(_issuerAddress)) ;
+        _;
+    }
+    
+    // [ requester ][issuer][claimType]=claimID
+    mapping(address => mapping(address => mapping(uint256 => bytes32))) public pairPendingClaimPerType; // total pending claims
+    
+    mapping(address => mapping(address => mapping(uint256 => bytes32))) public pairApprovedClaimPerType; // my approved claims
     
     mapping(address => bytes32[]) PendingClaimsForEachIssuers; // pending claims at individual issuers
     
@@ -86,10 +93,12 @@ contract ClaimsRegistry {
     function addClaim(uint256 _claimType, address _issuer, bytes _signature, bytes _data, string _uri ) 
     notYourself(_issuer) 
     isRequesterApproved(msg.sender)
+    onlyApprovedOrg(_issuer)
     returns (bytes32 claimId, bool isNewClaimAdded) {
+        
             claimId = keccak256(_claimType, msg.sender, _issuer); // three params: as a single claim can be uniquely identified by them
             //uint256 index = findClaimIndex(individualApprovedClaims[msg.sender], claimId);
-            if(individualApprovedClaims[msg.sender] == claimId || individualPendingClaims[msg.sender] == claimId){
+            if(pairApprovedClaimPerType[msg.sender][_issuer][_claimType] == claimId || pairPendingClaimPerType[msg.sender][_issuer][_claimType] == claimId){
                 return (claimId, false);
             }
 
@@ -107,7 +116,7 @@ contract ClaimsRegistry {
                  }
              );
     
-                individualPendingClaims[msg.sender]= claimId; // add to the list of the claimee
+                pairPendingClaimPerType[msg.sender][_issuer][_claimType]= claimId; // add to the list of the claimee
                 PendingClaimsForEachIssuers[_issuer].push(claimId); // add to the list of the issuer
                 ClaimAdded(claimId, msg.sender, _claimType, _issuer, _signature, _data, _uri);
                 
@@ -116,10 +125,11 @@ contract ClaimsRegistry {
 
     // shall be called by the ISSUER only
     function ApproveClaim( bytes32 _claimId )  
-    onlyIssuer( msg.sender, _claimId) 
+    onlyIssuer(msg.sender, _claimId) 
+    onlyApprovedOrg(msg.sender)
     returns (bool isClaimApproved)
     {
-        require( adminController.isOrgAndState(msg.sender)) ;
+        
         Claim memory _claim = claims[_claimId];
         uint256 index = findClaimIndex(PendingClaimsForEachIssuers[msg.sender], _claimId);
         if(index < PendingClaimsForEachIssuers[msg.sender].length){
@@ -137,11 +147,11 @@ contract ClaimsRegistry {
                  }
              );
             ApprovedClaimsbyEachIssuers[msg.sender].push(_claimId);
-            individualApprovedClaims[_claim.claimee]=_claimId;
+            pairApprovedClaimPerType[_claim.claimee][msg.sender][_claim.claimType]=_claimId;
 
             PendingClaimsForEachIssuers[msg.sender] = remove (PendingClaimsForEachIssuers[msg.sender], findClaimIndex(PendingClaimsForEachIssuers[msg.sender], _claimId));
             //individualPendingClaims[_claim.claimee] = remove (individualPendingClaims[_claim.claimee], findClaimIndex(individualPendingClaims[_claim.claimee], _claimId));
-            delete individualPendingClaims[_claim.claimee];
+            delete pairPendingClaimPerType[_claim.claimee][msg.sender][_claim.claimType];
             ClaimApprovedByIssuer(_claimId, msg.sender, _claim.claimType, _claim.issuer, _claim.signature, _claim.data, _claim.uri);
             return true;
         } else {
@@ -186,15 +196,15 @@ contract ClaimsRegistry {
     // shall be called by ISSUER to remove the claim
     function removeClaimByIssuer(bytes32 _claimId) 
     onlyIssuer( msg.sender, _claimId)
+    onlyApprovedOrg(msg.sender)
     returns (bool success) {
             Claim memory c = claims[_claimId];
             
             if(c.isApproved == true){ // must be already approved
-            require( adminController.isOrgAndState(msg.sender)) ;
             ClaimRemovedByIssuer(_claimId, c.claimee, c.claimType, c.issuer, c.signature, c.data, c.uri);
             // delete from three places: 1: issuer's approved list, 2: individual approved list, 3: from app wide claims  
             ApprovedClaimsbyEachIssuers[msg.sender] = remove (ApprovedClaimsbyEachIssuers[msg.sender], findClaimIndex(ApprovedClaimsbyEachIssuers[msg.sender], _claimId));
-            delete individualApprovedClaims[msg.sender];
+            delete pairApprovedClaimPerType[c.claimee][msg.sender][c.claimType];
             delete claims[_claimId];
             
             return true;
@@ -215,7 +225,7 @@ contract ClaimsRegistry {
              ClaimRemovedByClaimee(_claimId, c.claimee, c.claimType, c.issuer, c.signature, c.data, c.uri);
             // delete from three places: 1: issuer's approved list, 2: individual approved list, 3: from app wide claims  
             ApprovedClaimsbyEachIssuers[c.issuer] = remove (ApprovedClaimsbyEachIssuers[c.issuer], findClaimIndex(ApprovedClaimsbyEachIssuers[c.issuer], _claimId));
-            delete individualApprovedClaims[msg.sender];
+            delete pairApprovedClaimPerType[msg.sender][c.issuer][c.claimType];
             delete claims[_claimId];
             
             return true;

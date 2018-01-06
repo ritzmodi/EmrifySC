@@ -131,9 +131,11 @@ function RemoveClaimByIssuer(){
     });
 }
 
-function fetchPendingClaim(){
-    var fetchPendingClaimAdd = document.getElementById('fetchPendingClaimAdd').value ;
-    var isOrg = myContractInstance.individualPendingClaims.call(fetchPendingClaimAdd,function(err,result){
+function fetchPendingClaimsBetweenPair(){
+    var requesterAdd = document.getElementById('requesterAdd').value ;
+    var issuerAddress = document.getElementById('issuerAddress').value ;
+    var claimTypeForPendingClaimsBetweenPair = document.getElementById('claimTypeForPendingClaimsBetweenPair').value ;
+    var isOrg = myContractInstance.pairPendingClaimPerType.call(requesterAdd,issuerAddress,claimTypeForPendingClaimsBetweenPair,function(err,result){
 		if(!err){
             var msg = "Pending Claim Id =>" + result;
             console.log(msg);
@@ -145,9 +147,11 @@ function fetchPendingClaim(){
     });
 }
 
-function fetchApprovedClaim(){
-    var fetchApprovedClaimAdd = document.getElementById('fetchApprovedClaimAdd').value ;
-    var isOrg = myContractInstance.individualApprovedClaims.call(fetchApprovedClaimAdd,function(err,result){
+function fetchPendingClaimsBetweenPair(){
+    var requesterAddForApprovedClaim = document.getElementById('requesterAddForApprovedClaim').value ;
+    var issuerAddressForApprovedClaim = document.getElementById('issuerAddressForApprovedClaim').value ;
+    var claimTypeForApprovedClaimsBetweenPair = document.getElementById('claimTypeForApprovedClaimsBetweenPair').value ;
+    var isOrg = myContractInstance.pairApprovedClaimPerType.call(requesterAddForApprovedClaim,issuerAddressForApprovedClaim,claimTypeForApprovedClaimsBetweenPair,function(err,result){
 		if(!err){
             var msg = "Approved Claim Id =>" + result;
             console.log(msg);

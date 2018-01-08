@@ -38,7 +38,7 @@ function returnSharedHash() {
     var patientAdd =  document.getElementById('patientAdd').value;
     var addNewAdmin = myContractInstance.returnSharedHash.call(patientAdd, function(err,result){
         if(!err){
-            console.log("request for fetching the shared hash has been submitted successfully. "+ result);
+            console.log("request for fetching the shared hash has been submitted successfully. Data="+ result[0], " uri="+result[1]);
           }
           else {
               console.err(error);

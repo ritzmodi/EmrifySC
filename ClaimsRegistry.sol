@@ -51,6 +51,8 @@ contract ClaimsRegistry {
     
     mapping(address => mapping(address => mapping(uint256 => bytes32))) public pairApprovedClaimPerType; // my approved claims
     
+    mapping(address => mapping(uint256 => address[])) public claimsPerAddress;// this shall have a list of addresses who have approve the claim for this address
+    
     mapping(address => bytes32[]) PendingClaimsForEachIssuers; // pending claims at individual issuers
     
     mapping(address => bytes32[])  ApprovedClaimsbyEachIssuers; // claims  which are approved  by Issuers
@@ -160,10 +162,14 @@ contract ClaimsRegistry {
                  }
              );
             ApprovedClaimsbyEachIssuers[msg.sender].push(_claimId);
+            individualApprovedClaims[_claim.claimee].push(_claimId);
             pairApprovedClaimPerType[_claim.claimee][msg.sender][_claim.claimType]=_claimId;
 
             PendingClaimsForEachIssuers[msg.sender] = remove (PendingClaimsForEachIssuers[msg.sender], findClaimIndex(PendingClaimsForEachIssuers[msg.sender], _claimId));
             individualPendingClaims[_claim.claimee] = remove(individualPendingClaims[_claim.claimee], findClaimIndex(individualPendingClaims[_claim.claimee], _claimId));
+            
+            claimsPerAddress[_claim.claimee][_claim.claimType].push(msg.sender);
+            
             delete pairPendingClaimPerType[_claim.claimee][msg.sender][_claim.claimType];
             ClaimApprovedByIssuer(_claimId, msg.sender, _claim.claimType, _claim.issuer, _claim.signature, _claim.data, _claim.uri);
             return true;
@@ -172,40 +178,7 @@ contract ClaimsRegistry {
         }
     }
     
-    
-    // submit a fresh request for a new claim overwriting the previous one
-    // untile this gets accepted, the old one shall be active
-    // This is redundant function, no need of this. because change claim is a separate fresh request for addClaim with updated params
-/*    function changeClaimByClaimee(uint256 _claimType, address _issuer, bytes _signature, bytes _data, string _uri, bytes32 _claimId ) 
-    onlyClaimee( msg.sender, _claimId)
-    returns (bool){
-        bytes32 claimId = keccak256(_claimType, msg.sender, _issuer);
-        Claim memory _claim = claims[_claimId];
-
-        if(individualApprovedClaims[msg.sender] == claimId || individualPendingClaims[msg.sender] == claimId){
-                return false;
-        }
-        claims[_claimId] = Claim(
-                 {
-                    //  accountType: _claim.accountType,
-                     claimType: _claim.claimType,
-                     issuer: _claim.issuer,
-                     claimee: _claim.claimee,
-                    //  signatureType: _signatureType,
-                     signature: _claim.signature,
-                     data: _claim.data,
-                     uri: _claim.uri,
-                     isApproved: true                 
-                 }
-             );
-        
-        individualPendingClaims[msg.sender]=claimId; // add to the list of the claimee
-        PendingClaimsForEachIssuers[_issuer].push(claimId); // add to the list of the issuer    
-        ClaimChangedByClaimee(_claimId, msg.sender, _claim.claimType, _claim.issuer, _claim.signature, _claim.data, _claim.uri);
-        
-        
-    }*/
-    
+ 
     // shall be called by ISSUER to remove the claim
     function removeClaimByIssuer(bytes32 _claimId) 
     onlyIssuer( msg.sender, _claimId)
@@ -218,6 +191,7 @@ contract ClaimsRegistry {
             // delete from three places: 1: issuer's approved list, 2: individual approved list, 3: from app wide claims  
             ApprovedClaimsbyEachIssuers[msg.sender] = remove (ApprovedClaimsbyEachIssuers[msg.sender], findClaimIndex(ApprovedClaimsbyEachIssuers[msg.sender], _claimId));
             individualApprovedClaims[c.claimee] = remove(individualApprovedClaims[c.claimee], findClaimIndex(individualApprovedClaims[c.claimee], _claimId));
+            claimsPerAddress[c.claimee][c.claimType] = removeAddress(claimsPerAddress[c.claimee][c.claimType],findIndexOfAddress(claimsPerAddress[c.claimee][c.claimType],msg.sender ));
             delete pairApprovedClaimPerType[c.claimee][msg.sender][c.claimType];
             delete claims[_claimId];
             
@@ -240,6 +214,7 @@ contract ClaimsRegistry {
             // delete from three places: 1: issuer's approved list, 2: individual approved list, 3: from app wide claims  
             ApprovedClaimsbyEachIssuers[c.issuer] = remove (ApprovedClaimsbyEachIssuers[c.issuer], findClaimIndex(ApprovedClaimsbyEachIssuers[c.issuer], _claimId));
             individualApprovedClaims[c.claimee] = remove(individualApprovedClaims[c.claimee], findClaimIndex(individualApprovedClaims[c.claimee], _claimId));
+            claimsPerAddress[c.claimee][c.claimType] = removeAddress(claimsPerAddress[c.claimee][c.claimType],findIndexOfAddress(claimsPerAddress[c.claimee][c.claimType], c.issuer));
             delete pairApprovedClaimPerType[msg.sender][c.issuer][c.claimType];
             delete claims[_claimId];
             
@@ -278,6 +253,45 @@ contract ClaimsRegistry {
             return i;
         } else {
             return _claimIds.length;
+        }
+    }
+    
+    
+    
+     function removeAddress(address[] array, uint index) internal returns(address[] value) {
+        if (index >= array.length) return;
+
+        address[] memory arrayNew = new address[](array.length-1);
+        for (uint i = 0; i<arrayNew.length; i++){
+            if(i != index && i<index){
+                arrayNew[i] = array[i];
+            } else {
+                arrayNew[i] = array[i+1];
+            }
+        }
+        delete array;
+        return arrayNew;
+    }
+    
+    function findIndexOfAddress(address[] array, address findIndexOfThisAddress) internal  returns (uint256) {
+        for (uint i = 0; i<array.length; i++){
+            if( array[i] == findIndexOfThisAddress){
+                break;
+            }
+        }
+        if(i>=0 && i<array.length){
+            return i;
+        } else {
+            return array.length;
+        }
+        
+    }
+    
+    function whetherClaimExits(address _providerAddress, uint256 _claimType) constant returns (bool){
+        if(claimsPerAddress[_providerAddress][_claimType].length > 0 ){
+            return true;
+        } else {
+            return false;
         }
     }
     

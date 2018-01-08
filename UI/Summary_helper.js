@@ -11,7 +11,7 @@ function sharePermissionHash() {
 var providerAdd =  document.getElementById('providerAdd').value;
 var data =  document.getElementById('data').value;
 var uri =  document.getElementById('uri').value;
-var addNewAdmin = myContractInstance.addAdminGroup(providerAdd,data,uri,function(err,result){
+var addNewAdmin = myContractInstance.sharePermissionHash(providerAdd,data,uri,function(err,result){
     if(!err){
         console.log("Permission hash sharing request submitted successfully. "+ result);
       }

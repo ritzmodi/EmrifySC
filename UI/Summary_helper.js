@@ -47,10 +47,14 @@ function returnSharedHash() {
 }
 
 function fetchPatientListForThisIssuer() {
-    var docAdd =  document.getElementById('docAdd').value;
-    var addNewAdmin = myContractInstance.getListOfPatientsForThisDoctor.call(docAdd, function(err,result){
+    // var docAdd =  document.getElementById('docAdd').value;
+    var addNewAdmin = myContractInstance.getListOfPatientsForThisDoctor.call( function(err,result){
         if(!err){
-            console.log("request for fetching the list of patient who have shared the permission hash has been submitted successfully. "+ result);
+            var msg ="";
+            for (var i = 0; i< result.length; i++){
+                msg += result[i]+", ";
+            }
+            console.log("this is the list=>"+ msg);
           }
           else {
               console.err(error);

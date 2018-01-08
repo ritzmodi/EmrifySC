@@ -7,7 +7,7 @@ function startApp(_myContractInstance){
     
 }
 
-function shareePermissionHash() {
+function sharePermissionHash() {
 var providerAdd =  document.getElementById('providerAdd').value;
 var data =  document.getElementById('data').value;
 var uri =  document.getElementById('uri').value;

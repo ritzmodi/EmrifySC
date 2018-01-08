@@ -14,10 +14,6 @@ contract Summary{
         _;
     }
     
-    modifier isClaimExists(address _provider, uint256 _claimType){
-        require(claimsRegistry.whetherClaimExits(_provider, _claimType));
-        _;
-    }
     
     struct sharedHash{
         bytes32 data;
@@ -25,10 +21,9 @@ contract Summary{
         bool isShared;
     }
     
-    function Summary(address _adminController, address _claimsRegistry){
-        if (_adminController != 0x0 && _claimsRegistry != 0x0) {
+    function Summary(address _adminController){
+        if (_adminController != 0x0 ) {
             adminController = AdminController(_adminController);
-            claimsRegistry = ClaimsRegistry(_claimsRegistry);
         }
         else {
             revert(); //the admin controller address is wrong
@@ -40,7 +35,6 @@ contract Summary{
     
     function sharePermissionHash (address _providerAdd, bytes32 _data, string _uri, uint256 _claimType)
     isAppprovedProvider(_providerAdd)
-    isClaimExists(_providerAdd, _claimType)
     {   
         sharedHashes[msg.sender][_providerAdd].data = _data;
         sharedHashes[msg.sender][_providerAdd].uri = _uri;

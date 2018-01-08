@@ -1,11 +1,10 @@
 pragma solidity ^0.4.0;
 import "./AdminController.sol";
-import "./ClaimsRegistry.sol";
+
 
 contract Summary{
     
     AdminController adminController ;
-    ClaimsRegistry claimsRegistry ;
     
     event PermissionHashShared(address patient, address doctor, bytes32 data, string uri);
     
@@ -14,6 +13,7 @@ contract Summary{
         _;
     }
     
+
     
     struct sharedHash{
         bytes32 data;

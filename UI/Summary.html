@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Insurance Interaction</title>
+    <title>Summary Interaction</title>
 	<script src="http://rawgit.com/ethereum/web3.js/0.16.0/dist/web3.min.js"></script>
 	<script
 	  src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
@@ -20,29 +20,6 @@
 
 
       var abi =[
-      {
-          "constant": true,
-          "inputs": [
-              {
-                  "name": "",
-                  "type": "address"
-              },
-              {
-                  "name": "",
-                  "type": "uint256"
-              }
-          ],
-          "name": "AddressOfPatients",
-          "outputs": [
-              {
-                  "name": "",
-                  "type": "address"
-              }
-          ],
-          "payable": false,
-          "stateMutability": "view",
-          "type": "function"
-      },
       {
           "constant": true,
           "inputs": [
@@ -81,45 +58,27 @@
           "type": "function"
       },
       {
-          "constant": false,
+          "constant": true,
           "inputs": [
               {
-                  "name": "_providerAdd",
+                  "name": "",
                   "type": "address"
               },
               {
-                  "name": "_data",
-                  "type": "bytes32"
-              },
-              {
-                  "name": "_uri",
-                  "type": "string"
-              },
-              {
-                  "name": "_claimType",
+                  "name": "",
                   "type": "uint256"
               }
           ],
-          "name": "sharePermissionHash",
-          "outputs": [],
-          "payable": false,
-          "stateMutability": "nonpayable",
-          "type": "function"
-      },
-      {
-          "inputs": [
+          "name": "AddressOfPatients",
+          "outputs": [
               {
-                  "name": "_adminController",
-                  "type": "address"
-              },
-              {
-                  "name": "_claimsRegistry",
+                  "name": "",
                   "type": "address"
               }
           ],
           "payable": false,
-          "stateMutability": "nonpayable",
-          "type": "constructor"
+          "stateMutability": "view",
+          "type": "function"
       },
       {
           "anonymous": false,
@@ -147,12 +106,45 @@
           ],
           "name": "PermissionHashShared",
           "type": "event"
+      },
+      {
+          "constant": false,
+          "inputs": [
+              {
+                  "name": "_providerAdd",
+                  "type": "address"
+              },
+              {
+                  "name": "_data",
+                  "type": "bytes32"
+              },
+              {
+                  "name": "_uri",
+                  "type": "string"
+              }
+          ],
+          "name": "sharePermissionHash",
+          "outputs": [],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function"
+      },
+      {
+          "inputs": [
+              {
+                  "name": "_adminController",
+                  "type": "address"
+              }
+          ],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "constructor"
       }
   ];
 
       var MyContract = web3.eth.contract(abi);
       
-      var myContractInstance = MyContract.at('0x5be928b032f559ff1937f9efbd96a8fa471925b2');
+      var myContractInstance = MyContract.at('0xa20b58f4b76210703ac003cd2ff780fc407d9f18');
 
 
 
@@ -164,159 +156,43 @@
 
   <body>
 
-<h2>Add new Admin to the group: To be called only by the owner of the SC</h2>
+<h2>Share the permission hash with this issuer</h2>
 <div>
-    Admin Address : <input id="newAdminAdd">
+    Provider Address : <input id="providerAdd">
 </div>
-<button onclick="addAdminGroup()" > Add this as an Admin!</button>
+<div>
+    Data  : <input id="data">
+</div>
+<div>
+    URI : <input id="uri">
+</div>
+
+<button onclick="shareePermissionHash()" > share permission hash!</button>
 <hr/>
 <p>Events generated for the adding new Admin:
-        <h3 id='callbackNewAdmin'></h3>
+        <h3 id='permissionhashEvent'></h3>
     </p>
 	<hr/>
+    
 
-<h2>Fetch all the current admins, other than Emrify ( because emrify shall be an admin by-default):</h2>
+    
+<h2>return shared hash between this payer: shall be called by Doctor</h2>
+<div>
+    Patient Address : <input id="patientAdd">
+</div>
 
-<button onclick="listOfAllAdmins()" > Fetch all admin list!</button>
-<hr/>
-<p>Admin list :
-		<h3 id='callback25'></h3>
-	</p>
+<button onclick="returnSharedHash()" > Fetch shared hash between pair</button>
 	<hr/>
 
-<h2>Utility to check whether any address is org or not ?</h2>
+    
+
+<h2>Fetch the patient List for this doctor</h2>
 <div>
-	validate Address(if org, or not) : <input id="validateAddressForOrg">
+	doctor address : <input id="docAdd">
 </div>
-<button onclick="validateAddress()" > Validate Address ?</button>
+<button onclick="fetchPatientListForThisIssuer()" > Validate Address ?</button>
 <hr/>
-<p>Events generated for the adding new Admin:
-		<h3 id='callbackForIsOrg'></h3>
-	</p>
-	<hr/>
-
-  <h2>Submit Request For Approval: To be called by individual entity or organisation</h2>
-  <div>
-    Is Org : <input id='isOrgBool'>
-</div>
-<div>
-    Provider Details : <input id='providerDetails'>
-</div>
-<button onclick='submitRequestForApproval()'>Submit Provider Request!</button>
-<hr/>
-<p>Events generated for the Submit Request For Approval:
-    <h3 id='callback1'></h3>
-</p>
-<hr/>
-
-
-<button onclick="fetchAllPendingAddresses()" > Fetch all pending addresses !</button>
-<hr/>
-<p>all the Events generated for the pending Request For Approval:
-        <h3 id='callback22'></h3>
-    </p>
-	<hr/>
-	
-
-<button onclick="fetchAllAcceptedAddresses()" > Fetch all Accepted addresses !</button>
-<hr/>
-<p>all the Events generated for the modification of the profile in already Accepted Request :
-	<h3 id='acceptedCallback'></h3>
-</p>
-<hr/>
-	
-<button onclick="fetchAllRejectedAddresses()" > Fetch all Rejected addresses !</button>
-<hr/>
-<p>all the Events generated for the modification of the profile in already Accepted Request :
-	<h3 id='rejectedCallback'></h3>
-</p>
-<hr/>
-
-<button onclick="fetchAllRevokedAddresses()" > Fetch all Revoked addresses !</button>
-<hr/>
-<p>all the Events generated for the modification of the profile in already Accepted Request :
-	<h3 id='revokedCallback'></h3>
-</p>
-<hr/>
-
-
-
-<h2>Approve Provider Application : to be called by Emrify ONLY</h2>
-<div>
-  Provider Address : <input id='providerAddressForApproval'>
-</div>
-<button onclick='approveProviderApplication()'>Approve Provider!</button>
-<hr/>
-<p>Events generated for the Appproved provider :
-    <h3 id='callback2'></h3>
-</p>
-<hr/>
-
-<button onclick="fetchAllEventsforRequestAppproved()" > Fetch all approved events!</button>
-<hr/>
-<p>all the Events generated for the approved Request :
-        <h3 id='callback23'></h3>
-    </p>
-	<hr/>
-
-<h2> Reject Provider Application: To be called by individual entity or organisation</h2>
-<div>
-    Provider Address : <input id='providerAddressForRejection'>
-</div>
-<button onclick='rejectProviderApplication()'>Reject Provider!</button>
-<hr/>
-<p>Events generated for the rejected provider:
-			<h3 id='callback3'></h3>
-</p>
-
-<hr/>
-
-
-
-<button onclick="fetchAllEventsforRejectedRequests()" > Fetch all rejected requestd lists!</button>
-<hr/>
-<p>all the Requests which got rejected :
-        <h3 id='callback24'></h3>
-    </p>
-	<hr/>
-
-
-<h2> Revoke Provider Application: To be called by individual entity or organisation</h2>
-<div>
-	Provider Address : <input id='providerAddressForRevoking'>
-</div>
-<button onclick='revokeProviderApplication()'>Revoke Provider!</button>
-<hr/>
-<p>Events generated for the Revoke provider:
-			<h3 id='callbackRevoke3'></h3>
-</p>
-
-<hr/>
-
-
-
-<button onclick="fetchAllEventsforRevokedRequests()" > Fetch all revoked requestd lists!</button>
-<hr/>
-<p>all the Requests which got rejected :
-		<h3 id='callbackrevoke24'></h3>
-	</p>
-	<hr/>
-	
-
-<h2> Terminate Provider Application: To be called by individual entity or organisation</h2>
-<div>
-    Provider Address : <input id='providerAddressForTermination'>
-</div>
-<div>
-    Termination Document : <input id='DocumentForTermination'>
-</div>
-<button onclick='terminateProviderFromNetwork()'>Terminate Provider!</button>
-<hr/>
-<p>Events generated for the Ternimated provider:
-			<h3 id='callback4'></h3>
-</p>
-
-<script type="text/javascript" src='Admin_helper.js'></script>
+<script type="text/javascript" src='Summary_helper.js'></script>
 </body>
 
 </html>

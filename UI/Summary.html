@@ -20,131 +20,131 @@
 
 
       var abi =[
-      {
-          "constant": true,
-          "inputs": [
-              {
-                  "name": "_patientAdd",
-                  "type": "address"
-              }
-          ],
-          "name": "returnSharedHash",
-          "outputs": [
-              {
-                  "name": "",
-                  "type": "bytes32"
-              },
-              {
-                  "name": "",
-                  "type": "string"
-              }
-          ],
-          "payable": false,
-          "stateMutability": "view",
-          "type": "function"
-      },
-      {
-          "constant": true,
-          "inputs": [],
-          "name": "getListOfPatientsForThisDoctor",
-          "outputs": [
-              {
-                  "name": "",
-                  "type": "address[]"
-              }
-          ],
-          "payable": false,
-          "stateMutability": "view",
-          "type": "function"
-      },
-      {
-          "constant": true,
-          "inputs": [
-              {
-                  "name": "",
-                  "type": "address"
-              },
-              {
-                  "name": "",
-                  "type": "uint256"
-              }
-          ],
-          "name": "AddressOfPatients",
-          "outputs": [
-              {
-                  "name": "",
-                  "type": "address"
-              }
-          ],
-          "payable": false,
-          "stateMutability": "view",
-          "type": "function"
-      },
-      {
-          "anonymous": false,
-          "inputs": [
-              {
-                  "indexed": false,
-                  "name": "patient",
-                  "type": "address"
-              },
-              {
-                  "indexed": false,
-                  "name": "doctor",
-                  "type": "address"
-              },
-              {
-                  "indexed": false,
-                  "name": "data",
-                  "type": "bytes32"
-              },
-              {
-                  "indexed": false,
-                  "name": "uri",
-                  "type": "string"
-              }
-          ],
-          "name": "PermissionHashShared",
-          "type": "event"
-      },
-      {
-          "constant": false,
-          "inputs": [
-              {
-                  "name": "_providerAdd",
-                  "type": "address"
-              },
-              {
-                  "name": "_data",
-                  "type": "bytes32"
-              },
-              {
-                  "name": "_uri",
-                  "type": "string"
-              }
-          ],
-          "name": "sharePermissionHash",
-          "outputs": [],
-          "payable": false,
-          "stateMutability": "nonpayable",
-          "type": "function"
-      },
-      {
-          "inputs": [
-              {
-                  "name": "_adminController",
-                  "type": "address"
-              }
-          ],
-          "payable": false,
-          "stateMutability": "nonpayable",
-          "type": "constructor"
-      }
-  ];
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_patientAdd",
+				"type": "address"
+			}
+		],
+		"name": "returnSharedHash",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bytes"
+			},
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getListOfPatientsForThisDoctor",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			},
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "AddressOfPatients",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "patient",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "doctor",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "data",
+				"type": "bytes"
+			},
+			{
+				"indexed": false,
+				"name": "uri",
+				"type": "string"
+			}
+		],
+		"name": "PermissionHashShared",
+		"type": "event"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_providerAdd",
+				"type": "address"
+			},
+			{
+				"name": "_data",
+				"type": "bytes"
+			},
+			{
+				"name": "_uri",
+				"type": "string"
+			}
+		],
+		"name": "sharePermissionHash",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"name": "_adminController",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	}
+];
 
       var MyContract = web3.eth.contract(abi);
       
-      var myContractInstance = MyContract.at('0xa20b58f4b76210703ac003cd2ff780fc407d9f18');
+      var myContractInstance = MyContract.at('0x3a7f0148c69501de7065b4ca8948731a08ae4825');
 
 
 

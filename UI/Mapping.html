@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Mapping Interaction</title>
+	<script src="http://rawgit.com/ethereum/web3.js/0.16.0/dist/web3.min.js"></script>
+	<script
+	  src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+	 <script>
+		window.addEventListener('load', function() {
+
+		  // Checking if Web3 has been injected by the browser (Mist/MetaMask)
+		  if (typeof web3 !== 'undefined') {
+		    // Use Mist/MetaMask's provider
+		    web3 = new Web3(web3.currentProvider);
+		  } else {
+		    console.log('No web3? You should consider trying MetaMask!')
+		    // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
+		    web3 = new Web3(new Web3.providers.HttpProvider("https://ropsten.infura.io/jusRhRm9lPsVCXFLnnNk"));
+		  }
+
+
+      var abi =[
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getPendingMembersList",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getOrgAddress",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getApprovedMembersList",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "_orgAddress",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"name": "_doctorAddress",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "timestamp",
+				"type": "uint256"
+			}
+		],
+		"name": "DoctorAdded",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "_orgAddress",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"name": "_doctorAddress",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "timestamp",
+				"type": "uint256"
+			}
+		],
+		"name": "DoctorRemoved",
+		"type": "event"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_doctorAddress",
+				"type": "address"
+			}
+		],
+		"name": "approveMember",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_doctorAddress",
+				"type": "address"
+			}
+		],
+		"name": "removeMember",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_orgAddress",
+				"type": "address"
+			}
+		],
+		"name": "submitAttachMemberRequest",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"name": "_adminController",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	}
+];
+
+      var MyContract = web3.eth.contract(abi);
+      
+      var myContractInstance = MyContract.at('0x87192d22c148e79070a92d9998e30a8ec74e4bd7');
+
+
+
+    // Now you can start your app & access web3 freely:
+      startApp(myContractInstance);
+		})
+  </script>
+  </head>
+
+  <body>
+
+<h2>Submit request to organisation</h2>
+<div>
+    Provider Address : <input id="providerAdd">
+</div>
+<button onclick="submitAttachMemberRequest()" > submit req to org!</button>
+<hr/>
+
+<h2>Approve Request: should be called by the approved organization</h2>
+<div>
+	Doctor Address : <input id="doctorAdd">
+</div>
+<button onclick="approveMember()" > approve member!</button>
+<hr/>
+<p>Events generated for the adding new member for the current org:
+		<h3 id='approvedMemberEvent'></h3>
+	</p>
+	<hr/>   
+
+<h2>Remove member: should be called by the approved organization</h2>
+<div>
+Doctor Address : <input id="doctorAddToBeRemoved">
+</div>
+<button onclick="removeMember()" > remove member!</button>
+<hr/>
+<p>Events generated for the removing any approved member for the current org:
+	<h3 id='removedMemberEvent'></h3>
+</p>
+<hr/>
+    
+<h2>return pending member list for this orgnisation: shall be called by Doctor</h2>
+<button onclick="returnPendingList()" > Fetch pending list</button>
+	<hr/>
+
+<h2>return approve member list by this orgnisation: shall be called by Doctor</h2>
+<button onclick="returnApprovedList()" > Fetch approved list</button>
+	<hr/>
+
+<h2>Fetch the org List with which this doctor is associated: if there is a flexibility of a doctor can get associated with more than one organisation</h2>
+<div>
+	doctor address : <input id="doctorAddToFetchTheAssociatedOrgnisation">
+</div>
+<button onclick="fetchorgListForThisdoctor()" > Fetch Patient List</button>
+<hr/>
+<script type="text/javascript" src='Mapping_helper.js'></script>
+</body>
+
+</html>

@@ -40,7 +40,7 @@ contract Mapping {
     onlyDoctors(_doctorAddress)
     {
         uint256 index = findIndexOfAddress(pendingMemberList[msg.sender], _doctorAddress) ; 
-        require(index>0 && index<pendingMemberList[msg.sender].length);
+        require(index>=0 && index<pendingMemberList[msg.sender].length);
         approvedMemberList[msg.sender].push(_doctorAddress);
         withWhichProviderThisDocIsAssociated[_doctorAddress].push(msg.sender);
         pendingMemberList[msg.sender] = removeAddress(pendingMemberList[msg.sender],findIndexOfAddress(pendingMemberList[msg.sender], _doctorAddress));
@@ -53,7 +53,7 @@ contract Mapping {
     onlyDoctors(_doctorAddress)
     {
         uint256 index = findIndexOfAddress(approvedMemberList[msg.sender], _doctorAddress) ; 
-        require(index>0 && index<approvedMemberList[msg.sender].length);
+        require(index>=0 && index<approvedMemberList[msg.sender].length);
         approvedMemberList[msg.sender] = removeAddress(approvedMemberList[msg.sender],findIndexOfAddress(approvedMemberList[msg.sender], _doctorAddress));
         withWhichProviderThisDocIsAssociated[_doctorAddress] = removeAddress(withWhichProviderThisDocIsAssociated[_doctorAddress],findIndexOfAddress(withWhichProviderThisDocIsAssociated[_doctorAddress], msg.sender));
         DoctorRemoved(msg.sender, _doctorAddress, now);

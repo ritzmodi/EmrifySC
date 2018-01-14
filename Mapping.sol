@@ -4,7 +4,7 @@ import "./AdminController.sol";
 contract Mapping {
     AdminController adminController ;
     
-     function Mapping(address _adminController){
+    function Mapping(address _adminController){
         if (_adminController != 0x0 ) {
             adminController = AdminController(_adminController);
         }
@@ -16,28 +16,61 @@ contract Mapping {
         require(adminController.isState(_checkIfApproved));
         _;
     }
-    
-    mapping (address => address[]) memberList;
+    modifier onlyDoctors (address _doctor){
+        require(!adminController.isOrg(_doctor));
+        _;
+    }
+    mapping (address => address[]) pendingMemberList;
+    mapping (address => address[]) approvedMemberList;
     mapping (address => address[] ) withWhichProviderThisDocIsAssociated;
+    event DoctorAdded(address indexed _orgAddress, address indexed _doctorAddress, uint timestamp);
+    event DoctorRemoved(address indexed _orgAddress, address indexed _doctorAddress, uint timestamp);
     
-    function attachMember (address _providerAddress)
-    isAppprovedProvider(_providerAddress)
+    // shall be called by doctor
+    function submitAttachMemberRequest (address _orgAddress)
+    isAppprovedProvider(_orgAddress)
+    onlyDoctors(msg.sender)
     {
-        memberList[_providerAddress].push(msg.sender);
-        withWhichProviderThisDocIsAssociated[msg.sender].push(_providerAddress);
+        pendingMemberList[_orgAddress].push(msg.sender);
     }
     
-    // should be called by approved provider only
+    ///should be called by approved org only
+    function approveMember (address _doctorAddress) 
+    isAppprovedProvider(msg.sender) 
+    onlyDoctors(_doctorAddress)
+    {
+        uint256 index = findIndexOfAddress(pendingMemberList[msg.sender], _doctorAddress) ; 
+        require(index>0 && index<pendingMemberList[msg.sender].length);
+        approvedMemberList[msg.sender].push(_doctorAddress);
+        withWhichProviderThisDocIsAssociated[_doctorAddress].push(msg.sender);
+        pendingMemberList[msg.sender] = removeAddress(pendingMemberList[msg.sender],findIndexOfAddress(pendingMemberList[msg.sender], _doctorAddress));
+        DoctorAdded(msg.sender, _doctorAddress, now);
+    }
+    
+    // should be called by approved org only
     function removeMember(address _doctorAddress)
-    isAppprovedProvider(msg.sender){
-        memberList[msg.sender] = removeAddress(memberList[msg.sender],findIndexOfAddress(memberList[msg.sender], _doctorAddress));
+    isAppprovedProvider(msg.sender)
+    onlyDoctors(_doctorAddress)
+    {
+        uint256 index = findIndexOfAddress(approvedMemberList[msg.sender], _doctorAddress) ; 
+        require(index>0 && index<approvedMemberList[msg.sender].length);
+        approvedMemberList[msg.sender] = removeAddress(approvedMemberList[msg.sender],findIndexOfAddress(approvedMemberList[msg.sender], _doctorAddress));
         withWhichProviderThisDocIsAssociated[_doctorAddress] = removeAddress(withWhichProviderThisDocIsAssociated[_doctorAddress],findIndexOfAddress(withWhichProviderThisDocIsAssociated[_doctorAddress], msg.sender));
+        DoctorRemoved(msg.sender, _doctorAddress, now);
     }
     
-    function getAssociatedMembersList()
+    // should be called by approved org only
+    function getPendingMembersList()
     isAppprovedProvider(msg.sender)
     constant returns (address[]){
-        return memberList[msg.sender];
+        return pendingMemberList[msg.sender];
+    }
+    
+    // should be called by approved org only
+    function getApprovedMembersList()
+    isAppprovedProvider(msg.sender)
+    constant returns (address[]){
+        return approvedMemberList[msg.sender];
     }
     
     function getOrgAddress() constant returns (address[]){

@@ -20,150 +20,150 @@
 
 
       var abi =[
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "getPendingMembersList",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address[]"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "getOrgAddress",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address[]"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "getApprovedMembersList",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address[]"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"name": "_orgAddress",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"name": "_doctorAddress",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"name": "timestamp",
-				"type": "uint256"
-			}
-		],
-		"name": "DoctorAdded",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"name": "_orgAddress",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"name": "_doctorAddress",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"name": "timestamp",
-				"type": "uint256"
-			}
-		],
-		"name": "DoctorRemoved",
-		"type": "event"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_doctorAddress",
-				"type": "address"
-			}
-		],
-		"name": "approveMember",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_doctorAddress",
-				"type": "address"
-			}
-		],
-		"name": "removeMember",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_orgAddress",
-				"type": "address"
-			}
-		],
-		"name": "submitAttachMemberRequest",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"name": "_adminController",
-				"type": "address"
-			}
-		],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	}
-];
+	  {
+		  "constant": true,
+		  "inputs": [],
+		  "name": "getPendingMembersList",
+		  "outputs": [
+			  {
+				  "name": "",
+				  "type": "address[]"
+			  }
+		  ],
+		  "payable": false,
+		  "stateMutability": "view",
+		  "type": "function"
+	  },
+	  {
+		  "constant": true,
+		  "inputs": [],
+		  "name": "getOrgAddress",
+		  "outputs": [
+			  {
+				  "name": "",
+				  "type": "address[]"
+			  }
+		  ],
+		  "payable": false,
+		  "stateMutability": "view",
+		  "type": "function"
+	  },
+	  {
+		  "constant": true,
+		  "inputs": [],
+		  "name": "getApprovedMembersList",
+		  "outputs": [
+			  {
+				  "name": "",
+				  "type": "address[]"
+			  }
+		  ],
+		  "payable": false,
+		  "stateMutability": "view",
+		  "type": "function"
+	  },
+	  {
+		  "anonymous": false,
+		  "inputs": [
+			  {
+				  "indexed": true,
+				  "name": "_orgAddress",
+				  "type": "address"
+			  },
+			  {
+				  "indexed": true,
+				  "name": "_doctorAddress",
+				  "type": "address"
+			  },
+			  {
+				  "indexed": false,
+				  "name": "timestamp",
+				  "type": "uint256"
+			  }
+		  ],
+		  "name": "DoctorAdded",
+		  "type": "event"
+	  },
+	  {
+		  "anonymous": false,
+		  "inputs": [
+			  {
+				  "indexed": true,
+				  "name": "_orgAddress",
+				  "type": "address"
+			  },
+			  {
+				  "indexed": true,
+				  "name": "_doctorAddress",
+				  "type": "address"
+			  },
+			  {
+				  "indexed": false,
+				  "name": "timestamp",
+				  "type": "uint256"
+			  }
+		  ],
+		  "name": "DoctorRemoved",
+		  "type": "event"
+	  },
+	  {
+		  "constant": false,
+		  "inputs": [
+			  {
+				  "name": "_doctorAddress",
+				  "type": "address"
+			  }
+		  ],
+		  "name": "approveMember",
+		  "outputs": [],
+		  "payable": false,
+		  "stateMutability": "nonpayable",
+		  "type": "function"
+	  },
+	  {
+		  "constant": false,
+		  "inputs": [
+			  {
+				  "name": "_doctorAddress",
+				  "type": "address"
+			  }
+		  ],
+		  "name": "removeMember",
+		  "outputs": [],
+		  "payable": false,
+		  "stateMutability": "nonpayable",
+		  "type": "function"
+	  },
+	  {
+		  "constant": false,
+		  "inputs": [
+			  {
+				  "name": "_orgAddress",
+				  "type": "address"
+			  }
+		  ],
+		  "name": "submitAttachMemberRequest",
+		  "outputs": [],
+		  "payable": false,
+		  "stateMutability": "nonpayable",
+		  "type": "function"
+	  },
+	  {
+		  "inputs": [
+			  {
+				  "name": "_adminController",
+				  "type": "address"
+			  }
+		  ],
+		  "payable": false,
+		  "stateMutability": "nonpayable",
+		  "type": "constructor"
+	  }
+  ];
 
       var MyContract = web3.eth.contract(abi);
       
-      var myContractInstance = MyContract.at('0x87192d22c148e79070a92d9998e30a8ec74e4bd7');
+      var myContractInstance = MyContract.at('0x566061471c608768a51d2b27f3375469226364d1');
 
 
 

@@ -112,14 +112,14 @@ function returnApprovedList() {
 
 // Fetch the org List with which this doctor is associated: if there is a flexibility of a doctor can get associated with more than one organisation
 function fetchorgListForThisdoctor() {
-    // var docAdd =  document.getElementById('docAdd').value;
-    var addNewAdmin = myContractInstance.getOrgAddress.call( function(err,result){
+    var AddToFetchTheAssociatedOrgnisation =  document.getElementById('AddToFetchTheAssociatedOrgnisation').value;
+    var addNewAdmin = myContractInstance.getOrgAddress(AddToFetchTheAssociatedOrgnisation, function(err,result){
         if(!err){
             var msg ="";
             for (var i = 0; i< result.length; i++){
                 msg += result[i]+", ";
             }
-            console.log("this is the organisatio list with which this doctor is associated=>"+ msg);
+            console.log("this is the organisation list with which this address is associated=>"+ msg);
           }
           else {
               console.err(error);

@@ -36,7 +36,12 @@
 	  },
 	  {
 		  "constant": true,
-		  "inputs": [],
+		  "inputs": [
+			  {
+				  "name": "_address",
+				  "type": "address"
+			  }
+		  ],
 		  "name": "getOrgAddress",
 		  "outputs": [
 			  {
@@ -163,7 +168,7 @@
 
       var MyContract = web3.eth.contract(abi);
       
-      var myContractInstance = MyContract.at('0xa1aac15a33bfb4171bbcdd6dad9de0f0c426f12f');
+      var myContractInstance = MyContract.at('0x76c277acb91156d7a91d488fc69e976d354f1c0a');
 
 
 
@@ -212,9 +217,9 @@ Doctor Address : <input id="doctorAddToBeRemoved">
 <button onclick="returnApprovedList()" > Fetch approved list</button>
 	<hr/>
 
-<h2>Fetch the org List with which this doctor is associated: if there is a flexibility of a doctor can get associated with more than one organisation</h2>
+<h2>Fetch the org List with which this address is associated: if there is a flexibility of a doctor can get associated with more than one organisation</h2>
 <div>
-	doctor address : <input id="doctorAddToFetchTheAssociatedOrgnisation">
+	Any address to fetch the associated Organisation : <input id="AddToFetchTheAssociatedOrgnisation">
 </div>
 <button onclick="fetchorgListForThisdoctor()" > Fetch Patient List</button>
 <hr/>

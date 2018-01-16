@@ -6,7 +6,7 @@ contract Summary{
     
     AdminController adminController ;
     
-    event PermissionHashShared(address patient, address doctor, bytes32 data, string uri);
+    event PermissionHashShared(address patient, address doctor, bytes data, string uri);
     
     modifier isAppprovedProvider (address _checkIfApproved){
         require(adminController.isState(_checkIfApproved));
@@ -16,7 +16,7 @@ contract Summary{
 
     
     struct sharedHash{
-        bytes32 data;
+        bytes data;
         string uri;
         bool isShared;
     }
@@ -33,7 +33,7 @@ contract Summary{
     mapping(address => mapping(address =>  sharedHash )) sharedHashes;
     mapping(address => address[]) public AddressOfPatients;
     
-    function sharePermissionHash (address _providerAdd, bytes32 _data, string _uri, uint256 _claimType)
+    function sharePermissionHash (address _providerAdd, bytes _data, string _uri)
     isAppprovedProvider(_providerAdd)
     {   
         sharedHashes[msg.sender][_providerAdd].data = _data;
@@ -49,7 +49,7 @@ contract Summary{
     // shall be called by the approved provider only
     function returnSharedHash(address _patientAdd) 
     isAppprovedProvider(msg.sender)
-    constant returns(bytes32 , string ){
+    constant returns(bytes , string ){
         return (sharedHashes[_patientAdd][msg.sender].data, sharedHashes[_patientAdd][msg.sender].uri);
         
     }
@@ -57,6 +57,12 @@ contract Summary{
     // one can fetch the list of Patients here.
     function getListOfPatientsForThisDoctor() constant returns(address[]){
         return AddressOfPatients[msg.sender];
+        
+    }
+    
+    function returnSharedHashBetweenPair(address _patientAdd, address _providerAdd) 
+    constant returns(bytes , string ){
+        return (sharedHashes[_patientAdd][_providerAdd].data, sharedHashes[_patientAdd][_providerAdd].uri);
         
     }
 }

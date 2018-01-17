@@ -20,155 +20,174 @@
 
 
       var abi =[
-	  {
-		  "constant": true,
-		  "inputs": [],
-		  "name": "getPendingMembersList",
-		  "outputs": [
-			  {
-				  "name": "",
-				  "type": "address[]"
-			  }
-		  ],
-		  "payable": false,
-		  "stateMutability": "view",
-		  "type": "function"
-	  },
-	  {
-		  "constant": true,
-		  "inputs": [
-			  {
-				  "name": "_address",
-				  "type": "address"
-			  }
-		  ],
-		  "name": "getOrgAddress",
-		  "outputs": [
-			  {
-				  "name": "",
-				  "type": "address[]"
-			  }
-		  ],
-		  "payable": false,
-		  "stateMutability": "view",
-		  "type": "function"
-	  },
-	  {
-		  "constant": true,
-		  "inputs": [],
-		  "name": "getApprovedMembersList",
-		  "outputs": [
-			  {
-				  "name": "",
-				  "type": "address[]"
-			  }
-		  ],
-		  "payable": false,
-		  "stateMutability": "view",
-		  "type": "function"
-	  },
-	  {
-		  "anonymous": false,
-		  "inputs": [
-			  {
-				  "indexed": true,
-				  "name": "_orgAddress",
-				  "type": "address"
-			  },
-			  {
-				  "indexed": true,
-				  "name": "_doctorAddress",
-				  "type": "address"
-			  },
-			  {
-				  "indexed": false,
-				  "name": "timestamp",
-				  "type": "uint256"
-			  }
-		  ],
-		  "name": "DoctorAdded",
-		  "type": "event"
-	  },
-	  {
-		  "anonymous": false,
-		  "inputs": [
-			  {
-				  "indexed": true,
-				  "name": "_orgAddress",
-				  "type": "address"
-			  },
-			  {
-				  "indexed": true,
-				  "name": "_doctorAddress",
-				  "type": "address"
-			  },
-			  {
-				  "indexed": false,
-				  "name": "timestamp",
-				  "type": "uint256"
-			  }
-		  ],
-		  "name": "DoctorRemoved",
-		  "type": "event"
-	  },
-	  {
-		  "constant": false,
-		  "inputs": [
-			  {
-				  "name": "_doctorAddress",
-				  "type": "address"
-			  }
-		  ],
-		  "name": "approveMember",
-		  "outputs": [],
-		  "payable": false,
-		  "stateMutability": "nonpayable",
-		  "type": "function"
-	  },
-	  {
-		  "constant": false,
-		  "inputs": [
-			  {
-				  "name": "_doctorAddress",
-				  "type": "address"
-			  }
-		  ],
-		  "name": "removeMember",
-		  "outputs": [],
-		  "payable": false,
-		  "stateMutability": "nonpayable",
-		  "type": "function"
-	  },
-	  {
-		  "constant": false,
-		  "inputs": [
-			  {
-				  "name": "_orgAddress",
-				  "type": "address"
-			  }
-		  ],
-		  "name": "submitAttachMemberRequest",
-		  "outputs": [],
-		  "payable": false,
-		  "stateMutability": "nonpayable",
-		  "type": "function"
-	  },
-	  {
-		  "inputs": [
-			  {
-				  "name": "_adminController",
-				  "type": "address"
-			  }
-		  ],
-		  "payable": false,
-		  "stateMutability": "nonpayable",
-		  "type": "constructor"
-	  }
-  ];
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getPendingMembersList",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_address",
+				"type": "address"
+			}
+		],
+		"name": "getOrgAddress",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_anyAddress",
+				"type": "address"
+			}
+		],
+		"name": "getApprovedMembersListForAnyAddress",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getApprovedMembersList",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "_orgAddress",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"name": "_doctorAddress",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "timestamp",
+				"type": "uint256"
+			}
+		],
+		"name": "DoctorAdded",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "_orgAddress",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"name": "_doctorAddress",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "timestamp",
+				"type": "uint256"
+			}
+		],
+		"name": "DoctorRemoved",
+		"type": "event"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_doctorAddress",
+				"type": "address"
+			}
+		],
+		"name": "approveMember",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_doctorAddress",
+				"type": "address"
+			}
+		],
+		"name": "removeMember",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_orgAddress",
+				"type": "address"
+			}
+		],
+		"name": "submitAttachMemberRequest",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"name": "_adminController",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	}
+];
 
       var MyContract = web3.eth.contract(abi);
       
-      var myContractInstance = MyContract.at('0x76c277acb91156d7a91d488fc69e976d354f1c0a');
+      var myContractInstance = MyContract.at('0x2764e08392062ecf50cdb36d69de497f2fe52b87');
 
 
 
@@ -209,12 +228,19 @@ Doctor Address : <input id="doctorAddToBeRemoved">
 </p>
 <hr/>
     
-<h2>return pending member list for this orgnisation: shall be called by Doctor</h2>
+<h2>return pending member list for this orgnisation: shall be called by org</h2>
 <button onclick="returnPendingList()" > Fetch pending list</button>
 	<hr/>
 
-<h2>return approve member list by this orgnisation: shall be called by Doctor</h2>
-<button onclick="returnApprovedList()" > Fetch approved list</button>
+<h2>return approve member list by this orgnisation: shall be called by org</h2>
+<button onclick="returnApprovedList()" > Fetch approved list for my address</button>
+	<hr/>
+
+<h2>return approve member list by this orgnisation: shall be called by org</h2>
+<div>
+	org Address(it can be any address) : <input id="orgAddressToFetchMemberList">
+</div>
+<button onclick="returnApprovedMembersListForAnyAddress()" > Fetch approved list for this address</button>
 	<hr/>
 
 <h2>Fetch the org List with which this address is associated: if there is a flexibility of a doctor can get associated with more than one organisation</h2>

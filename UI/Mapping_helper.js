@@ -109,6 +109,22 @@ function returnApprovedList() {
     });
 }
 
+// it shall return the array of the members approved by this org
+function returnApprovedList() {
+    var orgAddressToFetchMemberList =  document.getElementById('orgAddressToFetchMemberList').value;
+    var addNewAdmin = myContractInstance.getApprovedMembersListForAnyAddress(orgAddressToFetchMemberList, function(err,result){
+        if(!err){
+            var msg ="";
+            for (var i = 0; i< result.length; i++){
+                msg += result[i]+", ";
+            }
+            console.log("this is the approved list=>"+ msg);
+          }
+          else {
+              console.err(error);
+          }
+    });
+}
 
 // Fetch the org List with which this doctor is associated: if there is a flexibility of a doctor can get associated with more than one organisation
 function fetchorgListForThisdoctor() {

@@ -73,6 +73,12 @@ contract Mapping {
         return approvedMemberList[msg.sender];
     }
     
+    function getApprovedMembersListForAnyAddress(address _anyAddress)
+    isAppprovedProvider(_anyAddress)
+    constant returns (address[]){
+        return approvedMemberList[_anyAddress];
+    }
+    
     function getOrgAddress(address _address) constant returns (address[]){
         return withWhichProviderThisDocIsAssociated[_address];
     }

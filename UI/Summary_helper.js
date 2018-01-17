@@ -65,7 +65,7 @@ function fetchPatientListForThisIssuer() {
 function returnSharedHashBetweenPair() {
     var pairPatientAdd =  document.getElementById('pairPatientAdd').value;
     var pairProviderAdd =  document.getElementById('pairProviderAdd').value;
-    var addNewAdmin = myContractInstance.returnSharedHash(pairPatientAdd,pairProviderAdd, function(err,result){
+    var addNewAdmin = myContractInstance.returnSharedHashBetweenPair(pairPatientAdd,pairProviderAdd, function(err,result){
         if(!err){
             console.log("request for fetching the shared hash has been submitted successfully. Data="+ result[0], " uri="+result[1]);
           }

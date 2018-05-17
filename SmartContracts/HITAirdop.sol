@@ -1,31 +1,9 @@
 pragma solidity 0.4.23;
 
 
+
 import "./library.sol";
 import "./ERC20.sol";
-
-contract Ownable {
-  address public owner;
-
-  event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
-
-  function Ownable() public {
-    owner = msg.sender;
-  }
-
-  modifier onlyOwner() {
-    require(msg.sender == owner);
-    _;
-  }
-
-  function transferOwnership(address newOwner) onlyOwner public {
-    require(newOwner != address(0));
-    emit OwnershipTransferred(owner, newOwner);
-    owner = newOwner;
-  }
-}
-
-
 
 
 contract Airdrop is Ownable {
@@ -35,7 +13,7 @@ contract Airdrop is Ownable {
    
     
     
-    function Airdrop(address _tokenContractAddress) public{
+    constructor(address _tokenContractAddress) public{
         
         tokenContract   = ERC20(_tokenContractAddress);
     
@@ -45,9 +23,9 @@ contract Airdrop is Ownable {
     
     //internal method to transfer the tokens to a user address. This is an internal method.
     
-    function distributeTokens(address _beneficiaryAddress,uint256 _amount) internal {
+    function distributeTokens(address _beneficiaryAddress,uint256 _amount) internal returns (bool) {
         
-        assert(tokenContract.transfer(_beneficiaryAddress,_amount));
+        require(tokenContract.transfer(_beneficiaryAddress,_amount));
         
     }
     
@@ -58,8 +36,10 @@ contract Airdrop is Ownable {
         
         for(uint i=0;i<_addresses.length;i++){
             
-            require( _addresses[i]!=address(0) && _addresses[i]!=owner );
-            distributeTokens(_addresses[i],_value);
+
+            require(_addresses[i]!=address(0)&&_addresses[i]!=owner);
+            require(distributeTokens(_addresses[i],_value));
+
         }
         return true;
     }
@@ -73,10 +53,11 @@ contract Airdrop is Ownable {
             
             require( _addresses[i]!=address(0) && _addresses[i]!=owner );
          
-            distributeTokens(_addresses[i],_values[i]);
+            require(distributeTokens(_addresses[i],_values[i]));
         }
         return true;
         
     }
     
 }
+

@@ -13,6 +13,7 @@ import "./ERC20.sol";
  */
 contract Hodler is Ownable {
     using SafeMath for uint256;
+    using SafeMath40 for uint40;
 
     // HODLER reward tracker
     // stake amount per address
@@ -37,11 +38,11 @@ contract Hodler is Ownable {
     uint256 public hodlerTotalValue6M;
     uint256 public hodlerTotalValue9M;
     uint256 public hodlerTotalValue12M;
-    uint256 public hodlerTimeStart;
-    uint256 public hodlerTime3M;
-    uint256 public hodlerTime6M;
-    uint256 public hodlerTime9M;
-    uint256 public hodlerTime12M;
+    uint40 public hodlerTimeStart;
+    uint40 public hodlerTime3M;
+    uint40 public hodlerTime6M;
+    uint40 public hodlerTime9M;
+    uint40 public hodlerTime12M;
     
     // reward HIT token amount
     uint256 public TOKEN_HODL_3M;
@@ -80,7 +81,7 @@ contract Hodler is Ownable {
     }
 
     /// it should be created by a token distribution contract
-    function Hodler(uint256 _stake3m, uint256 _stake6m, uint256 _stake9m,uint256 _stake12m) {
+    constructor(uint256 _stake3m, uint256 _stake6m, uint256 _stake9m,uint256 _stake12m) public {
         TOKEN_HODL_3M = _stake3m;
         TOKEN_HODL_6M = _stake6m;
         TOKEN_HODL_9M = _stake9m;
@@ -93,13 +94,14 @@ contract Hodler is Ownable {
     //We are following this approach insted of passing in constructor because, we need to deploy the hodler fisrt before
     // deploying the HIT ERC20 as it requires hodler.
     function setContractAddresses(address _tokenContractAddress,address _tokenDistributionAddress) public onlyOwner{
+        require(tokenContract==address(0));
         tokenContract = ERC20(_tokenContractAddress);
         HITTokenContract = _tokenContractAddress;
         tokenDistributionContract = _tokenDistributionAddress;
     }
 
    //This method can only be called by the sale distribution method 
-    function addHodlerStake(address _beneficiary, uint256 _stake) public onlyAccessContract beforeHodlStart {
+    function addHodlerStake(address _beneficiary, uint256 _stake) public onlyAccessContract beforeHodlStart returns (bool) {
         // real change and valid _beneficiary is needed
         if (_stake == 0 || _beneficiary == address(0))
             return;
@@ -112,14 +114,16 @@ contract Hodler is Ownable {
 
         hodlerTotalValue = hodlerTotalValue.add(_stake);
 
-        LogHodlSetStake(msg.sender, _beneficiary, hodlerStakes[_beneficiary].stake);
+        emit LogHodlSetStake(msg.sender, _beneficiary, hodlerStakes[_beneficiary].stake);
+        
+        return true;
     }
 
     
 
    
     //The time when hodler reward starts counting
-    function setHodlerTime(uint256 _time) public onlyOwner beforeHodlStart {
+    function setHodlerTime(uint40 _time) public onlyOwner beforeHodlStart {
         require(_time >= now);
 
         hodlerTimeStart = _time;
@@ -128,19 +132,17 @@ contract Hodler is Ownable {
         hodlerTime9M = _time.add(270 days);
         hodlerTime12M = _time.add(360 days);
         
-        LogHodlStartSet(msg.sender, _time);
+        emit LogHodlStartSet(msg.sender, _time);
     }
 
     //This method can only be called by HIT token contract. 
-    function invalidate(address _account) public onlyTokenContract {
+    function invalidate(address _account) public onlyTokenContract returns (bool) {
         if (hodlerStakes[_account].stake > 0 && !hodlerStakes[_account].invalid) {
             hodlerStakes[_account].invalid = true;
             hodlerTotalValue = hodlerTotalValue.sub(hodlerStakes[_account].stake);
             hodlerTotalCount = hodlerTotalCount.sub(1);
         }
-
-        // update hodl total values "automatically" - whenever someone sends funds thus
-        //updateAndGetHodlTotalValue();
+        return true;
     }
 
     //Claiming HODL reward for msg.sender
@@ -151,7 +153,7 @@ contract Hodler is Ownable {
 
     
      //Claiming HODL reward for an address
-    function claimHodlRewardFor(address _beneficiary) public {
+    function claimHodlRewardFor(address _beneficiary) public returns (bool) {
         // only when the address has a valid stake
         require(hodlerStakes[_beneficiary].stake > 0 && !hodlerStakes[_beneficiary].invalid);
 
@@ -184,17 +186,21 @@ contract Hodler is Ownable {
             require(tokenContract.transfer(_beneficiary, _stake));
 
             // log
-            LogHodlClaimed(msg.sender, _beneficiary, _stake);
+            emit LogHodlClaimed(msg.sender, _beneficiary, _stake);
+            return true;
         }
+        
+        return false;
     }
     
     
-    function finalizeHodler() onlyOwner {
+    function finalizeHodler() public onlyOwner returns (bool) {
         require(now>=hodlerTime12M);
          uint256 amount = tokenContract.balanceOf(this);
         require(amount > 0);
 
-        assert(tokenContract.transfer(owner,amount));
+        require(tokenContract.transfer(owner,amount));
+        return true;
     }
     
     
@@ -204,8 +210,9 @@ contract Hodler is Ownable {
     //_beneficiaries Array of addresses for which we want to claim hodl rewards
     function claimHodlRewardsFor(address[] _beneficiaries) external {
         for (uint256 i = 0; i < _beneficiaries.length; i++)
-            claimHodlRewardFor(_beneficiaries[i]);
+            require(claimHodlRewardFor(_beneficiaries[i]));
     }
 
    
 }
+

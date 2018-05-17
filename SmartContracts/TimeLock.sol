@@ -23,37 +23,25 @@ contract TimeLock  {
     
     
     //Constructor method which will accept token contract address.
-    function TimeLock(address _tokenContractAddress) public {
+    constructor(address _tokenContractAddress) public {
         admin = msg.sender;
         tokenContract = ERC20(_tokenContractAddress);
     }
     
     
-    //To make sure that lock tokens can only be called by the admin.
-    modifier onlyOwner() {
-        require(msg.sender==admin);
-        _;
-    }
-    
-    
-    //To make sure that only beneficiary can call the release tokens method.
-    modifier onlyBeneficiary() {
-        require(msg.sender==beneficiary);
-        _;
-    }
     
     
     //Admin will call this method to lock the tokens. 
     //Before calling this method, admin should give allowance to this contract from the HIT ERC20 token balance.
     //It takes beneficiary, releaseTime, and amount as inputs.
-    function LockTokens(address _beneficiary,uint _releaseTime,uint256 _amount)  public onlyOwner {
+    function LockTokens(address _beneficiary,uint256 _releaseTime,uint256 _amount)  public  {
         
+        require(msg.sender==admin);
         require(_releaseTime > 0);
         require(_amount <= tokenContract.allowance(msg.sender, address(this)));
-        require(tokenContract.transferFrom(msg.sender, address(this), _amount));
-       
         beneficiary = _beneficiary;
         releaseTime = _releaseTime+block.timestamp;
+        require(tokenContract.transferFrom(msg.sender, address(this), _amount));
         
     }
     
@@ -63,14 +51,15 @@ contract TimeLock  {
     //This method can only be called by beneficiary
     //Once the above conditions are met, this method will transfer the tokens to the beneficiary
     
-    function release() public onlyBeneficiary {
+    function release() public  {
         
+        require(msg.sender==beneficiary);
         require(block.timestamp >= releaseTime);
 
         uint256 amount = tokenContract.balanceOf(this);
         require(amount > 0);
 
-        assert(tokenContract.transfer(beneficiary,amount));
+        require(tokenContract.transfer(beneficiary,amount));
     }
     
      
@@ -82,3 +71,4 @@ contract TimeLock  {
     
     
 }
+

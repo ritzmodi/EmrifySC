@@ -6,7 +6,7 @@ contract Ownable {
     
   address public owner;
   
-  address tempOwner;
+  address public tempOwner;
 
   event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
   event OwnershipTransferRequest(address indexed previousOwner, address indexed newOwner);
@@ -24,7 +24,7 @@ contract Ownable {
   function transferOwnership(address newOwner) onlyOwner public {
     require(newOwner != address(0));
     emit OwnershipTransferRequest(owner, newOwner);
-    owner = newOwner;
+    tempOwner = newOwner;
   }
   
   function acceptOwnership() public {

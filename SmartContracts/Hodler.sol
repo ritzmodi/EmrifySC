@@ -1,8 +1,8 @@
 pragma solidity 0.4.23;
 
 
-import "./library.sol";
-import "./ERC20.sol";
+import 'browser/library.sol';
+import "browser/ERC20.sol";
 
 
 
@@ -60,7 +60,7 @@ contract Hodler is Ownable {
     event LogHodlClaimed(address indexed _setter, address indexed _beneficiary, uint256 _value);
     event LogHodlStartSet(address indexed _setter, uint256 _time);
 
-    ERC20 tokenContract;
+    ERC20 public tokenContract;
     
     /// @dev Only before hodl is started
     modifier beforeHodlStart() {
@@ -93,11 +93,13 @@ contract Hodler is Ownable {
     //This method will be used , to set the addresses for the deployed token and sale distribution contracts.
     //We are following this approach insted of passing in constructor because, we need to deploy the hodler fisrt before
     // deploying the HIT ERC20 as it requires hodler.
-    function setContractAddresses(address _tokenContractAddress,address _tokenDistributionAddress) public onlyOwner{
+    function setContractAddresses(address _tokenContractAddress,address _tokenDistributionAddress) public onlyOwner returns (bool){
         require(tokenContract==address(0));
         tokenContract = ERC20(_tokenContractAddress);
         HITTokenContract = _tokenContractAddress;
         tokenDistributionContract = _tokenDistributionAddress;
+        
+        return true;
     }
 
    //This method can only be called by the sale distribution method 
@@ -123,7 +125,7 @@ contract Hodler is Ownable {
 
    
     //The time when hodler reward starts counting
-    function setHodlerTime(uint40 _time) public onlyOwner beforeHodlStart {
+    function setHodlerTime(uint40 _time) public onlyOwner beforeHodlStart returns (bool) {
         require(_time >= now);
 
         hodlerTimeStart = _time;
@@ -133,6 +135,8 @@ contract Hodler is Ownable {
         hodlerTime12M = _time.add(360 days);
         
         emit LogHodlStartSet(msg.sender, _time);
+        
+        return true;
     }
 
     //This method can only be called by HIT token contract. 
@@ -141,13 +145,18 @@ contract Hodler is Ownable {
             hodlerStakes[_account].invalid = true;
             hodlerTotalValue = hodlerTotalValue.sub(hodlerStakes[_account].stake);
             hodlerTotalCount = hodlerTotalCount.sub(1);
+            
+            delete hodlerStakes[_account];
+            
+            return true;
         }
-        return true;
+        return false;
     }
 
     //Claiming HODL reward for msg.sender
-    function claimHodlReward() public {
+    function claimHodlReward() public returns (bool) {
         claimHodlRewardFor(msg.sender);
+        return true;
     }
 
 
@@ -187,10 +196,10 @@ contract Hodler is Ownable {
 
             // log
             emit LogHodlClaimed(msg.sender, _beneficiary, _stake);
-            return true;
+    
         }
         
-        return false;
+        return true;
     }
     
     
@@ -208,10 +217,15 @@ contract Hodler is Ownable {
     //claimHodlRewardFor() for multiple addresses
     //Anyone can call this function and distribute hodl rewards
     //_beneficiaries Array of addresses for which we want to claim hodl rewards
-    function claimHodlRewardsFor(address[] _beneficiaries) external {
+    function claimHodlRewardsFor(address[] _beneficiaries) external returns (bool){
         for (uint256 i = 0; i < _beneficiaries.length; i++)
+    
             require(claimHodlRewardFor(_beneficiaries[i]));
+            
+        return true;
     }
+    
+    
 
    
 }

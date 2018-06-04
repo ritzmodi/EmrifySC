@@ -1,20 +1,18 @@
 pragma solidity 0.4.23;
 
 
-import "./library.sol";
-import "./ERC20.sol";
-import "./Hodler.sol";
+import 'browser/library.sol';
+import "browser/ERC20.sol";
+import "browser/Hodler.sol";
 
 
 
 
 contract TokenDistribution is Ownable {
     
-
     ERC20  public  constant tokenContract = ERC20(0x1233);        //our ERC20 token contract, correct address will be added during the time of deployment.
     Hodler public  constant hodlerContract = Hodler(0x123);      //Holder contract, correct address will be added during the time of deployment;
    
-
     
     //internal method to transfer the tokens to a user address. This is an internal method.
     
@@ -30,7 +28,7 @@ contract TokenDistribution is Ownable {
     
     //This method can be used by the admin to allocate tokens to the presale users.
     
-    function saleDistribution(address _beneficiaryAddress,uint256 _amount)  public onlyOwner {
+    function saleDistribution(address _beneficiaryAddress,uint256 _amount)  public onlyOwner returns (bool) {
         
         require(_beneficiaryAddress!=address(0)&&_beneficiaryAddress!=owner);
         
@@ -38,6 +36,8 @@ contract TokenDistribution is Ownable {
         require(hodlerContract.addHodlerStake(_beneficiaryAddress,_amount));
         
         require(distributeTokens(_beneficiaryAddress,_amount));
+        
+        return true;
         
     }
     

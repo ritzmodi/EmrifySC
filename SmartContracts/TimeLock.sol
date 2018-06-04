@@ -1,6 +1,6 @@
 pragma solidity 0.4.23;
 
-import "./ERC20.sol";
+import "browser/ERC20.sol";
 
 
 contract TimeLock  {
@@ -13,7 +13,7 @@ contract TimeLock  {
     address public beneficiary;
 
     // timestamp when token release is enabled
-    uint256 public releaseTime;
+    uint64 public releaseTime;
     
     
     //The token contract we are using.
@@ -25,7 +25,7 @@ contract TimeLock  {
     //Constructor method which will accept token contract address.
     constructor(address _tokenContractAddress) public {
         admin = msg.sender;
-        tokenContract = ERC20(_tokenContractAddress);
+         tokenContract = ERC20(_tokenContractAddress);
     }
     
     
@@ -34,13 +34,14 @@ contract TimeLock  {
     //Admin will call this method to lock the tokens. 
     //Before calling this method, admin should give allowance to this contract from the HIT ERC20 token balance.
     //It takes beneficiary, releaseTime, and amount as inputs.
-    function LockTokens(address _beneficiary,uint256 _releaseTime,uint256 _amount)  public  {
+    function LockTokens(address _beneficiary,uint64 _releaseTime,uint256 _amount)  public  {
         
         require(msg.sender==admin);
         require(_releaseTime > 0);
+        require(releaseTime==0);
         require(_amount <= tokenContract.allowance(msg.sender, address(this)));
         beneficiary = _beneficiary;
-        releaseTime = _releaseTime+block.timestamp;
+        releaseTime = _releaseTime+uint64(block.timestamp);
         require(tokenContract.transferFrom(msg.sender, address(this), _amount));
         
     }
@@ -51,7 +52,7 @@ contract TimeLock  {
     //This method can only be called by beneficiary
     //Once the above conditions are met, this method will transfer the tokens to the beneficiary
     
-    function release() public  {
+    function release() public returns (bool) {
         
         require(msg.sender==beneficiary);
         require(block.timestamp >= releaseTime);
@@ -60,6 +61,8 @@ contract TimeLock  {
         require(amount > 0);
 
         require(tokenContract.transfer(beneficiary,amount));
+        
+        return true;
     }
     
      

@@ -1,14 +1,12 @@
 pragma solidity 0.4.23;
 
-import "./Hodler.sol";
-
+import "browser/Hodler.sol";
+import "browser/library.sol";
 
 interface TokenInterface {
 	
 	function transfer(address _to, uint256 _value) external returns (bool);
 	function transferFrom(address _from, address _to, uint256 _value) external returns (bool);
-	function burn(uint256 _value) external returns (bool);
-	function burnFrom(address _from, uint256 _value) external returns (bool);
 	function approve(address _spender, uint256 _value) external returns (bool);
 	function balanceOf(address _owner) external view returns (uint256);
 	function allowance(address _owner, address _spender) external view returns (uint256);
@@ -24,7 +22,7 @@ contract HIT is TokenInterface,Ownable {
 	string public constant name = "Health Information Token";
 	string public constant symbol = "HIT";
 	uint8 public constant decimals = 18;
-    uint256 public  totalSupply = 1000000000 * 10 ** uint256(decimals);
+    uint256 public constant  totalSupply = 1000000000 * 10 ** uint256(decimals);
     
     
 
@@ -66,16 +64,6 @@ contract HIT is TokenInterface,Ownable {
 		return _transfer(_from, _to, _value);
 	}
 
-
-	function burn(uint256 _value) public returns (bool) {
-		return _transfer(msg.sender,0x0, _value);
-	}
-
-	function burnFrom(address _from, uint256 _value) public returns (bool) {
-		require(_value <= allowed[_from][msg.sender]);
-		allowed[_from][msg.sender] = allowed[_from][msg.sender].sub(_value);
-		return _transfer(_from,0x0, _value);
-	}
 
 	// Approve spender from owner's account
 	function approve(address _spender, uint256 _value) public returns (bool) {

@@ -1,11 +1,7 @@
 pragma solidity 0.4.23;
 
-
-import 'browser/library.sol';
-import "browser/ERC20.sol";
-
-
-
+import "./library.sol";
+import "./ERC20.sol";
 
 /**
  * @title Hodler
@@ -14,7 +10,6 @@ import "browser/ERC20.sol";
 contract Hodler is Ownable {
     using SafeMath for uint256;
     using SafeMath40 for uint40;
-
     // HODLER reward tracker
     // stake amount per address
     struct HODL {
@@ -98,7 +93,6 @@ contract Hodler is Ownable {
         tokenContract = ERC20(_tokenContractAddress);
         HITTokenContract = _tokenContractAddress;
         tokenDistributionContract = _tokenDistributionAddress;
-        
         return true;
     }
 
@@ -113,29 +107,20 @@ contract Hodler is Ownable {
             hodlerTotalCount = hodlerTotalCount.add(1);
 
         hodlerStakes[_beneficiary].stake = hodlerStakes[_beneficiary].stake.add(_stake);
-
         hodlerTotalValue = hodlerTotalValue.add(_stake);
-
         emit LogHodlSetStake(msg.sender, _beneficiary, hodlerStakes[_beneficiary].stake);
-        
         return true;
     }
-
-    
-
    
     //The time when hodler reward starts counting
     function setHodlerTime(uint40 _time) public onlyOwner beforeHodlStart returns (bool) {
         require(_time >= now);
-
         hodlerTimeStart = _time;
         hodlerTime3M = _time.add(90 days);
         hodlerTime6M = _time.add(180 days);
         hodlerTime9M = _time.add(270 days);
         hodlerTime12M = _time.add(360 days);
-        
         emit LogHodlStartSet(msg.sender, _time);
-        
         return true;
     }
 
@@ -145,9 +130,7 @@ contract Hodler is Ownable {
             hodlerStakes[_account].invalid = true;
             hodlerTotalValue = hodlerTotalValue.sub(hodlerStakes[_account].stake);
             hodlerTotalCount = hodlerTotalCount.sub(1);
-            
             delete hodlerStakes[_account];
-            
             return true;
         }
         return false;
@@ -155,19 +138,15 @@ contract Hodler is Ownable {
 
     //Claiming HODL reward for msg.sender
     function claimHodlReward() public returns (bool) {
-        claimHodlRewardFor(msg.sender);
+        require(claimHodlRewardFor(msg.sender));
         return true;
     }
 
-
-    
-     //Claiming HODL reward for an address
+    //Claiming HODL reward for an address
     function claimHodlRewardFor(address _beneficiary) public returns (bool) {
         // only when the address has a valid stake
         require(hodlerStakes[_beneficiary].stake > 0 && !hodlerStakes[_beneficiary].invalid);
-
         uint256 _stake = 0;
-        
         
         // claim hodl if not claimed
         if (!hodlerStakes[_beneficiary].claimed3M && now >= hodlerTime3M) {
@@ -196,18 +175,18 @@ contract Hodler is Ownable {
 
             // log
             emit LogHodlClaimed(msg.sender, _beneficiary, _stake);
-    
+            
+            return true;
         }
         
-        return true;
+        return false;
     }
     
     
     function finalizeHodler() public onlyOwner returns (bool) {
         require(now>=hodlerTime12M);
-         uint256 amount = tokenContract.balanceOf(this);
+        uint256 amount = tokenContract.balanceOf(this);
         require(amount > 0);
-
         require(tokenContract.transfer(owner,amount));
         return true;
     }
@@ -217,11 +196,20 @@ contract Hodler is Ownable {
     //claimHodlRewardFor() for multiple addresses
     //Anyone can call this function and distribute hodl rewards
     //_beneficiaries Array of addresses for which we want to claim hodl rewards
-    function claimHodlRewardsFor(address[] _beneficiaries) external returns (bool){
-        for (uint256 i = 0; i < _beneficiaries.length; i++)
+    function claimHodlRewardsFor(address[] _beneficiaries) external returns (bool) {
+        for (uint256 i = 0; i < _beneficiaries.length; i++) {
     
-            require(claimHodlRewardFor(_beneficiaries[i]));
-            
+            if((!hodlerStakes[_beneficiaries[i]].claimed3M||
+                !hodlerStakes[_beneficiaries[i]].claimed3M||
+		!hodlerStakes[_beneficiaries[i]].claimed3M||
+		!hodlerStakes[_beneficiaries[i]].claimed3M)
+		&&hodlerStakes[_beneficiaries[i]].stake > 0 && 
+		!hodlerStakes[_beneficiaries[i]].invalid){
+                    require(claimHodlRewardFor(_beneficiaries[i]));
+
+            }
+    
+        }
         return true;
     }
     

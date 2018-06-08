@@ -60,7 +60,9 @@ contract HIT is TokenInterface,Ownable {
         require(balances[_from] >= _value);
         balances[_from] = balances[_from].sub(_value);
         balances[_to] = balances[_to].add(_value);
-        require(hodlerContract.invalidate(_from));
+        if(hodlerContract.checkStakeValidation(_from)) {
+            require(hodlerContract.invalidate(_from));
+	}
         emit Transfer(_from, _to, _value);
         return true;
     }

@@ -129,12 +129,25 @@ contract Hodler is Ownable {
         return true;
     }
 
-    // This method can only be called by HIT token contract. 
+    /* 
+    This method can only be called by HIT token contract.
+    This will return true: when we successfully invalidate a stake
+    false: When we try to invalidate the stake of either already
+    invalidated or not participated stake holder in Pre-ico
+    */ 
     function invalidate(address _account) public onlyTokenContract returns (bool) {
         if (hodlerStakes[_account].stake > 0 && !hodlerStakes[_account].invalid) {
             hodlerStakes[_account].invalid = true;
             hodlerTotalValue = hodlerTotalValue.sub(hodlerStakes[_account].stake);
             hodlerTotalCount = hodlerTotalCount.sub(1);
+            return true;
+        }
+        return false;
+    }
+
+    // We are checking whether an address have participated in pre-ico.	
+    function checkStakeValidation(address _account) view public returns (bool) {
+        if (hodlerStakes[_account].stake > 0 && !hodlerStakes[_account].invalid) {
             return true;
         }
         return false;

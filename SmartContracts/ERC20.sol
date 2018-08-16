@@ -1,4 +1,4 @@
-pragma solidity 0.4.23;
+pragma solidity 0.4.24;
 
 /*
 * This is the interface of the HITT token contract(just below). It gives the basic idea

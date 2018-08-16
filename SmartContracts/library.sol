@@ -1,10 +1,10 @@
 
-pragma solidity 0.4.23;
+pragma solidity 0.4.24;
 
 /*
-Standard Ownable contract from Open Zepplin,
-With a change in ownership, This contract uses a
-two step process for ownership transfer.
+* Standard Ownable contract from Open Zepplin,
+* With a change in ownership, This contract uses a
+* two step process for ownership transfer.
 */
 
 contract Ownable {    
@@ -68,34 +68,3 @@ library SafeMath {
         return c;
     }
 }
-
-/*
-Standard Safe Math library modified for uint40
-*/
-
-library SafeMath40 {
-    function mul(uint40 a, uint40 b) internal pure returns (uint40) {
-        uint40 c = a * b;
-        assert(a == 0 || c / a == b);
-        return c;
-    }
-
-    function div(uint40 a, uint40 b) internal pure returns (uint40) {
-        // assert(b > 0); // Solidity automatically throws when dividing by 0
-        uint40 c = a / b;
-        // assert(a == b * c + a % b); // There is no case in which this doesn't hold
-        return c;
-    }
-
-    function sub(uint40 a, uint40 b) internal pure returns (uint40) {
-        assert(b <= a);
-        return a - b;
-    }
-
-    function add(uint40 a, uint40 b) internal pure returns (uint40) {
-        uint40 c = a + b;
-        assert(c >= a);
-        return c;
-    }
-}
-

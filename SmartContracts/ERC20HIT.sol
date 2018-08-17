@@ -34,7 +34,8 @@ contract HITT is ERC20,Ownable {
     
     /*
     * 31104000 = 360 Days in seconds. We're not using whole 365 days for `tokenLockTime` 
-    * because we have used similar days in the Hodler Smart contract's time calculation as well. 
+    * because we have used multiple of 90 for 3M, 6M, 9M and 12M in the Hodler Smart contract's time calculation as well.
+    * We shall use it to lock the tokens of Advisors and Founders. 
     */
     uint64 public constant tokenLockTime = 31104000;
     
@@ -48,39 +49,40 @@ contract HITT is ERC20,Ownable {
     */
     uint256 public constant hodlerPoolTokens = 200000000 * 10 ** uint256(decimals) ; //update
     Hodler public hodlerContract;
-    
-    /*
-    * To figure out the addresses on which the token distribution was not successful or were incorrect.
-    */
-    event TokenDistributionAddressNotCorrect(address _userAddress, uint256 _value);
 
     /*
     * The constructor method which will initialize the token supply.
     * We've multiple `Transfer` events emitting from the Constructor so that Etherscan can pick 
     * it as the contributor's address and can show correct informtaion on the site.
+    * We're deliberately choosing the manual transfer of the tokens to the advisors and the founders over the 
+    * internal `_transfer()` because the admin might use the same account for deploying this Contract and as an founder address.
+    * which will have `locktime`.
     */
     constructor() public {
         uint8 i=0 ;
         balances[msg.sender] = totalSupply1;
         emit Transfer(0x0,msg.sender,totalSupply1);
-        for( ;i<founders.length;i++){
+        for( ; i < founders.length ; i++ ){
+            /*
+            * These 45 days shall be used to distribute the tokens to the contributors of the ICO.
+            */
             lockTimes[founders[i]] = uint64(block.timestamp + 45 days + tokenLockTime );
         }
-        for(i=0;i<advisors.length;i++){
+        for( i=0 ; i < advisors.length ; i++ ){
             lockTimes[advisors[i]] = uint64(block.timestamp +  45 days + tokenLockTime);
             balances[msg.sender] = balances[msg.sender].sub(40000 * 10 ** uint256(decimals));
             balances[advisors[i]] = 40000 * 10 ** uint256(decimals) ;
-            emit Transfer(msg.sender,advisors[i],40000 * 10 ** uint256(decimals));
+            emit Transfer( msg.sender, advisors[i], 40000 * 10 ** uint256(decimals) );
         }
         balances[msg.sender] = balances[msg.sender].sub(200000000 * 10 ** uint256(decimals));
         balances[founders[0]] = 170000000 * 10 ** uint256(decimals) ; // Tom
         balances[founders[1]] =  30000000 * 10 ** uint256(decimals) ; // Vikas
-        emit Transfer(msg.sender,founders[0],170000000 * 10 ** uint256(decimals));
-        emit Transfer(msg.sender,founders[1], 30000000 * 10 ** uint256(decimals));
+        emit Transfer( msg.sender, founders[0], 170000000 * 10 ** uint256(decimals) );
+        emit Transfer( msg.sender, founders[1],  30000000 * 10 ** uint256(decimals) );
         hodlerContract = new Hodler(hodlerPoolTokens, msg.sender); 
         balances[msg.sender] = balances[msg.sender].sub(hodlerPoolTokens);
         balances[address(hodlerContract)] = hodlerPoolTokens; // giving the total hodler bonus to the HODLER contract to distribute.
-        emit Transfer(msg.sender,address(hodlerContract),hodlerPoolTokens);
+        emit Transfer( msg.sender, address(hodlerContract), hodlerPoolTokens );
     }
     
 
@@ -93,14 +95,13 @@ contract HITT is ERC20,Ownable {
 
     /* 
     * Transfer amount from one account to another. This function trigger the action to 
-    * invalidate the participant's right to get the HODL rewards if they make any transation within the hodl period.
-    * Getting into the HODL club is optional by not moving their tokens after reveiving tokens in their wallet for 
+    * invalidate the participant's right to get the HODL rewards if they make any transaction within the hodl period.
+    * Getting into the HODL club is optional by not moving their tokens after receiving tokens in their wallet for 
     * pre-defined period like 3,6,9 or 12 months.
     * More details are here about the HODL T&C : https://medium.com/@Vikas1188/lets-hodl-with-emrify-bc5620a14237
     */
     function _transfer(address _from, address _to, uint256 _value) internal returns (bool) {
-        require(balances[_from] >= _value);
-        require(block.timestamp>lockTimes[_from]);
+        require(block.timestamp > lockTimes[_from]);
         balances[_from] = balances[_from].sub(_value);
         balances[_to] = balances[_to].add(_value);
         if(hodlerContract.isValid(_from)) {
@@ -155,30 +156,27 @@ contract HITT is ERC20,Ownable {
     * This method will be used by the admin to allocate tokens to multiple contributors in a single shot.
     */
     function saleDistributionMultiAddress(address[] _addresses,uint256[] _values) public onlyOwner returns (bool) {    
-        require(_addresses.length>0 && _values.length>0 && _addresses.length == _values.length); 
+        require( _addresses.length > 0 && _values.length > 0 && _addresses.length == _values.length); 
         
-        for(uint i=0;i<_addresses.length;i++)
+        for(uint8 i=0 ; i < _addresses.length ; i++ )
         {
-            if(_addresses[i]!=address(0)&&_addresses[i]!=owner) {
-                require(hodlerContract.addHodlerStake(_addresses[i],_values[i]));
-                require(_transfer(msg.sender,_addresses[i],_values[i]));
-            }
-            else {
-                emit TokenDistributionAddressNotCorrect(_addresses[i], _values[i]);
+            if(_addresses[i] != address(0) && _addresses[i] != owner) {
+                require(hodlerContract.addHodlerStake(_addresses[i], _values[i]));
+                require(_transfer( msg.sender, _addresses[i], _values[i]));
             }
         }
         return true;
     }
-    
+     
     /*
-    * This method will be used by the admin & normal users to send tokens to multiple addresses in a single method.
+    * This method will be used to send tokens to multiple addresses.
     */
     function batchTransfer(address[] _addresses,uint256[] _values) public  returns (bool) {    
-        require(_addresses.length>0 && _values.length>0 && _addresses.length == _values.length);
-        for(uint i=0;i<_addresses.length;i++){
+        require(_addresses.length > 0 && _values.length > 0 && _addresses.length == _values.length);
+        for( uint8 i = 0 ; i < _addresses.length ; i++ ){
             
-            if(_addresses[i]!=address(0)) {
-                require(_transfer(msg.sender,_addresses[i],_values[i]));
+            if(_addresses[i] != address(0)) {
+                require(_transfer(msg.sender, _addresses[i], _values[i]));
             }
         }
         return true;

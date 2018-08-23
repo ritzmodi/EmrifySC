@@ -185,7 +185,9 @@ contract Hodler is Ownable {
     */
     function calculateStake(address _beneficiary) internal returns (uint256) {
         uint256 _stake = 0;
-                
+        
+       // uint256 lastClaimed = hodlerStakes[_beneficiary].lastClaimed;
+        
         HODL memory hodler = hodlerStakes[_beneficiary];
         
         if(( hodler.claimed3M == false ) && ( block.timestamp-hodlerTimeStart) >= 90 days){ 

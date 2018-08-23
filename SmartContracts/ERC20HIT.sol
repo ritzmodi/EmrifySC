@@ -66,7 +66,7 @@ contract HITT is ERC20,Ownable {
         for( ;i<founders.length;i++){
             lockTimes[founders[i]] = uint64(block.timestamp + 45 days + tokenLockTime );
         }
-        for(i=0;i<advisors.length;i++){
+        for(i=0;i<advisors.length;i++){ //update the condition
             lockTimes[advisors[i]] = uint64(block.timestamp +  45 days + tokenLockTime);
             balances[msg.sender] = balances[msg.sender].sub(40000 * 10 ** uint256(decimals));
             balances[advisors[i]] = 40000 * 10 ** uint256(decimals) ;

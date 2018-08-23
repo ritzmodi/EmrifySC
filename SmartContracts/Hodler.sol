@@ -13,11 +13,10 @@ import "./ERC20.sol";
 *
 * After 450 days:
 * 1. Users won't be able to make any transaction related to claiming bonus after this. 
-* 2. Admin shall call `claimHodlRewardsForMultipleAddresses()` before finalizing this  
-* contract with all the valid addresses to provide them the bonus.
-* 3. Admin shall call finalize on it and collect all the remaining funds.( ideally no  
-* funds shall be present in this HODL contract, as admin shall be responsible for calling 
-* the `claimHodlRewardsForMultipleAddresses()` to distribute the Bonus. users can call it by 
+* 2. Admin shall call `claimHodlRewardsForMultipleAddresses()` before finalizing this contract with all the valid addresses to provide 
+* them the bonus.
+* 3. Admin shall call finalize on it and collect all the remaining funds.( ideally no funds shall be present in this HODL contract, as 
+* admin shall be responsible for calling the `claimHodlRewardsForMultipleAddresses()` to distribute the Bonus. users can call it by
 * themselves as well. as mentioned in point 2.)
 * 
 * Author : Vikas
@@ -45,15 +44,15 @@ contract Hodler is Ownable {
 
     /* 
     * Total current staking value & count of hodler addresses.
-    * hodlerTotalValue = ∑ all the valid distributed tokens. 
+    * hodlerTotalValue = ∑ all the valid airdropped tokens. 
     * This shall be the reference in which we shall distribute the HODL bonus.
-    * hodlerTotalCount = count of the different addresses who is still HODLing their intial distributed tokens.
+    * hodlerTotalCount = count of the different addresses took part in the ICO.
     */
     uint256 public hodlerTotalValue;
     uint256 public hodlerTotalCount;
 
     /*
-    * To keep the snapshot of the tokens for 3,6,9 & 12 months after token sale.
+    * To keep the snapshot of the tokens for 3 - 6 - 9 - 12 months after token sale.
     * Since people shall invalidate their stakes during the HODL period, we shall keep 
     * decreasing their share from the `hodlerTotalValue`. it shall always have the 
     * user's ICO contribution who've not invalidated their stakes.
@@ -64,8 +63,8 @@ contract Hodler is Ownable {
     uint256 public hodlerTotalValue12M;
 
     /*
-    * This shall be set deterministically to 45 days in the constructor itself 
-    * from the deployment date of the Token Contract. 
+    * This shall be set deterministically to 45 days from the deployment date of 
+    * the Token Contract.
     */
     uint256 public hodlerTimeStart;
  
@@ -92,8 +91,8 @@ contract Hodler is Ownable {
     * Modifier: before hodl is started
     */
     modifier beforeHodlStart() {
-        require(block.timestamp < hodlerTimeStart);
-        _;
+        if (hodlerTimeStart == 0 || now <= hodlerTimeStart)
+            _;
     }
 
     /*
@@ -108,7 +107,7 @@ contract Hodler is Ownable {
         TOKEN_HODL_9M = (_stake*30)/100;
         TOKEN_HODL_12M = (_stake*475)/1000;
         tokenContract = ERC20(msg.sender);
-        hodlerTimeStart = block.timestamp + 45 days ; // These 45 days shall be used to distribute the tokens to the contributors of the ICO
+        hodlerTimeStart = block.timestamp + 45 days ; // These 45 days shall be used to airdrop the tokens to the contributors of the ICO
         admin = _admin;
     }
     
@@ -148,7 +147,7 @@ contract Hodler is Ownable {
     }
 
     /* 
-    * This method will be used whether the particular user has HODL stake or not.   
+    * We can check whether an address have participated in pre-ico.  
     */
     function isValid(address _account) view public returns (bool) {
         if (hodlerStakes[_account].stake > 0) {
@@ -189,19 +188,19 @@ contract Hodler is Ownable {
                 
         HODL memory hodler = hodlerStakes[_beneficiary];
         
-        if(( hodler.claimed3M == false ) && ( block.timestamp - hodlerTimeStart) >= 90 days){ 
+        if(( hodler.claimed3M == false ) && ( block.timestamp-hodlerTimeStart) >= 90 days){ 
             _stake = _stake.add(hodlerStakes[_beneficiary].stake.mul(TOKEN_HODL_3M).div(hodlerTotalValue3M));
             hodler.claimed3M = true;
         }
-        if(( hodler.claimed6M == false ) && ( block.timestamp - hodlerTimeStart) >= 180 days){ 
+        if(( hodler.claimed6M == false ) && ( block.timestamp-hodlerTimeStart) >= 180 days){ 
             _stake = _stake.add(hodlerStakes[_beneficiary].stake.mul(TOKEN_HODL_6M).div(hodlerTotalValue6M));
             hodler.claimed6M = true;
         }
-        if(( hodler.claimed9M == false ) && ( block.timestamp - hodlerTimeStart) >= 270 days ){ 
+        if(( hodler.claimed9M == false ) && ( block.timestamp-hodlerTimeStart) >= 270 days ){ 
             _stake = _stake.add(hodlerStakes[_beneficiary].stake.mul(TOKEN_HODL_9M).div(hodlerTotalValue9M));
             hodler.claimed9M = true;
         }
-        if(( hodler.claimed12M == false ) && ( block.timestamp - hodlerTimeStart) >= 360 days){
+        if(( hodler.claimed12M == false ) && ( block.timestamp-hodlerTimeStart) >= 360 days){
             _stake = _stake.add(hodlerStakes[_beneficiary].stake.mul(TOKEN_HODL_12M).div(hodlerTotalValue12M));
             hodler.claimed12M = true;
         }
@@ -216,7 +215,7 @@ contract Hodler is Ownable {
     */
     function finalizeHodler() public returns (bool) {
         require(msg.sender == admin);
-        require(block.timestamp >= hodlerTimeStart + 450 days ); 
+        require(now>=hodlerTimeStart + 450 days ); 
         uint256 amount = tokenContract.balanceOf(this);
         require(amount > 0);
         require(tokenContract.transfer(admin,amount));
@@ -231,8 +230,8 @@ contract Hodler is Ownable {
     * `_beneficiaries` is the array of addresses for which we want to claim HODL rewards.
     */
     function claimHodlRewardsForMultipleAddresses(address[] _beneficiaries) external returns (bool) {
-        require(block.timestamp - hodlerTimeStart <= 450 days ); 
-        for (uint8 i = 0; i < _beneficiaries.length ; i++) {
+        require(block.timestamp-hodlerTimeStart<= 450 days ); 
+        for (uint256 i = 0; i < _beneficiaries.length; i++) {
             HODL memory hodler = hodlerStakes[_beneficiaries[i]]; 
             if(hodler.stake > 0 && (hodler.claimed3M == false || hodler.claimed6M == false || hodler.claimed9M == false || hodler.claimed12M == false)) { 
                 require(claimHodlRewardFor(_beneficiaries[i]));
@@ -247,18 +246,18 @@ contract Hodler is Ownable {
     * Setting 3, 6, 9 & 12 months total staked token value.
     */
     function updateAndGetHodlTotalValue() public returns (uint) {
-        if (block.timestamp >= hodlerTimeStart+ 90 days && hodlerTotalValue3M == 0) { 
+        if (now >= hodlerTimeStart+ 90 days && hodlerTotalValue3M == 0) { 
             hodlerTotalValue3M = hodlerTotalValue;
         }
 
-        if (block.timestamp >= hodlerTimeStart+ 180 days && hodlerTotalValue6M == 0) { 
+        if (now >= hodlerTimeStart+ 180 days && hodlerTotalValue6M == 0) { 
             hodlerTotalValue6M = hodlerTotalValue;
         }
 
-        if (block.timestamp >= hodlerTimeStart+ 270 days && hodlerTotalValue9M == 0) { 
+        if (now >= hodlerTimeStart+ 270 days && hodlerTotalValue9M == 0) { 
             hodlerTotalValue9M = hodlerTotalValue;
         }
-        if (block.timestamp >= hodlerTimeStart+ 360 days && hodlerTotalValue12M == 0) {
+        if (now >= hodlerTimeStart+ 360 days && hodlerTotalValue12M == 0) {
             hodlerTotalValue12M = hodlerTotalValue;
         }
 

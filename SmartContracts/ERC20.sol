@@ -1,8 +1,8 @@
 pragma solidity 0.4.23;
 
 /*
-* This is the interface of the HITT token contract(just below). It gives the basic idea
-* of the functions we are using in the HITT contract.
+This is the interface of the HIT token contract(just below). It gives the basic idea
+of the functions we are using in the HIT contract.
 */
 
 interface ERC20 {

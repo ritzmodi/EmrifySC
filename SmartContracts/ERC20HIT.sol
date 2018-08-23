@@ -31,7 +31,6 @@ contract HITT is ERC20,Ownable {
     mapping (address => uint256)  balances;
     mapping (address => mapping (address => uint256))  allowed;
     mapping (address => uint64) lockTimes;
-    
     /*
     * 31104000 = 360 Days in seconds. We're not using whole 365 days for `tokenLockTime` 
     * because we have used similar days in the Hodler Smart contract's time calculation as well. 
@@ -84,9 +83,7 @@ contract HITT is ERC20,Ownable {
     }
     
 
-    /*
-    * Constant function to return the total supply of the HITT contract
-    */
+    // Constant function to return the total supply of the HITT contract
     function totalSupply() public view returns(uint256) {
         return totalSupply1;
     }

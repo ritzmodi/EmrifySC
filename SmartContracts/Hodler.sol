@@ -25,7 +25,6 @@ import "./ERC20.sol";
 contract Hodler is Ownable {
     using SafeMath for uint256;
     address public admin; // getting updated in constructor
-    
     /* 
     * HODLER reward tracker
     * stake amount per address

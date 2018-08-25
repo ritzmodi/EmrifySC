@@ -232,9 +232,9 @@ contract Hodler is Ownable {
     */
     function claimHodlRewardsForMultipleAddresses(address[] _beneficiaries) external returns (bool) {
         require(block.timestamp - hodlerTimeStart <= 450 days ); 
-        for (uint8 i = 0; i < _beneficiaries.length ; i++) {
-            HODL memory hodler = hodlerStakes[_beneficiaries[i]]; 
-            if(hodler.stake > 0 && (hodler.claimed3M == false || hodler.claimed6M == false || hodler.claimed9M == false || hodler.claimed12M == false)) { 
+        uint256 length = _beneficiaries.length ;
+        for (uint8 i = 0; i < length ; i++) {
+            if(hodlerStakes[_beneficiaries[i]].stake > 0 && (hodlerStakes[_beneficiaries[i]].claimed3M == false || hodlerStakes[_beneficiaries[i]].claimed6M == false || hodlerStakes[_beneficiaries[i]].claimed9M == false || hodlerStakes[_beneficiaries[i]].claimed12M == false)) { 
                 require(claimHodlRewardFor(_beneficiaries[i]));
             }
         }

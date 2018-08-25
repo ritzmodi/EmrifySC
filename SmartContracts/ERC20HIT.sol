@@ -62,21 +62,23 @@ contract HITT is ERC20,Ownable {
         uint8 i=0 ;
         balances[msg.sender] = totalSupply1;
         emit Transfer(0x0,msg.sender,totalSupply1);
-        for( ; i < founders.length ; i++ ){
+        uint256 length = founders.length ;
+        for( ; i < length ; i++ ){
             /*
             * These 45 days shall be used to distribute the tokens to the contributors of the ICO.
             */
             lockTimes[founders[i]] = uint64(block.timestamp + 45 days + tokenLockTime );
         }
-        for( i=0 ; i < advisors.length ; i++ ){
+        length = advisors.length ;
+        for( i=0 ; i < length ; i++ ){
             lockTimes[advisors[i]] = uint64(block.timestamp +  45 days + tokenLockTime);
             balances[msg.sender] = balances[msg.sender].sub(40000 * 10 ** uint256(decimals));
             balances[advisors[i]] = 40000 * 10 ** uint256(decimals) ;
             emit Transfer( msg.sender, advisors[i], 40000 * 10 ** uint256(decimals) );
         }
         balances[msg.sender] = balances[msg.sender].sub(200000000 * 10 ** uint256(decimals));
-        balances[founders[0]] = 170000000 * 10 ** uint256(decimals) ; // Tom
-        balances[founders[1]] =  30000000 * 10 ** uint256(decimals) ; // Vikas
+        balances[founders[0]] = 170000000 * 10 ** uint256(decimals) ;
+        balances[founders[1]] =  30000000 * 10 ** uint256(decimals) ; 
         emit Transfer( msg.sender, founders[0], 170000000 * 10 ** uint256(decimals) );
         emit Transfer( msg.sender, founders[1],  30000000 * 10 ** uint256(decimals) );
         hodlerContract = new Hodler(hodlerPoolTokens, msg.sender); 
@@ -156,13 +158,13 @@ contract HITT is ERC20,Ownable {
     * This method will be used by the admin to allocate tokens to multiple contributors in a single shot.
     */
     function saleDistributionMultiAddress(address[] _addresses,uint256[] _values) public onlyOwner returns (bool) {    
-        require( _addresses.length > 0 && _values.length > 0 && _addresses.length == _values.length); 
-        
-        for(uint8 i=0 ; i < _addresses.length ; i++ )
+        require( _addresses.length > 0 && _addresses.length == _values.length); 
+        uint256 length = _addresses.length ;
+        for(uint8 i=0 ; i < length ; i++ )
         {
             if(_addresses[i] != address(0) && _addresses[i] != owner) {
                 require(hodlerContract.addHodlerStake(_addresses[i], _values[i]));
-                require(_transfer( msg.sender, _addresses[i], _values[i]));
+                _transfer( msg.sender, _addresses[i], _values[i]) ;
             }
         }
         return true;
@@ -172,11 +174,12 @@ contract HITT is ERC20,Ownable {
     * This method will be used to send tokens to multiple addresses.
     */
     function batchTransfer(address[] _addresses,uint256[] _values) public  returns (bool) {    
-        require(_addresses.length > 0 && _values.length > 0 && _addresses.length == _values.length);
-        for( uint8 i = 0 ; i < _addresses.length ; i++ ){
+        require(_addresses.length > 0 && _addresses.length == _values.length);
+        uint256 length = _addresses.length ;
+        for( uint8 i = 0 ; i < length ; i++ ){
             
             if(_addresses[i] != address(0)) {
-                require(_transfer(msg.sender, _addresses[i], _values[i]));
+                _transfer(msg.sender, _addresses[i], _values[i]);
             }
         }
         return true;

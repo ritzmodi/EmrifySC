@@ -1,4 +1,4 @@
-pragma solidity ^0.4.0;
+pragma solidity 0.4.24;
 import "./AdminController.sol";
 
 
@@ -22,7 +22,7 @@ contract ProviderRegistry is AdminController {
     event DoctorAssociated(address _orgAddress, address doctorAddress, string IPFSDocumentHash);
     event DoctorDisassociated(address _orgAddress, address doctorAddress, string IPFSDocumentHash);
     
-function ProviderRegistry(address _adminController){
+    constructor (address _adminController) public{
         if (_adminController != 0x0) {
             adminController = AdminController(_adminController);
     } else {
@@ -42,23 +42,27 @@ function ProviderRegistry(address _adminController){
     mapping (address => mapping(address => DoctorDetails )) public DoctorInformation; // this mapping is to keep the relationship between the Organization and their whitelisted doctor
     
     /// this function shall be called by those hospitals which is already registered by the admin in the AdminController contract.
-    function AssociateDoctorUnderMyHospital(address _doctorAddress, string _IPFSDocumentHash)   {
+    function AssociateDoctorUnderMyHospital(address _doctorAddress, string _IPFSDocumentHash)   
+    public
+    {
         if(WhiteListedProviders[msg.sender].isRegistered && WhiteListedProviders[msg.sender].isOrganization == true){
             DoctorInformation[msg.sender][_doctorAddress].doctorAddress = _doctorAddress;
             DoctorInformation[msg.sender][_doctorAddress].isRegistered = true;
             DoctorInformation[msg.sender][_doctorAddress].IPFSDoctorApprovalDocumentHash = _IPFSDocumentHash;
-            DoctorAssociated(msg.sender, _doctorAddress, _IPFSDocumentHash);
+            emit DoctorAssociated(msg.sender, _doctorAddress, _IPFSDocumentHash);
         } else {
             revert();//the hospital is not registered under Emrify yet.
         }
         
     }
     
-    function DisassociateDoctorfromTheHospital(address _doctorAddress, string _IPFSDocumentHash){
+    function DisassociateDoctorfromTheHospital(address _doctorAddress, string _IPFSDocumentHash)
+    public
+    {
         if(WhiteListedProviders[msg.sender].isRegistered && WhiteListedProviders[msg.sender].isOrganization){
             if(DoctorInformation[msg.sender][_doctorAddress].isRegistered == true){
                 DoctorInformation[msg.sender][_doctorAddress].isRegistered = false;
-                DoctorDisassociated(msg.sender, _doctorAddress, _IPFSDocumentHash);
+                emit DoctorDisassociated(msg.sender, _doctorAddress, _IPFSDocumentHash);
             } else {
                 revert();//doctor already disassociated
             }

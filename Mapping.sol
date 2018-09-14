@@ -1,10 +1,10 @@
-pragma solidity ^0.4.0;
+pragma solidity 0.4.24;
 import "./AdminController.sol";
 
 contract Mapping {
     AdminController adminController ;
     
-    function Mapping(address _adminController){
+    constructor (address _adminController) public{
         if (_adminController != 0x0 ) {
             adminController = AdminController(_adminController);
         }
@@ -30,6 +30,7 @@ contract Mapping {
     function submitAttachMemberRequest (address _orgAddress)
     isAppprovedProvider(_orgAddress)
     onlyDoctors(msg.sender)
+    public
     {
         pendingMemberList[_orgAddress].push(msg.sender);
     }
@@ -38,53 +39,64 @@ contract Mapping {
     function approveMember (address _doctorAddress) 
     isAppprovedProvider(msg.sender) 
     onlyDoctors(_doctorAddress)
+    public
     {
         uint256 index = findIndexOfAddress(pendingMemberList[msg.sender], _doctorAddress) ; 
         require(index>=0 && index<pendingMemberList[msg.sender].length);
         approvedMemberList[msg.sender].push(_doctorAddress);
         withWhichProviderThisDocIsAssociated[_doctorAddress].push(msg.sender);
         pendingMemberList[msg.sender] = removeAddress(pendingMemberList[msg.sender],findIndexOfAddress(pendingMemberList[msg.sender], _doctorAddress));
-        DoctorAdded(msg.sender, _doctorAddress, now);
+        emit DoctorAdded(msg.sender, _doctorAddress, now);
     }
     
-    // should be called by approved org only
+    /// should be called by approved org only
     function removeMember(address _doctorAddress)
     isAppprovedProvider(msg.sender)
     onlyDoctors(_doctorAddress)
+    public
     {
         uint256 index = findIndexOfAddress(approvedMemberList[msg.sender], _doctorAddress) ; 
         require(index>=0 && index<approvedMemberList[msg.sender].length);
         approvedMemberList[msg.sender] = removeAddress(approvedMemberList[msg.sender],findIndexOfAddress(approvedMemberList[msg.sender], _doctorAddress));
         withWhichProviderThisDocIsAssociated[_doctorAddress] = removeAddress(withWhichProviderThisDocIsAssociated[_doctorAddress],findIndexOfAddress(withWhichProviderThisDocIsAssociated[_doctorAddress], msg.sender));
-        DoctorRemoved(msg.sender, _doctorAddress, now);
+        emit DoctorRemoved(msg.sender, _doctorAddress, now);
     }
     
     // should be called by approved org only
     function getPendingMembersList()
     isAppprovedProvider(msg.sender)
-    constant returns (address[]){
+    public
+    view
+    returns (address[]){
         return pendingMemberList[msg.sender];
     }
     
     // should be called by approved org only
     function getApprovedMembersList()
     isAppprovedProvider(msg.sender)
-    constant returns (address[]){
+    public
+    view 
+    returns (address[]){
         return approvedMemberList[msg.sender];
     }
     
     function getApprovedMembersListForAnyAddress(address _anyAddress)
     isAppprovedProvider(_anyAddress)
-    constant returns (address[]){
+    public
+    view 
+    returns (address[]){
         return approvedMemberList[_anyAddress];
     }
     
-    function getOrgAddress(address _address) constant returns (address[]){
+    function getOrgAddress(address _address) 
+    public
+    view 
+    returns (address[]){
         return withWhichProviderThisDocIsAssociated[_address];
     }
     
     
-    function removeAddress(address[] array, uint index) internal returns(address[] value) {
+    function removeAddress(address[] array, uint index) internal pure returns(address[] value) {
         if (index >= array.length) return;
 
         address[] memory arrayNew = new address[](array.length-1);
@@ -99,7 +111,7 @@ contract Mapping {
         return arrayNew;
     }
     
-    function findIndexOfAddress(address[] array, address findIndexOfThisAddress) internal  returns (uint256) {
+    function findIndexOfAddress(address[] array, address findIndexOfThisAddress) internal pure returns (uint256) {
         for (uint i = 0; i<array.length; i++){
             if( array[i] == findIndexOfThisAddress){
                 break;

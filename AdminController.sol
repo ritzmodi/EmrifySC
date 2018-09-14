@@ -1,4 +1,4 @@
-pragma solidity ^0.4.0;
+pragma solidity 0.4.24;
 // this controller shall allow Hostpital's entry in the system. 
 // & then only the hospitals shall be able to start functioning in the etheruem ecosystem.
 
@@ -76,24 +76,32 @@ contract AdminController {
     
     // this condition makes sure that the operation can be done by any of the designated address
     // they are having Admin previlleges
-    function isAdmin(address addr) public returns(bool) { 
+    function isAdmin(address addr) 
+    public 
+    view 
+    returns(bool) { 
         return addr == admin ||  AdminGroup[addr] == true ; 
     }
 
-    function AdminController(){
+    constructor() public{
         admin = msg.sender; 
     }
     
     mapping (address => providerDetail) public WhiteListedProviders;
     
     // this group tomorrow shall handle the pressure of 
-    function addAdminGroup(address _newAdminAddress) onlyAdmin {
+    function addAdminGroup(address _newAdminAddress) 
+    onlyAdmin 
+    public
+    {
         AdminGroup[_newAdminAddress] = true;
-        NewAdminAdded(_newAdminAddress);
+        emit NewAdminAdded(_newAdminAddress);
     }
     
     // Step 1:
-    function submitRequestForApproval(bool _isOrg, string _ProviderDetailsIPFShash){
+    function submitRequestForApproval(bool _isOrg, string _ProviderDetailsIPFShash) 
+    public 
+    {
         if( WhiteListedProviders[msg.sender].state != State.Accepted && WhiteListedProviders[msg.sender].state != State.Pending ){
             WhiteListedProviders[msg.sender].isOrganization = _isOrg;
             WhiteListedProviders[msg.sender].state = State.Pending;
@@ -104,7 +112,7 @@ contract AdminController {
             PendingList.push(msg.sender);
             totalPendingCount++;
             individualPendingCount[msg.sender]=PendingList.length-1;
-            RequestSubmittedForApproval(msg.sender, _isOrg, _ProviderDetailsIPFShash, WhiteListedProviders[msg.sender].state);
+            emit RequestSubmittedForApproval(msg.sender, _isOrg, _ProviderDetailsIPFShash, WhiteListedProviders[msg.sender].state);
             // }
             
 
@@ -122,6 +130,7 @@ contract AdminController {
     function approveProviderApplication(address _providerAddress) 
     onlyAdmin 
     onlyPendingOrRevokedReq(_providerAddress) 
+    public
     {
         //delete PendingList[individualPendingCount[_providerAddress]] ;
         if(WhiteListedProviders[_providerAddress].state == State.Pending){ 
@@ -139,7 +148,7 @@ contract AdminController {
         individualAcceptedCount[_providerAddress]=AcceptedList.length-1;
          
         // fire an event with `isORg` variable so that we can identify that providerAddress is org or not
-        RequestApproved(_providerAddress, WhiteListedProviders[_providerAddress].IPFSApprovalDocumentHash);
+        emit RequestApproved(_providerAddress, WhiteListedProviders[_providerAddress].IPFSApprovalDocumentHash);
     }
     
     
@@ -147,6 +156,7 @@ contract AdminController {
     function rejectProviderApplication(address _providerAddress) 
     onlyAdmin 
     onlyPending(_providerAddress)
+    public
     {
         WhiteListedProviders[_providerAddress].state = State.Rejected;
         WhiteListedProviders[_providerAddress].isRegistered = false;
@@ -159,7 +169,7 @@ contract AdminController {
         individualRejectiedCount[_providerAddress]=RejectedList.length-1;
         
         
-        RequestRejected(_providerAddress, WhiteListedProviders[_providerAddress].IPFSApprovalDocumentHash);
+        emit RequestRejected(_providerAddress, WhiteListedProviders[_providerAddress].IPFSApprovalDocumentHash);
         
     } 
     
@@ -167,6 +177,7 @@ contract AdminController {
     function revokeProviderApplication(address _providerAddress) 
     onlyAdmin  
     onlyAccepted(_providerAddress)
+    public
     {
         WhiteListedProviders[_providerAddress].state = State.Revoke;
         WhiteListedProviders[_providerAddress].isRegistered = false;
@@ -179,20 +190,26 @@ contract AdminController {
         individualRevokeCount[_providerAddress]=RevokeList.length-1;
         
         
-        RequestRevoked(_providerAddress, WhiteListedProviders[_providerAddress].IPFSApprovalDocumentHash);
+        emit RequestRevoked(_providerAddress, WhiteListedProviders[_providerAddress].IPFSApprovalDocumentHash);
         
     } 
     
     // This is the case when we want to terminate the relationship from the Network 
-    function terminateProviderFromNetwork(address _providerAddress, string _supportingRejectingDocument) onlyAdmin {
+    function terminateProviderFromNetwork(address _providerAddress, string _supportingRejectingDocument) 
+    onlyAdmin 
+    public
+    {
         WhiteListedProviders[_providerAddress].state = State.Terminated;
         WhiteListedProviders[_providerAddress].isRegistered = false;
         WhiteListedProviders[_providerAddress].IPFSRemovalDocumentHash = _supportingRejectingDocument;
-        Terminate(_providerAddress,_supportingRejectingDocument);
+        emit Terminate(_providerAddress,_supportingRejectingDocument);
         
     }
     
-    function remove(address[] array, uint index) internal returns(address[] value) {
+    function remove(address[] array, uint index) 
+    internal 
+    pure
+    returns(address[] value) {
         if (index >= array.length) return;
 
         address[] memory arrayNew = new address[](array.length-1);
@@ -207,7 +224,10 @@ contract AdminController {
         return arrayNew;
     }
     
-    function findIndexOfAddress(address[] array, address findIndexOfThisAddress) internal  returns (uint256) {
+    function findIndexOfAddress(address[] array, address findIndexOfThisAddress) 
+    internal 
+    pure
+    returns (uint256) {
         for (uint i = 0; i<array.length; i++){
             if( array[i] == findIndexOfThisAddress){
                 break;
@@ -221,44 +241,53 @@ contract AdminController {
         
     }
     
-    function returnPendingArray() constant returns (address[]){
+    function returnPendingArray() public view returns (address[]){
         return PendingList;
     }
     
-    function returnAcceptedArray() constant returns (address[]){
+    function returnAcceptedArray() public view returns (address[]){
         return AcceptedList;
     }
-    function returnRejectedArray() constant returns (address[]){
+    function returnRejectedArray() public view returns (address[]){
         return RejectedList;
     }
-    function returnRevokedArray() constant  returns (address[]){
+    function returnRevokedArray() public view  returns (address[]){
         return RevokeList;
     }
     
     
-    function returnApplicationPending() constant returns (uint256){
+    function returnApplicationPending() public view returns (uint256){
         return PendingList.length;
     }
     
-    function returnApplicationAccepted() constant returns (uint256){
+    function returnApplicationAccepted() public view returns (uint256){
         return AcceptedList.length;
     }
-    function returnApplicationRejected() constant returns (uint256){
+    function returnApplicationRejected() public view returns (uint256){
         return RejectedList.length;
     }
-    function returnApplicationRevoke() constant returns (uint256){
+    function returnApplicationRevoke() public view returns (uint256){
         return RevokeList.length;
     }
     
-    function isOrgAndState(address _anyAddress) returns (bool){
+    function isOrgAndState(address _anyAddress)
+    public
+    view 
+    returns (bool){
         return (WhiteListedProviders[_anyAddress].isOrganization == true &&  WhiteListedProviders[_anyAddress].state == State.Accepted ? true : false );
     }
     
-    function isState(address _anyAddress) returns (bool){
+    function isState(address _anyAddress)
+    public 
+    view 
+    returns (bool){
     return (WhiteListedProviders[_anyAddress].state == State.Accepted ? true : false );
     }
     
-    function isOrg(address _anyAddress) returns (bool){
+    function isOrg(address _anyAddress)
+    public
+    view 
+    returns (bool){
         return (WhiteListedProviders[_anyAddress].isOrganization == true ? true : false );
     }
     

@@ -1,4 +1,4 @@
-pragma solidity ^0.4.0;
+pragma solidity 0.4.24;
 import "./AdminController.sol";
 
 contract ClaimsRegistry {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
@@ -51,11 +51,11 @@ contract ClaimsRegistry {
     
     mapping(address => mapping(address => mapping(uint256 => bytes32))) public pairApprovedClaimPerType; // my approved claims
     
-    mapping(address => bytes32[]) PendingClaimsForEachIssuers; // pending claims at individual issuers
+    mapping(address => bytes32[])  PendingClaimsForEachIssuers; // pending claims at individual issuers
     
     mapping(address => bytes32[])  ApprovedClaimsbyEachIssuers; // claims  which are approved  by Issuers
     
-    mapping(address => bytes32[]) individualPendingClaims; // pending claims for individual 
+    mapping(address => bytes32[])  individualPendingClaims; // pending claims for individual 
     
     mapping(address => bytes32[])  individualApprovedClaims; // approved  claims for individual 
     
@@ -63,7 +63,7 @@ contract ClaimsRegistry {
     
     // mapping (bytes32 => bytes32[]) claimsByType; // either organization or individual
 
-    function ClaimsRegistry(address _adminController){
+    constructor (address _adminController) public {
         if (_adminController != 0x0) {
             adminController = AdminController(_adminController);
         }
@@ -85,19 +85,19 @@ contract ClaimsRegistry {
 
     
     
-    function getAllApprovedClaimIdsForThisIssuer (address _issuer) constant returns (bytes32[] ){
+    function getAllApprovedClaimIdsForThisIssuer (address _issuer) public view  returns (bytes32[] ){
         return ApprovedClaimsbyEachIssuers[_issuer];
     }
     
-    function getAllPendingClaimIdsForThisIssuer (address _issuer) constant returns (bytes32[] ){
+    function getAllPendingClaimIdsForThisIssuer (address _issuer) public view returns (bytes32[] ){
         return PendingClaimsForEachIssuers[_issuer];
     }
     
-    function getAllApprovedClaimIdsforIndividual (address _requester) constant returns (bytes32[] ){
+    function getAllApprovedClaimIdsforIndividual (address _requester) public view returns (bytes32[] ){
         return individualApprovedClaims[_requester];
     }
     
-    function getAllPendingClaimIdsForIndividual (address _requester) constant returns (bytes32[] ){
+    function getAllPendingClaimIdsForIndividual (address _requester) public view returns (bytes32[] ){
         return individualPendingClaims[_requester];
     }
     // it shall add or change the claim directly. no need to check anything. it will be called by the ISSUER
@@ -105,6 +105,7 @@ contract ClaimsRegistry {
     notYourself(_issuer) 
     isRequesterApproved(msg.sender)
     onlyApprovedOrg(_issuer)
+    public
     returns (bytes32 claimId, bool isNewClaimAdded) {
         
             claimId = keccak256(_claimType, msg.sender, _issuer); // three params: as a single claim can be uniquely identified by them
@@ -131,7 +132,7 @@ contract ClaimsRegistry {
                 pairPendingClaimPerType[msg.sender][_issuer][_claimType]= claimId; // add to the list of the claimee
                 PendingClaimsForEachIssuers[_issuer].push(claimId); // add to the list of the issuer
                 individualPendingClaims[msg.sender].push(claimId);
-                ClaimAdded(claimId, msg.sender, _claimType, _issuer, _signature, _data, _uri);
+                emit ClaimAdded(claimId, msg.sender, _claimType, _issuer, _signature, _data, _uri);
             }
                 return (claimId, true);    
     }
@@ -140,6 +141,7 @@ contract ClaimsRegistry {
     function ApproveClaim( bytes32 _claimId )  
     onlyIssuer(msg.sender, _claimId) 
     onlyApprovedOrg(msg.sender)
+    public
     returns (bool isClaimApproved)
     {
         
@@ -160,12 +162,13 @@ contract ClaimsRegistry {
                  }
              );
             ApprovedClaimsbyEachIssuers[msg.sender].push(_claimId);
+            individualApprovedClaims[_claim.claimee].push(_claimId);
             pairApprovedClaimPerType[_claim.claimee][msg.sender][_claim.claimType]=_claimId;
 
             PendingClaimsForEachIssuers[msg.sender] = remove (PendingClaimsForEachIssuers[msg.sender], findClaimIndex(PendingClaimsForEachIssuers[msg.sender], _claimId));
             individualPendingClaims[_claim.claimee] = remove(individualPendingClaims[_claim.claimee], findClaimIndex(individualPendingClaims[_claim.claimee], _claimId));
             delete pairPendingClaimPerType[_claim.claimee][msg.sender][_claim.claimType];
-            ClaimApprovedByIssuer(_claimId, msg.sender, _claim.claimType, _claim.issuer, _claim.signature, _claim.data, _claim.uri);
+            emit ClaimApprovedByIssuer(_claimId, msg.sender, _claim.claimType, _claim.issuer, _claim.signature, _claim.data, _claim.uri);
             return true;
         } else {
             return false;
@@ -210,11 +213,12 @@ contract ClaimsRegistry {
     function removeClaimByIssuer(bytes32 _claimId) 
     onlyIssuer( msg.sender, _claimId)
     onlyApprovedOrg(msg.sender)
+    public
     returns (bool success) {
             Claim memory c = claims[_claimId];
             
             if(c.isApproved == true){ // must be already approved
-            ClaimRemovedByIssuer(_claimId, c.claimee, c.claimType, c.issuer, c.signature, c.data, c.uri);
+            emit ClaimRemovedByIssuer(_claimId, c.claimee, c.claimType, c.issuer, c.signature, c.data, c.uri);
             // delete from three places: 1: issuer's approved list, 2: individual approved list, 3: from app wide claims  
             ApprovedClaimsbyEachIssuers[msg.sender] = remove (ApprovedClaimsbyEachIssuers[msg.sender], findClaimIndex(ApprovedClaimsbyEachIssuers[msg.sender], _claimId));
             individualApprovedClaims[c.claimee] = remove(individualApprovedClaims[c.claimee], findClaimIndex(individualApprovedClaims[c.claimee], _claimId));
@@ -233,10 +237,11 @@ contract ClaimsRegistry {
     function removeSelfClaim(bytes32 _claimId)
     isRequesterApproved(msg.sender)
     onlyClaimee( msg.sender, _claimId)
+    public
     returns (bool success) {
             Claim memory c = claims[_claimId];
              if(c.isApproved == true){ // must be already approved
-             ClaimRemovedByClaimee(_claimId, c.claimee, c.claimType, c.issuer, c.signature, c.data, c.uri);
+            emit ClaimRemovedByClaimee(_claimId, c.claimee, c.claimType, c.issuer, c.signature, c.data, c.uri);
             // delete from three places: 1: issuer's approved list, 2: individual approved list, 3: from app wide claims  
             ApprovedClaimsbyEachIssuers[c.issuer] = remove (ApprovedClaimsbyEachIssuers[c.issuer], findClaimIndex(ApprovedClaimsbyEachIssuers[c.issuer], _claimId));
             individualApprovedClaims[c.claimee] = remove(individualApprovedClaims[c.claimee], findClaimIndex(individualApprovedClaims[c.claimee], _claimId));
@@ -253,7 +258,7 @@ contract ClaimsRegistry {
         
     
         
-    function remove(bytes32[] array, uint index) internal returns(bytes32[] value) {
+    function remove(bytes32[] array, uint index) internal pure returns(bytes32[] value) {
         // if (index >= array.length) return;
 
         bytes32[] memory arrayNew = new bytes32[](array.length-1);
@@ -268,7 +273,7 @@ contract ClaimsRegistry {
         return arrayNew;
     }
     
-    function findClaimIndex(bytes32[] _claimIds, bytes32 findThisClaim) internal returns (uint256){
+    function findClaimIndex(bytes32[] _claimIds, bytes32 findThisClaim) internal pure returns (uint256){
         for (uint256 i = 0; i<_claimIds.length; i++){
              if( _claimIds[i] == findThisClaim){
                 break;

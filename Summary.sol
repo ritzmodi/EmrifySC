@@ -1,4 +1,4 @@
-pragma solidity ^0.4.0;
+pragma solidity 0.4.24;
 import "./AdminController.sol";
 
 
@@ -21,7 +21,7 @@ contract Summary{
         bool isShared;
     }
     
-    function Summary(address _adminController){
+    constructor (address _adminController) public {
         if (_adminController != 0x0 ) {
             adminController = AdminController(_adminController);
         }
@@ -35,6 +35,7 @@ contract Summary{
     
     function sharePermissionHash (address _providerAdd, bytes _data, string _uri)
     isAppprovedProvider(_providerAdd)
+    public
     {   
         sharedHashes[msg.sender][_providerAdd].data = _data;
         sharedHashes[msg.sender][_providerAdd].uri = _uri;
@@ -43,25 +44,32 @@ contract Summary{
             AddressOfPatients[_providerAdd].push(msg.sender);
         }
         
-        PermissionHashShared(msg.sender, _providerAdd, _data, _uri);
+        emit PermissionHashShared(msg.sender, _providerAdd, _data, _uri);
         
     }
     // shall be called by the approved provider only
     function returnSharedHash(address _patientAdd) 
     isAppprovedProvider(msg.sender)
-    constant returns(bytes , string ){
+    public
+    view
+    returns(bytes , string ){
         return (sharedHashes[_patientAdd][msg.sender].data, sharedHashes[_patientAdd][msg.sender].uri);
         
     }
     
     // one can fetch the list of Patients here.
-    function getListOfPatientsForThisDoctor() constant returns(address[]){
+    function getListOfPatientsForThisDoctor() 
+    public
+    view 
+    returns(address[]){
         return AddressOfPatients[msg.sender];
         
     }
     
     function returnSharedHashBetweenPair(address _patientAdd, address _providerAdd) 
-    constant returns(bytes , string ){
+    public
+    view 
+    returns(bytes , string ){
         return (sharedHashes[_patientAdd][_providerAdd].data, sharedHashes[_patientAdd][_providerAdd].uri);
         
     }

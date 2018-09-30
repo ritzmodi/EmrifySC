@@ -193,19 +193,19 @@ contract Hodler is Ownable {
                 
         HODL memory hodler = hodlerStakes[_beneficiary];
         
-        if(( hodler.claimed3M == false ) && ( block.timestamp - hodlerTimeStart) >= 90 days){ 
+        if(( hodler.claimed3M == false ) && ( block.timestamp.sub(hodlerTimeStart)) >= 90 days){ 
             _stake = _stake.add(hodler.stake.mul(TOKEN_HODL_3M).div(hodlerTotalValue3M));
             hodler.claimed3M = true;
         }
-        if(( hodler.claimed6M == false ) && ( block.timestamp - hodlerTimeStart) >= 180 days){ 
+        if(( hodler.claimed6M == false ) && ( block.timestamp.sub(hodlerTimeStart)) >= 180 days){ 
             _stake = _stake.add(hodler.stake.mul(TOKEN_HODL_6M).div(hodlerTotalValue6M));
             hodler.claimed6M = true;
         }
-        if(( hodler.claimed9M == false ) && ( block.timestamp - hodlerTimeStart) >= 270 days ){ 
+        if(( hodler.claimed9M == false ) && ( block.timestamp.sub(hodlerTimeStart)) >= 270 days ){ 
             _stake = _stake.add(hodler.stake.mul(TOKEN_HODL_9M).div(hodlerTotalValue9M));
             hodler.claimed9M = true;
         }
-        if(( hodler.claimed12M == false ) && ( block.timestamp - hodlerTimeStart) >= 360 days){ 
+        if(( hodler.claimed12M == false ) && ( block.timestamp.sub(hodlerTimeStart)) >= 360 days){ 
             _stake = _stake.add(hodler.stake.mul(TOKEN_HODL_12M).div(hodlerTotalValue12M));
             hodler.claimed12M = true;
         }
@@ -220,7 +220,7 @@ contract Hodler is Ownable {
     */
     function finalizeHodler() public returns (bool) {
         require(msg.sender == admin);
-        require(block.timestamp >= hodlerTimeStart + 450 days ); 
+        require(block.timestamp >= hodlerTimeStart.add( 450 days ) ); 
         uint256 amount = tokenContract.balanceOf(this);
         require(amount > 0);
         if (istransferringTokens == false) {
@@ -240,7 +240,7 @@ contract Hodler is Ownable {
     * `_beneficiaries` is the array of addresses for which we want to claim HODL rewards.
     */
     function claimHodlRewardsForMultipleAddresses(address[] _beneficiaries) external returns (bool) {
-        require(block.timestamp - hodlerTimeStart <= 450 days ); 
+        require(block.timestamp.sub(hodlerTimeStart) <= 450 days ); 
         uint8 length = uint8(_beneficiaries.length);
         for (uint8 i = 0; i < length ; i++) {
             if(hodlerStakes[_beneficiaries[i]].stake > 0 && (hodlerStakes[_beneficiaries[i]].claimed3M == false || hodlerStakes[_beneficiaries[i]].claimed6M == false || hodlerStakes[_beneficiaries[i]].claimed9M == false || hodlerStakes[_beneficiaries[i]].claimed12M == false)) { 

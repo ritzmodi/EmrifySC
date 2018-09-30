@@ -1,7 +1,8 @@
-pragma solidity 0.4.24;
+pragma solidity 0.4.25;
 
 import "./Hodler.sol";
 import "./library.sol";
+import "https://github.com/OpenZeppelin/openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./ERC20.sol";
 
 
@@ -47,7 +48,7 @@ contract HITT is ERC20,Ownable {
     * Setting it 200 Million Temporarily. 
     * We shall know the exact value when we shall be done with the ICO period.
     */
-    uint256 public constant hodlerPoolTokens = 200000000 * 10 ** uint256(decimals) ; //update
+    uint256 public constant hodlerPoolTokens = 200000000 * 10 ** uint256(decimals) ; 
     Hodler public hodlerContract;
 
     /*
@@ -71,7 +72,7 @@ contract HITT is ERC20,Ownable {
         }
         length = advisors.length ;
         for( i=0 ; i < length ; i++ ){
-            lockTimes[advisors[i]] = uint64(block.timestamp +  45 days + tokenLockTime);
+            lockTimes[advisors[i]] = uint64(block.timestamp +  45 days + tokenLockTime); 
             balances[msg.sender] = balances[msg.sender].sub(40000 * 10 ** uint256(decimals));
             balances[advisors[i]] = 40000 * 10 ** uint256(decimals) ;
             emit Transfer( msg.sender, advisors[i], 40000 * 10 ** uint256(decimals) );
@@ -83,7 +84,7 @@ contract HITT is ERC20,Ownable {
         emit Transfer( msg.sender, founders[1],  30000000 * 10 ** uint256(decimals) );
         hodlerContract = new Hodler(hodlerPoolTokens, msg.sender); 
         balances[msg.sender] = balances[msg.sender].sub(hodlerPoolTokens);
-        balances[address(hodlerContract)] = hodlerPoolTokens; // giving the total hodler bonus to the HODLER contract to distribute.
+        balances[address(hodlerContract)] = hodlerPoolTokens; // giving the total hodler bonus to the HODLER contract to distribute.        
         emit Transfer( msg.sender, address(hodlerContract), hodlerPoolTokens );
     }
     
@@ -96,20 +97,26 @@ contract HITT is ERC20,Ownable {
     }
 
     /* 
-    * Transfer amount from one account to another. This function trigger the action to 
-    * invalidate the participant's right to get the HODL rewards if they make any transaction within the hodl period.
+    * Transfer amount from one account to another. The code takes care that it doesn't transfer the tokens to contracts. 
+    * This function trigger the action to invalidate the participant's right to get the
+    *  HODL rewards if they make any transaction within the hodl period.
     * Getting into the HODL club is optional by not moving their tokens after receiving tokens in their wallet for 
     * pre-defined period like 3,6,9 or 12 months.
     * More details are here about the HODL T&C : https://medium.com/@Vikas1188/lets-hodl-with-emrify-bc5620a14237
     */
     function _transfer(address _from, address _to, uint256 _value) internal returns (bool) {
+        require(!isContract(_to));
         require(block.timestamp > lockTimes[_from]);
+        uint256 prevBalTo = balances[_to] ;
+        uint256 prevBalFrom = balances[_from];
         balances[_from] = balances[_from].sub(_value);
         balances[_to] = balances[_to].add(_value);
         if(hodlerContract.isValid(_from)) {
             require(hodlerContract.invalidate(_from));
         }
         emit Transfer(_from, _to, _value);
+        assert(_value == balances[_to].sub(prevBalTo) );
+        assert(_value == prevBalFrom.sub(balances[_from]));
         return true;
     }
 	
@@ -184,4 +191,16 @@ contract HITT is ERC20,Ownable {
         }
         return true;
     }   
+    
+    /*
+    * This method checks whether the address is a contract or not. 
+    */
+    function isContract(address _addr) private view returns (bool) {
+        uint32 size;
+        assembly {
+            size := extcodesize(_addr)
+        }
+        return (size > 0);
+    }
+    
 }

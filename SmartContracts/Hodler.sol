@@ -1,6 +1,7 @@
-pragma solidity 0.4.24;
+pragma solidity 0.4.25;
 
 import "./library.sol";
+import "https://github.com/OpenZeppelin/openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./ERC20.sol";
 
 /*
@@ -25,6 +26,7 @@ import "./ERC20.sol";
 */
 contract Hodler is Ownable {
     using SafeMath for uint256;
+    bool istransferringTokens = false;
     address public admin; // getting updated in constructor
     
     /* 
@@ -169,14 +171,16 @@ contract Hodler is Ownable {
         updateAndGetHodlTotalValue();
         uint256 _stake = calculateStake(_beneficiary);
         if (_stake > 0) {
+            if (istransferringTokens == false) {
             // increasing claimed tokens
             claimedTokens = claimedTokens.add(_stake);
-            
+                istransferringTokens = true;
             // Transferring tokens
             require(tokenContract.transfer(_beneficiary, _stake));
+                istransferringTokens = false ;
             emit LogHodlClaimed(_beneficiary, _stake);
-            
             return true;
+            }
         } 
         return false;
     }
@@ -201,7 +205,7 @@ contract Hodler is Ownable {
             _stake = _stake.add(hodler.stake.mul(TOKEN_HODL_9M).div(hodlerTotalValue9M));
             hodler.claimed9M = true;
         }
-        if(( hodler.claimed12M == false ) && ( block.timestamp - hodlerTimeStart) >= 360 days){
+        if(( hodler.claimed12M == false ) && ( block.timestamp - hodlerTimeStart) >= 360 days){ 
             _stake = _stake.add(hodler.stake.mul(TOKEN_HODL_12M).div(hodlerTotalValue12M));
             hodler.claimed12M = true;
         }
@@ -219,8 +223,13 @@ contract Hodler is Ownable {
         require(block.timestamp >= hodlerTimeStart + 450 days ); 
         uint256 amount = tokenContract.balanceOf(this);
         require(amount > 0);
-        require(tokenContract.transfer(admin,amount));
-        return true;
+        if (istransferringTokens == false) {
+            istransferringTokens = true;
+            require(tokenContract.transfer(admin,amount));
+            istransferringTokens = false;
+            return true;
+        }
+        return false;
     }
     
     
@@ -232,7 +241,7 @@ contract Hodler is Ownable {
     */
     function claimHodlRewardsForMultipleAddresses(address[] _beneficiaries) external returns (bool) {
         require(block.timestamp - hodlerTimeStart <= 450 days ); 
-        uint256 length = _beneficiaries.length ;
+        uint8 length = uint8(_beneficiaries.length);
         for (uint8 i = 0; i < length ; i++) {
             if(hodlerStakes[_beneficiaries[i]].stake > 0 && (hodlerStakes[_beneficiaries[i]].claimed3M == false || hodlerStakes[_beneficiaries[i]].claimed6M == false || hodlerStakes[_beneficiaries[i]].claimed9M == false || hodlerStakes[_beneficiaries[i]].claimed12M == false)) { 
                 require(claimHodlRewardFor(_beneficiaries[i]));
@@ -247,7 +256,7 @@ contract Hodler is Ownable {
     * Setting 3, 6, 9 & 12 months total staked token value.
     */
     function updateAndGetHodlTotalValue() public returns (uint) {
-        if (block.timestamp >= hodlerTimeStart+ 90 days && hodlerTotalValue3M == 0) { 
+        if (block.timestamp >= hodlerTimeStart+ 90 days && hodlerTotalValue3M == 0) {   
             hodlerTotalValue3M = hodlerTotalValue;
         }
 
@@ -258,7 +267,7 @@ contract Hodler is Ownable {
         if (block.timestamp >= hodlerTimeStart+ 270 days && hodlerTotalValue9M == 0) { 
             hodlerTotalValue9M = hodlerTotalValue;
         }
-        if (block.timestamp >= hodlerTimeStart+ 360 days && hodlerTotalValue12M == 0) {
+        if (block.timestamp >= hodlerTimeStart+ 360 days && hodlerTotalValue12M == 0) { 
             hodlerTotalValue12M = hodlerTotalValue;
         }
 
